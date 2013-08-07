@@ -118,4 +118,19 @@ $app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
     }
 });
 
+$app->get('/pathversions/init', function () use($app, $db) {
+
+    // TODO REMOVE ME
+
+    $sql = "TRUNCATE TABLE pathversions";
+
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $db = null;
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+});
+
 $app->run();

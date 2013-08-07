@@ -7,15 +7,21 @@ angular.module('myApp.controllers', []).
 
         $scope.history = null;
 
-        $scope.init = function () {
-            $http.get('tree.json')
-                .success(function(json) {
-                    $scope.path = json.path;
+        $scope.init = function() {
+            $http.get('../api/index.php/pathversions/init')
+                .success(function() {
+                    $http.get('tree.json')
+                        .success(function(json) {
+                            $scope.path = json.path;
+                        }
+                    );
                 }
             );
         };
 
-        $scope.undo = function (id) {
+        $scope.init();
+
+        $scope.undo = function(id) {
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
                     $scope.path = path;
@@ -23,7 +29,7 @@ angular.module('myApp.controllers', []).
             );
         };
 
-        $scope.redo = function (id) {
+        $scope.redo = function(id) {
             $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
                     $scope.path = path;
@@ -31,11 +37,11 @@ angular.module('myApp.controllers', []).
             );
         };
 
-        $scope.remove = function (child) {
-
+        $scope.remove = function(child) {
             function walk(target) {
                 var children = target.children,
                     i;
+
                 if (children) {
                     i = children.length;
                     while (i--) {
@@ -47,9 +53,11 @@ angular.module('myApp.controllers', []).
                     }
                 }
             }
+
             walk($scope.path.activities[0]);
+
             updateDB($scope.path);
-        }
+        };
 
         $scope.removeChildren = function(activity) {
             activity.children = [];
