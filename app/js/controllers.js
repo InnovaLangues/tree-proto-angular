@@ -16,19 +16,26 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
       return console.log(["Updated", $scope.items]);
     };
 
-        $scope.history = null;
 
         $scope.init = function() {
             $http.get('../api/index.php/pathversions/init')
                 .success(function() {
                     $http.get('tree.json')
                         .success(function(json) {
+                            $scope.history = null;
                             $scope.path = json.path;
+
+                            updateDB($scope.path);
+
+                            $scope.redoDisabled = true;
+                            $scope.undoDisabled = true;
                         }
                     );
                 }
             );
         };
+
+        $scope.init();
 
         $scope.undo = function(id) {
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
@@ -108,9 +115,10 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
                 .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
                     $scope.path = path;
+                    $scope.undoDisabled = false;
+                    $scope.redoDisabled = true;
                 });
         };
 
-        $scope.init();
     }]
 );
