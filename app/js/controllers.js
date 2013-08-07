@@ -11,7 +11,6 @@ angular.module('myApp.controllers', []).
             $http.get('tree.json')
                 .success(function(json) {
                     $scope.path = json.path;
-                    console.log($scope.path);
                 }
             );
         };
@@ -19,7 +18,14 @@ angular.module('myApp.controllers', []).
         $scope.undo = function (id) {
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
-                    console.log(path);
+                    $scope.path = path;
+                }
+            );
+        };
+
+        $scope.redo = function (id) {
+            $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
+                .success(function(path) {
                     $scope.path = path;
                 }
             );

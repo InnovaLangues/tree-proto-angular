@@ -94,20 +94,28 @@ $app->get('/pathversions/undo/:id', function ($id) use($app, $db) {
     }
 });
 
-$app->post('/pathversions/redo', function () use($app, $db) {
-    $sql = "SELECT json FROM pathversions ORDER BY id DESC LIMIT 1, 1";
-    // TODO WHERE USER = USER COURANT
+$app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
+
+    // TODO WHERE USER = USER COURANT, etc...
+
+    $sql = "SELECT id, path FROM pathversions WHERE pathversions.id > $id LIMIT 1";
+
     try {
         $stmt = $db->prepare($sql);
-        $json = $stmt->execute();
+        $stmt->execute();
         $db = null;
-        // TODO echo json
-        echo $sql;
+
+        $result = $stmt->fetchObject();
+
+        if ($result) {
+            $path = json_decode($result->path);
+            $path->history = $result->id;
+            echo json_encode($path);
+        }
+
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
-
-    //echo $body;
 });
 
 $app->run();
