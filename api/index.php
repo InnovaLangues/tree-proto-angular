@@ -9,8 +9,8 @@ $db = new PDO('mysql:host=localhost;dbname=protojpp', $user, $pass);
 
 $app->post('/pathversions', function () use($app, $db) {
 
-
     $request = $app->request();
+
     $body = $request->getBody();
 
     $path = json_decode($body);
@@ -87,6 +87,8 @@ $app->get('/pathversions/undo/:id', function ($id) use($app, $db) {
             $path = json_decode($result->path);
             $path->history = $result->id;
             echo json_encode($path);
+        } else {
+            echo "end";
         }
 
     } catch(PDOException $e) {
@@ -111,6 +113,8 @@ $app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
             $path = json_decode($result->path);
             $path->history = $result->id;
             echo json_encode($path);
+        } else {
+            echo "end";
         }
 
     } catch(PDOException $e) {
