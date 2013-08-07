@@ -5,17 +5,18 @@
 angular.module('myApp.controllers', ['ui.bootstrap']).
     controller('TreeContoller', ['$scope', '$http', function($scope, $http) {
 
-
-        /*$scope.dynamicTooltip = "Hello, World!";
-        $scope.dynamicTooltipText = "dynamic";
-        $scope.htmlTooltip = "I've been made <b>bold</b>!";*/
-
-
+        $scope.isCollapsed = false;
+    $scope.update = function() {
+      var e, i, _i, _len, _ref;
+      _ref = $scope.items;
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        e = _ref[i];
+        e.pos = i;
+      }
+      return console.log(["Updated", $scope.items]);
+    };
 
         $scope.history = null;
-
-        $scope.undoDisabled = true;
-        $scope.redoDisabled = true;
 
         $scope.init = function() {
             $http.get('../api/index.php/pathversions/init')
@@ -23,22 +24,15 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
                     $http.get('tree.json')
                         .success(function(json) {
                             $scope.path = json.path;
-                            $scope.undoDisabled = true;
-                            $scope.redoDisabled = true;
-                            updateDB($scope.path);
                         }
                     );
                 }
             );
-
         };
-
 
         $scope.undo = function(id) {
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
-                    console.log(data);
-
                     if(data != 'end') {
                         $scope.path = data;
                     } else {
@@ -114,7 +108,6 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
                 .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
                     $scope.path = path;
-                    $scope.undoDisabled = false;
                 });
         };
 
