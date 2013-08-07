@@ -31,10 +31,25 @@ angular.module('myApp.controllers', []).
             );
         };
 
-        /*$scope.remove = function (activity) {
-            // TODO
-            //activity = null;
-        };*/
+        $scope.remove = function (child) {
+
+            function walk(target) {
+                var children = target.children,
+                    i;
+                if (children) {
+                    i = children.length;
+                    while (i--) {
+                        if (children[i] === child) {
+                            return children.splice(i, 1);
+                        } else {
+                            walk(children[i]);
+                        }
+                    }
+                }
+            }
+            walk($scope.path.activities[0]);
+            updateDB($scope.path);
+        }
 
         $scope.removeChildren = function(activity) {
             activity.children = [];

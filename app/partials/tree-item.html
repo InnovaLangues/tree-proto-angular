@@ -3,11 +3,12 @@
     <span ng-switch-default>&#x25BC;</span>
 </button>
 
-<a href="#" class="tools-trigger">{{activity.name}}</a> 
+<a href="#" class="tools-trigger">{{activity.name}}</a>
 
 <div class="tools">
-	<button class="btn btn-mini" ng-click="addChild(activity)">Add child</button>
-	<button class="btn btn-danger btn-mini" ng-click="removeChildren(activity)" ng-show="activity.children.length > 0">Kill all children</button>
+    <button class="btn btn-primary btn-mini" ng-click="addChild(activity)">Add child</button>
+	<button class="btn btn-danger btn-mini" ng-click="remove(activity)">Remove</button>
+	<button class="btn btn-danger btn-mini" ng-click="removeChildren(activity)" ng-show="activity.children.length > 0">Remove children</button>
 </div>
 
 <ul>
@@ -16,7 +17,7 @@
 
 
 <script>
-        // $('.tools-trigger').popover({ 
+        // $('.tools-trigger').popover({
         //     html : true,
         //     content: function() {
         //     	return $('.tools').html();
