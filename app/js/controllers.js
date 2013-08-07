@@ -5,10 +5,6 @@
 angular.module('myApp.controllers', ['ui.bootstrap']).
     controller('TreeContoller', ['$scope', '$http', function($scope, $http) {
 
-
-        $scope.dynamicTooltip = "Hello, World!";
-        $scope.dynamicTooltipText = "dynamic";
-        $scope.htmlTooltip = "I've been made <b>bold</b>!";
         $scope.isCollapsed = false;
     $scope.update = function() {
       var e, i, _i, _len, _ref;
@@ -34,20 +30,29 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
             );
         };
 
-        $scope.init();
-
         $scope.undo = function(id) {
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
-                .success(function(path) {
-                    $scope.path = path;
+                .success(function(data) {
+                    if(data != 'end') {
+                        $scope.path = data;
+                    } else {
+                        $scope.undoDisabled = true;
+                    }
+
+                    $scope.redoDisabled = false;
                 }
             );
         };
 
         $scope.redo = function(id) {
             $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
-                .success(function(path) {
-                    $scope.path = path;
+                .success(function(data) {
+                    if(data != 'end') {
+                        $scope.path = data;
+                    } else {
+                        $scope.redoDisabled = true;
+                    }
+                    $scope.undoDisabled = false;
                 }
             );
         };
@@ -105,5 +110,7 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
                     $scope.path = path;
                 });
         };
+
+        $scope.init();
     }]
 );

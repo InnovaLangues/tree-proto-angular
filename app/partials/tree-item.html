@@ -18,7 +18,6 @@
 
 <ul collapse="isCollapsed">
     <li ng-repeat="activity in activity.children"
-        ng-include="'partials/tree-item.html'"
-        ng-class="{minimized:child.minimized}">
+        ng-include="'partials/tree-item.html'">
     </li>
 </ul>
