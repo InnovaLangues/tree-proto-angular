@@ -9,8 +9,16 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
         $scope.dynamicTooltip = "Hello, World!";
         $scope.dynamicTooltipText = "dynamic";
         $scope.htmlTooltip = "I've been made <b>bold</b>!";
-
-
+        $scope.isCollapsed = false;
+    $scope.update = function() {
+      var e, i, _i, _len, _ref;
+      _ref = $scope.items;
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        e = _ref[i];
+        e.pos = i;
+      }
+      return console.log(["Updated", $scope.items]);
+    };
 
         $scope.history = null;
 
