@@ -1,16 +1,24 @@
-<button class="toggle" ng-click="toggleMinimized(activity)" ng-switch on="activity.minimized">
+<button class="toggle"
+        ng-click="toggleMinimized(activity)"
+        ng-switch on="activity.minimized">
     <span ng-switch-when="true">&#x25B6;</span>
     <span ng-switch-default>&#x25BC;</span>
 </button>
 
-
 <input type="text" value="{{activity.name}}"
+    title="activity.name"
+    ng-model="activity.name"
+    ng-blur="rename()"
     tooltip-html-unsafe='{{htmlTooltip}}'
     tooltip-trigger="focus"
     tooltip-placement="right" />
 
-    <div class="tools" ng-include="'partials/activity-tools.html'">
-    </div>
+<div class="tools"
+     ng-include="'partials/activity-tools.html'"></div>
+
 <ul>
-    <li ng-repeat="activity in activity.children" ng-include="'partials/tree-item.html'" ng-class="{minimized:child.minimized}"></li>
+    <li ng-repeat="activity in activity.children"
+        ng-include="'partials/tree-item.html'"
+        ng-class="{minimized:child.minimized}">
+    </li>
 </ul>

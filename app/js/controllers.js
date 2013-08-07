@@ -44,7 +44,11 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
             );
         };
 
-        $scope.remove = function(child) {
+        $scope.rename = function() {
+            updateDB($scope.path);
+        };
+
+        $scope.remove = function(activity) {
             function walk(target) {
                 var children = target.children,
                     i;
@@ -52,7 +56,7 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
                 if (children) {
                     i = children.length;
                     while (i--) {
-                        if (children[i] === child) {
+                        if (children[i] === activity) {
                             return children.splice(i, 1);
                         } else {
                             walk(children[i]);
