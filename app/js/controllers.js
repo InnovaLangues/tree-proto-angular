@@ -2,8 +2,15 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
+angular.module('myApp.controllers', ['ui.bootstrap']).
     controller('TreeContoller', ['$scope', '$http', function($scope, $http) {
+
+
+        $scope.dynamicTooltip = "Hello, World!";
+        $scope.dynamicTooltipText = "dynamic";
+        $scope.htmlTooltip = "I've been made <b>bold</b>!";
+
+
 
         $scope.history = null;
 
