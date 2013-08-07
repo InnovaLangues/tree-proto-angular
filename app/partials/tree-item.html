@@ -1,0 +1,25 @@
+<button class="toggle" ng-click="toggleMinimized(child)" ng-switch on="child.minimized">
+    <span ng-switch-when="true">&#x25B6;</span>
+    <span ng-switch-default>&#x25BC;</span>
+</button>
+
+<a href="#" class="tools-trigger">{{activity.name}}</a> 
+
+<div class="tools">
+	<button class="btn btn-mini" ng-click="addChild(activity)">Add child</button>
+	<button class="btn btn-danger btn-mini" ng-click="removeChildren(activity)" ng-show="activity.children.length > 0">Kill all children</button>
+</div>
+
+<ul>
+    <li ng-repeat="activity in activity.children" ng-include="'partials/tree-item.html'" ng-class="{minimized:child.minimized}"></li>
+</ul>
+
+
+<script>
+        // $('.tools-trigger').popover({ 
+        //     html : true,
+        //     content: function() {
+        //     	return $('.tools').html();
+        //     }
+        // });
+</script>

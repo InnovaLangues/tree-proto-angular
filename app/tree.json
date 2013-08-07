@@ -1,0 +1,23 @@
+{
+    "path" : {
+        "name" : "My Path Name",
+        "activities" : [
+            {
+                "activite": 0,
+                "parentNodeId": null,
+                "className": "node",
+                "nodeType": "seq",
+                "name": "Etape",
+                "childIndex": 0,
+                "expanded": true,
+                "rootNodeId": 0,
+                "nodeDepth": 0,
+                "selected": false,
+                "data": null,
+                "children": []
+            }
+        ],
+        "history": null
+    }
+}
+

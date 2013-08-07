@@ -1,0 +1,30 @@
+<h1>Démo arbre</h1>
+<input type="button" class="btn" value="init" ng-click ="init()" >
+<!--<input type="button" class="btn" value="redraw" onclick ="vnode.draw()" >-->
+<input type="button" class="btn" value="undo" ng-click="undo(path.history)" >
+<input type="button" class="btn" value="redo" ng-click ="redo()" >
+<input type="button" class="btn" value="test" ng-click ="test()" >
+<div class="row">
+    <div class="span4">
+        <div class="well" id="zone">
+            <h4>{{ path.name }}</h4>
+            <ul>
+                <li ng-repeat="activity in path.activities" ng-include="'partials/tree-item.html'"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="span4">
+        <div class="well" id="situation"></div>
+    </div>
+    <div class="span4">
+        <div class="span4" id="json">
+
+        </div>
+    </div>
+</div>
+<div >
+    <div class="well">
+
+    </div>
+    <pre id="myJson">{{ path | json}}</pre>
+</div>

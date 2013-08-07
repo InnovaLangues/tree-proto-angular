@@ -1,0 +1,101 @@
+[
+  {
+    "activite": 0,
+    "parentNodeId": null,
+    "className": "node",
+    "nodeType": "seq",
+    "name": "Etape",
+    "childIndex": 0,
+    "expanded": true,
+    "rootNodeId": 0,
+    "nodeDepth": 0,
+    "selected": false,
+    "data": null,
+    "children": [
+      {
+        "activite": 1,
+        "parentNodeId": 0,
+        "className": "node",
+        "nodeType": "seq",
+        "name": "noeud1",
+        "childIndex": 0,
+        "expanded": true,
+        "rootNodeId": 0,
+        "nodeDepth": 1,
+        "selected": false,
+        "data": {
+          "ressources": [
+            {
+              "resourceIn": [
+                {
+                  "abstractType": "video"
+                },
+                {
+                  "resourceURL": "http://www.youtube.com/watch?feature=player_detailpage&v=pf1FpK5eQFY"
+                }
+              ]
+            }
+          ]
+        },
+        "children": []
+      },
+      {
+        "activite": 2,
+        "parentNodeId": 0,
+        "className": "node",
+        "nodeType": "seq",
+        "name": "noeud2",
+        "childIndex": 1,
+        "expanded": true,
+        "rootNodeId": 0,
+        "nodeDepth": 1,
+        "selected": false,
+        "data": null,
+        "children": [
+          {
+            "activite": 3,
+            "parentNodeId": 2,
+            "className": "node",
+            "nodeType": "seq",
+            "name": "noeud21",
+            "childIndex": 0,
+            "expanded": true,
+            "rootNodeId": 0,
+            "nodeDepth": 2,
+            "selected": false,
+            "data": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "activite": 4,
+        "parentNodeId": 0,
+        "className": "node",
+        "nodeType": "seq",
+        "name": "noeud4",
+        "childIndex": 2,
+        "expanded": true,
+        "rootNodeId": 0,
+        "nodeDepth": 1,
+        "selected": false,
+        "data": null,
+        "children": []
+      },
+      {
+        "activite": 5,
+        "parentNodeId": 0,
+        "className": "node",
+        "nodeType": "seq",
+        "name": "noeud5",
+        "childIndex": 3,
+        "expanded": true,
+        "rootNodeId": 0,
+        "nodeDepth": 1,
+        "selected": false,
+        "data": null,
+        "children": []
+      }
+    ]
+  }
+]
