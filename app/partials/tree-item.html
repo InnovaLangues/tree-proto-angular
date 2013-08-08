@@ -8,42 +8,42 @@
     </a>
     <input
         type="text"
-        value="{{activity.name}}"
-        class="activity-name"
-        title="activity.name"
-        ng-model="activity.name"
+        value="{{step.name}}"
+        class="step-name"
+        title="step.name"
+        ng-model="step.name"
         ng-blur="rename()" />
-        <button class="btn btn-primary" ng-click="addChild(activity)">
+        <button class="btn btn-primary" ng-click="addChild(step)">
             <i class="icon-plus"></i>
         </button>
-        <button class="btn btn-primary" ng-click="copy(activity)">
+        <button class="btn btn-primary" ng-click="copy(step)">
             Copy
         </button>
-        <button class="btn btn-primary" ng-click="paste(activity)">
+        <button class="btn btn-primary" ng-click="paste(step)">
             Paste
         </button>
-        <button class="btn btn-danger" ng-click="remove(activity)">
+        <button class="btn btn-danger" ng-click="remove(step)">
             <i class="icon-trash"></i>
         </button>
-        <button class="btn btn-danger" ng-click="removeChildren(activity)" ng-show="activity.children.length > 0">
+        <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
             <i class="icon-tasks"></i>
         </button>
-        <button class="btn btn-danger" ng-click="view(activity)">
+        <button class="btn btn-danger" ng-click="view(step)">
             Espace d'interaction
         </button>
-        <button class="btn" ng-click="saveTemplate(activity)">
+        <button class="btn" ng-click="saveTemplate(step)">
             Save as telmplate
         </button>
 </form>
 
 
 <!-- <div class="tools"
-     ng-include="'partials/activity-tools.html'"></div> -->
+     ng-include="'partials/step-tools.html'"></div> -->
 
 
-<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="activity.children">
+<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children">
     <li style="position:relative;"
-        ng-repeat="activity in activity.children"
+        ng-repeat="step in step.children"
         ng-include="'partials/tree-item.html'"
         >
     </li>
