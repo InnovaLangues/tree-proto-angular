@@ -13,13 +13,13 @@
         title="step.name"
         ng-model="step.name"
         ng-blur="rename()" />
-        <button class="btn btn-primary" ng-click="addChild(step)">
+        <button class="btn" ng-click="addChild(step)">
             <i class="icon-plus"></i>
         </button>
-        <button class="btn btn-primary" ng-click="copy(step)">
+        <button class="btn" ng-click="copy(step)">
             Copy
         </button>
-        <button class="btn btn-primary" ng-click="paste(step)">
+        <button class="btn" ng-click="paste(step)">
             Paste
         </button>
         <button class="btn btn-danger" ng-click="remove(step)">
@@ -28,11 +28,11 @@
         <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
             <i class="icon-tasks"></i>
         </button>
-        <button class="btn btn-danger" ng-click="view(step)">
+        <button class="btn btn-primary" ng-click="view(step)">
             Espace d'interaction
         </button>
         <button class="btn" ng-click="saveTemplate(step)">
-            Save as telmplate
+            <i class="icon-heart"></i>
         </button>
 </form>
 
