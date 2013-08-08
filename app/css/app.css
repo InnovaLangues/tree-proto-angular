@@ -45,3 +45,12 @@ li {
   position:relative;
   overflow: hidden;
 }
+
+ul {
+  min-height: : 5px;
+}
+
+.placeholder {
+  background: blue;
+
+}
