@@ -41,3 +41,9 @@ li {
 .minimized > ul {   border: 0 none transparent; }
 .toggle { border: 0 none transparent; background:transparent; width:2em; color:#aaa; }
 button { cursor: pointer }
+
+
+#zone li{
+  position:relative;
+  border: 1px solid red;
+}
