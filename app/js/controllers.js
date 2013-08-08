@@ -2,10 +2,11 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', ['ui.bootstrap']).
-    controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
+angular.module('myApp.controllers', ['ui.bootstrap'])
+    .controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
 
         $scope.isCollapsed = false;
+        $scope.clipboard = null;
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
@@ -96,6 +97,20 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
         $scope.removeChildren = function(activity) {
             activity.children = [];
 
+            updateDB($scope.path);
+        };
+
+        $scope.copy = function(activity) {
+            $scope.clipboard = activity;
+        };
+
+        $scope.paste = function(activity) {
+            // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
+            var activityCopy = jQuery.extend(true, {}, $scope.clipboard);
+
+            activityCopy.name = activityCopy.name + '_copy';
+
+            activity.children.push(activityCopy);
             updateDB($scope.path);
         };
 

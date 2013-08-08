@@ -43,5 +43,5 @@ li {
 
 #zone li{
   position:relative;
-  overflow: hidden;
+  overflow: visible;
 }

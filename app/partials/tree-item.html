@@ -16,11 +16,23 @@
         <button class="btn btn-primary" ng-click="addChild(activity)">
             <i class="icon-plus"></i>
         </button>
+        <button class="btn btn-primary" ng-click="copy(activity)">
+            Copy
+        </button>
+        <button class="btn btn-primary" ng-click="paste(activity)">
+            Paste
+        </button>
         <button class="btn btn-danger" ng-click="remove(activity)">
             <i class="icon-trash"></i>
         </button>
         <button class="btn btn-danger" ng-click="removeChildren(activity)" ng-show="activity.children.length > 0">
             <i class="icon-tasks"></i>
+        </button>
+        <button class="btn btn-danger" ng-click="view(activity)">
+            Espace d'interaction
+        </button>
+        <button class="btn" ng-click="saveTemplate(activity)">
+            Save as telmplate
         </button>
 </form>
 

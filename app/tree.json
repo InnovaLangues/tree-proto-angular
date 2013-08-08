@@ -1,23 +1,36 @@
-{
-    "path" : {
-        "name" : "My Path Name",
-        "activities" : [
-            {
-                "activite": 0,
-                "parentNodeId": null,
-                "className": "node",
-                "nodeType": "seq",
-                "name": "Etape",
-                "childIndex": 0,
-                "expanded": true,
-                "rootNodeId": 0,
-                "nodeDepth": 0,
-                "selected": false,
-                "data": null,
-                "children": []
-            }
-        ],
-        "history": null
-    }
-}
+[
+    {
+        "path" : {
+            "name" : "My Path Name",
+            "steps" : [
+                {
+                    "id": 0,
+                    "name": "Etape",
+                    "parentId": null,
+                    "type": "seq",
+                    "expanded": true,
+                    "dataType" : "activity",
+                    "dataId": 123,
+                    "children": []
+                }
+            ],
+            "history": null
+        }
+    },
+    {
+        "activity" : {
+            "id" : 123,
+            "name" : "My Path Name",
+            "resourceIn" : [
+                {
+                    "id" : 321,
+                    "name" : "toto",
+                    "isInstanciated" : false,
+                    "uri" : "www.google.com"
+                }
+            ],
 
+            "history": null
+        }
+    }
+]
