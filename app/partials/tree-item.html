@@ -1,24 +1,38 @@
-<button class="toggle"
-        ng-click="isCollapsed = !isCollapsed"
-        ng-switch on="isCollapsed">
-    <span ng-switch-when="true">&#x25B6;</span>
-    <span ng-switch-default>&#x25BC;</span>
-</button>
+<form class="form-inline">
+    <i class="icon-move"></i>
+    <a class="btn"
+            ng-click="isCollapsed = !isCollapsed"
+            ng-switch on="isCollapsed">
+        <span ng-switch-when="true"><i class="icon-plus"></i></span>
+        <span ng-switch-default><i class="icon-minus"></i></span>
+    </a>
+    <input
+        type="text"
+        value="{{activity.name}}"
+        class="activity-name"
+        title="activity.name"
+        ng-model="activity.name"
+        ng-blur="rename()" />
+        <button class="btn btn-primary" ng-click="addChild(activity)">
+            <i class="icon-plus"></i>
+        </button>
+        <button class="btn btn-danger" ng-click="remove(activity)">
+            <i class="icon-trash"></i>
+        </button>
+        <button class="btn btn-danger" ng-click="removeChildren(activity)" ng-show="activity.children.length > 0">
+            <i class="icon-tasks"></i>
+        </button>
+</form>
 
-<input type="text" value="{{activity.name}}"
-    title="activity.name"
-    ng-model="activity.name"
-    ng-blur="rename()"
-    tooltip-html-unsafe='{{htmlTooltip}}'
-    tooltip-trigger="focus"
-    tooltip-placement="right" />
 
 <!-- <div class="tools"
      ng-include="'partials/activity-tools.html'"></div> -->
 
-<div class="popover fade right in" style="left:220px; top:15px; display: block; min-width:200px;"><div class="arrow"></div><h3 class="popover-title" style="display: none;"></h3><div class="popover-content" ng-include="'partials/activity-tools.html'"></div></div>
+
 <ul collapse="isCollapsed" ui-sortable="{update: update, connectWith:'.ui-sortable'}" ng-model="activity.children">
-    <li ng-repeat="activity in activity.children"
-        ng-include="'partials/tree-item.html'">
+    <li style="position:relative;"
+        ng-repeat="activity in activity.children"
+        ng-include="'partials/tree-item.html'"
+        >
     </li>
 </ul>
