@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ui.bootstrap']).
-    controller('TreeContoller', ['$scope', '$http', function($scope, $http) {
+    controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
 
         $scope.isCollapsed = false;
     $scope.update = function() {
@@ -16,6 +16,7 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
       return console.log(["Updated", $scope.items]);
     };
 
+        $scope.path = pathFactory.getPath();
 
         $scope.init = function() {
             $http.get('../api/index.php/pathversions/init')
@@ -33,15 +34,15 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
                     );
                 }
             );
-        };
 
-        $scope.init();
+        };
 
         $scope.undo = function(id) {
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        $scope.path = data;
+                        pathFactory.setPath(data);
+                        $scope.path = pathFactory.getPath();
                     } else {
                         $scope.undoDisabled = true;
                     }
@@ -55,7 +56,8 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
             $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        $scope.path = data;
+                        pathFactory.setPath(data);
+                        $scope.path = pathFactory.getPath();
                     } else {
                         $scope.redoDisabled = true;
                     }
@@ -114,7 +116,8 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
             $http
                 .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
-                    $scope.path = path;
+                    pathFactory.setPath(path);
+                    $scope.path = pathFactory.getPath();
                     $scope.undoDisabled = false;
                     $scope.redoDisabled = true;
                 });

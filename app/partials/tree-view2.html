@@ -1,0 +1,29 @@
+<h1>Démo arbre2</h1>
+<input type="button" class="btn" value="init" ng-click="init()">
+<input type="button" class="btn" value="undo" ng-click="undo(path.history)" ng-disabled="undoDisabled">
+<input type="button" class="btn" value="redo" ng-click="redo(path.history)" ng-disabled="redoDisabled">
+<hr>
+<div class="row">
+    <div class="span4">
+        <div class="well" id="zone">
+            <h4>{{ path.name }}</h4>
+            <ul>
+                <li ng-repeat="activity in path.activities" ng-include="'partials/tree-item.html'"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="span4">
+        <div class="well" id="situation"></div>
+    </div>
+    <div class="span4">
+        <div class="span4" id="json">
+
+        </div>
+    </div>
+</div>
+<div >
+    <div class="well">
+
+    </div>
+    <pre id="myJson">{{ path | json}}</pre>
+</div>
