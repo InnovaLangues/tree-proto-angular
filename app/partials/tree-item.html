@@ -13,10 +13,11 @@
     tooltip-trigger="focus"
     tooltip-placement="right" />
 
-<div class="tools"
-     ng-include="'partials/activity-tools.html'"></div>
+<!-- <div class="tools"
+     ng-include="'partials/activity-tools.html'"></div> -->
 
-<ul collapse="isCollapsed">
+<div class="popover fade right in" style="left:220px; top:15px; display: block; min-width:200px;"><div class="arrow"></div><h3 class="popover-title" style="display: none;"></h3><div class="popover-content" ng-include="'partials/activity-tools.html'"></div></div>
+<ul collapse="isCollapsed" ui-sortable="{update: update, connectWith:'.ui-sortable'}" ng-model="activity.children">
     <li ng-repeat="activity in activity.children"
         ng-include="'partials/tree-item.html'">
     </li>

@@ -6,15 +6,16 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
     controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
 
         $scope.isCollapsed = false;
-    $scope.update = function() {
-      var e, i, _i, _len, _ref;
-      _ref = $scope.items;
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        e = _ref[i];
-        e.pos = i;
-      }
-      return console.log(["Updated", $scope.items]);
-    };
+
+        $scope.update = function() {
+          var e, i, _i, _len, _ref;
+          _ref = $scope.path;
+          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            e = _ref[i];
+            e.pos = i;
+          }
+          return console.log(["Updated", $scope.path]);
+        };
 
         $scope.path = pathFactory.getPath();
 
