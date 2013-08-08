@@ -17,6 +17,13 @@ angular.module('myApp.controllers', ['ui.bootstrap']).
           return console.log(["Updated", $scope.path]);
         };
 
+        $scope.sortableOptions = {
+            update: $scope.update,
+            axis: 'y',
+            connectWith: '.ui-sortable'
+        };
+
+
         $scope.path = pathFactory.getPath();
 
         $scope.init = function() {
