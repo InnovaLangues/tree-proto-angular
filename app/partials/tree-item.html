@@ -41,7 +41,7 @@
      ng-include="'partials/activity-tools.html'"></div> -->
 
 
-<ul collapse="isCollapsed" ui-sortable="{update: update, connectWith:'.ui-sortable'}" ng-model="activity.children">
+<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="activity.children">
     <li style="position:relative;"
         ng-repeat="activity in activity.children"
         ng-include="'partials/tree-item.html'"

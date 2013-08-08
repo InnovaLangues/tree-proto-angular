@@ -43,5 +43,14 @@ li {
 
 #zone li{
   position:relative;
-  overflow: visible;
+  overflow: hidden;
+}
+
+ul {
+  min-height: : 5px;
+}
+
+.placeholder {
+  background: blue;
+
 }
