@@ -11,8 +11,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.history = null;
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
-        $scope.path = null;
-        $scope.json = null;
+        $scope.path = pathFactory.getPath();
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
@@ -44,38 +43,40 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.undo = function(id) {
+            $scope.loader = 'Loading...';
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        pathFactory.setPath(data.path);
+                        pathFactory.setPath(data);
                         $scope.path = pathFactory.getPath();
-                        $scope.json = data;
                     } else {
                         $scope.undoDisabled = true;
                     }
 
                     $scope.redoDisabled = false;
+                    $scope.loader = null; //TODO boolean
                 }
             );
         };
 
         $scope.redo = function(id) {
+            $scope.loader = 'Loading...';
             $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        pathFactory.setPath(data.path);
+                        pathFactory.setPath(data);
                         $scope.path = pathFactory.getPath();
-                        $scope.json = data;
                     } else {
                         $scope.redoDisabled = true;
                     }
                     $scope.undoDisabled = false;
+                    $scope.loader = null; //TODO boolean
                 }
             );
         };
 
         $scope.rename = function() {
-            updateDB($scope.json);
+            updateDB($scope.path);
         };
 
         $scope.remove = function(step) {
@@ -97,13 +98,13 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             walk($scope.path.steps[0]);
 
-            updateDB($scope.json);
+            updateDB($scope.path);
         };
 
         $scope.removeChildren = function(activity) {
             activity.children = [];
 
-            updateDB($scope.json);
+            updateDB($scope.path);
         };
 
         $scope.copy = function(activity) {
@@ -118,7 +119,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             activityCopy.name = activityCopy.name + '_copy';
 
             activity.children.push(activityCopy);
-            updateDB($scope.json);
+            updateDB($scope.path);
         };
 
         $scope.addChild = function(activity) {
@@ -139,7 +140,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             );
 
-            updateDB($scope.json);
+            updateDB($scope.path);
         };
 
         $scope.saveTemplate = function(activity) {
@@ -147,14 +148,13 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // $http ... etc
         };
 
-        var updateDB = function(json) {
+        var updateDB = function(path) {
             $http
-                .post('../api/index.php/pathversions', json) //TODO prefix path comme dans la video d'angular
+                .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
                 .success(
                     function(data) {
-                        pathFactory.setPath(data.path);
+                        pathFactory.setPath(data);
                         $scope.path = pathFactory.getPath();
-                        $scope.json = data;
                         $scope.undoDisabled = false;
                         $scope.redoDisabled = true;
                         $scope.loader = null; //TODO boolean

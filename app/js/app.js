@@ -9,7 +9,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui'])
     $routeProvider.otherwise({redirectTo: '/view'});
   }])
   .factory('pathFactory', function() {
-    var path = {};
+    var path = null;
 
     return {
             setPath:function (data) {

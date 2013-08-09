@@ -1,8 +1,8 @@
 <div id="page-loader">{{ loader }}</div>
 <h1>Démo arbre</h1>
 <input type="button" class="btn btn-warning" value="init" ng-click="init()">
-<input type="button" class="btn" value="undo" ng-click="undo(json.history)" ng-disabled="undoDisabled">
-<input type="button" class="btn" value="redo" ng-click="redo(json.history)" ng-disabled="redoDisabled">
+<input type="button" class="btn" value="undo" ng-click="undo(path.history)" ng-disabled="undoDisabled">
+<input type="button" class="btn" value="redo" ng-click="redo(path.history)" ng-disabled="redoDisabled">
 <input type="button" class="btn btn-primary" value="save" ng-click="save(path)">
 <input type="button" class="btn btn-primary" value="deploy" ng-click="deploy(path)">
 <hr>
@@ -19,7 +19,6 @@
 <div >
     <h4>Path</h4>
     <pre id="myPath">{{ path | json}}</pre>
-    <pre id="myJson">{{ json | json}}</pre>
 </div>
 <div >
     <h4>Clipboard</h4>
