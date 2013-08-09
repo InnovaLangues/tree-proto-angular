@@ -9,13 +9,15 @@ $db = new PDO('mysql:host=localhost;dbname=protojpp', $user, $pass);
 
 $app->post('/pathversions', function () use($app, $db) {
 
+    $history = null;
+
     $request = $app->request();
 
     $body = $request->getBody();
 
-    $path = json_decode($body);
+    $body = json_decode($body);
 
-    $history = $path->history;
+    $history = $body->workspace->history;
 
     // Delete all future versions
     if ($history) {
@@ -32,13 +34,13 @@ $app->post('/pathversions', function () use($app, $db) {
 
     $sql = "INSERT INTO pathversions (path, user, edit_date) VALUES (:path, :user, :edit_date)";
 
-    unset($path->history);
+    unset($body->workspace->history);
 
     try {
         $user = "Donovan";
         $date = "";
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("path", json_encode($path));
+        $stmt->bindParam("path", json_encode($body));
         $stmt->bindParam("user", $user);
         $stmt->bindParam("edit_date", $date);
         $stmt->execute();
@@ -58,7 +60,7 @@ $app->post('/pathversions', function () use($app, $db) {
 
             $history = $result->id;
 
-            $json->history = $history;
+            $json->workspace->history = $history;
 
             echo json_encode($json);
         }
@@ -83,9 +85,10 @@ $app->get('/pathversions/undo/:id', function ($id) use($app, $db) {
 
         $result = $stmt->fetchObject();
 
+
         if ($result) {
             $path = json_decode($result->path);
-            $path->history = $result->id;
+            $path->workspace->history = $result->id;
             echo json_encode($path);
         } else {
             echo "end";
@@ -111,7 +114,7 @@ $app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
 
         if ($result) {
             $path = json_decode($result->path);
-            $path->history = $result->id;
+            $path->workspace->history = $result->id;
             echo json_encode($path);
         } else {
             echo "end";
@@ -122,7 +125,7 @@ $app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
     }
 });
 
-$app->get('/pathtemplates/init', function () use($app, $db) {
+$app->get('/pathversions/init', function () use($app, $db) {
 
     // TODO REMOVE ME
 

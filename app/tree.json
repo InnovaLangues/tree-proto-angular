@@ -1,36 +1,37 @@
 {
-    "path" : {
-        "name"  : "My Path Name",
-        "steps" : [
+    "workspace" : {
+        "path" : {
+            "name"  : "My Path Name",
+            "steps" : [
+                {
+                    "id"         : null,
+                    "name"       : "Step",
+                    "parentId"   : null,
+                    "type"       : "seq",
+                    "expanded"   : true,
+                    "data"       : "activity",
+                    "dataId"     : 123,
+                    "templateId" : null,
+                    "children"   : []
+                }
+            ]
+        },
+        "actvities" : [
             {
-                "id"         : 0,
-                "name"       : "Etape",
-                "parentId"   : null,
-                "type"       : "seq",
-                "expanded"   : true,
-                "dataType"   : "activity",
-                "dataId"     : 123,
-                "children"   : [],
-                "templateId" : null
-            }
-        ]
-    },
+                "123" : {
+                    "name"       : "My Activity Name",
+                    "resourceIn" : [
+                        {
+                            "id"             : 321,
+                            "name"           : "toto",
+                            "isInstanciated" : false,
+                            "uri"            : "www.google.com"
+                        }
+                    ]
 
-    "actvities" : [
-        {
-            "123" : {
-                "name"       : "My Path Name",
-                "resourceIn" : [
-                    {
-                        "id"             : 321,
-                        "name"           : "toto",
-                        "isInstanciated" : false,
-                        "uri"            : "www.google.com"
-                    }
-                ]
-
+                }
             }
-        }
-    ],
-    "history": null
+        ],
+        "history": null
+    }
 }

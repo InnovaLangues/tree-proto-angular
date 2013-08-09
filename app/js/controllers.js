@@ -3,11 +3,14 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ui.bootstrap'])
-    .controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
+    .controller('TreeContoller', ['$scope', '$http', 'workspaceFactory', function($scope, $http, workspaceFactory) {
 
         $scope.loader = null;
         $scope.isCollapsed = false;
         $scope.clipboard = null;
+        $scope.history = null;
+        $scope.redoDisabled = true;
+        $scope.undoDisabled = true;
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
@@ -16,7 +19,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             e = _ref[i];
             e.pos = i;
           }
-          return console.log(["Updated", $scope.path]);
+          return console.log(['Updated', $scope.path]);
         };
 
         $scope.sortableOptions = {
@@ -25,21 +28,13 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             connectWith: '.ui-sortable'
         };
 
-
-        $scope.path = pathFactory.getPath();
-
         $scope.init = function() {
             $http.get('../api/index.php/pathversions/init')
                 .success(function() {
                     $http.get('tree.json')
-                        .success(function(json) {
-                            $scope.history = null;
-                            $scope.path = json.path;
-
-                            updateDB($scope.path);
-
-                            $scope.redoDisabled = true;
-                            $scope.undoDisabled = true;
+                        .success(function(data) {
+                            $scope.json = data;
+                            updateDB(data);
                         }
                     );
                 }
@@ -51,8 +46,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        pathFactory.setPath(data);
-                        $scope.path = pathFactory.getPath();
+                        workspaceFactory.setWorkspace(data);
+                        $scope.json = workspaceFactory.getWorkspace();
                     } else {
                         $scope.undoDisabled = true;
                     }
@@ -66,8 +61,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        pathFactory.setPath(data);
-                        $scope.path = pathFactory.getPath();
+                        workspaceFactory.setWorkspace(data);
+                        $scope.json = workspaceFactory.getWorkspace();
                     } else {
                         $scope.redoDisabled = true;
                     }
@@ -77,7 +72,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.rename = function() {
-            updateDB($scope.path);
+            updateDB($scope.json);
         };
 
         $scope.remove = function(step) {
@@ -97,15 +92,15 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             }
 
-            walk($scope.path.steps[0]);
+            walk($scope.json.workspace.path.steps[0]);
 
-            updateDB($scope.path);
+            updateDB($scope.json);
         };
 
         $scope.removeChildren = function(activity) {
             activity.children = [];
 
-            updateDB($scope.path);
+            updateDB($scope.json);
         };
 
         $scope.copy = function(activity) {
@@ -120,7 +115,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             activityCopy.name = activityCopy.name + '_copy';
 
             activity.children.push(activityCopy);
-            updateDB($scope.path);
+            updateDB($scope.json);
         };
 
         $scope.addChild = function(activity) {
@@ -129,12 +124,19 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             activity.children.push(
                 {
-                    name: newName,
-                    children: []
+                    id         : null,
+                    name       : 'Step',
+                    parentId   : null,
+                    type       : 'seq',
+                    expanded   : true,
+                    dataType   : null,
+                    dataId     : null,
+                    templateId : null,
+                    children   : []
                 }
             );
 
-            updateDB($scope.path);
+            updateDB($scope.json);
         };
 
         $scope.saveTemplate = function(activity) {
@@ -142,17 +144,19 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // $http ... etc
         };
 
-        var updateDB = function(path) {
-
+        var updateDB = function(workspace) {
             $http
-                .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
-                .success(function(path) {
-                    pathFactory.setPath(path);
-                    $scope.path = pathFactory.getPath();
-                    $scope.undoDisabled = false;
-                    $scope.redoDisabled = true;
-                    $scope.loader = null; //TODO boolean
-                });
+                .post('../api/index.php/pathversions', workspace) //TODO prefix path comme dans la video d'angular
+                .success(
+                    function(data) {
+                        console.log(data);
+                        workspaceFactory.setWorkspace(data);
+                        $scope.json = workspaceFactory.getWorkspace();
+                        $scope.undoDisabled = false;
+                        $scope.redoDisabled = true;
+                        $scope.loader = null; //TODO boolean
+                    }
+                );
         };
 
     }]

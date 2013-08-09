@@ -1,24 +1,27 @@
 <div id="page-loader">{{ loader }}</div>
 <h1>Démo arbre</h1>
 <input type="button" class="btn btn-warning" value="init" ng-click="init()">
-<input type="button" class="btn" value="undo" ng-click="undo(path.history)" ng-disabled="undoDisabled">
-<input type="button" class="btn" value="redo" ng-click="redo(path.history)" ng-disabled="redoDisabled">
-<input type="button" class="btn btn-primary" value="save" ng-click="save(path.history)">
-<input type="button" class="btn btn-primary" value="deploy" ng-click="deploy(path.history)">
+<input type="button" class="btn" value="undo" ng-click="undo(json.workspace.history)" ng-disabled="undoDisabled">
+<input type="button" class="btn" value="redo" ng-click="redo(json.workspace.history)" ng-disabled="redoDisabled">
+<input type="button" class="btn btn-primary" value="save" ng-click="save(workspace)">
+<input type="button" class="btn btn-primary" value="deploy" ng-click="deploy(workspace)">
 <hr>
 <div class="row">
     <div class="span12">
         <div class="well" id="zone">
-            <h4>{{ path.name }}</h4>
+            <h4>{{ json.workspace.path.name }}</h4>
             <ul>
-                <li ng-repeat="step in path.steps" ng-include="'partials/tree-item.html'" ></li>
+                <li ng-repeat="step in json.workspace.path.steps" ng-include="'partials/tree-item.html'" ></li>
             </ul>
         </div>
     </div>
 </div>
 <div >
-    <pre id="myJson">{{ path | json}}</pre>
+    <h4>Workspace</h4>
+    <pre id="myJson">{{ json | json}}</pre>
+    <pre id="myWorkspace">{{ workspace | json}}</pre>
 </div>
 <div >
+    <h4>Clipboard</h4>
     <pre id="clipboard">{{ clipboard | json}}</pre>
 </div>
