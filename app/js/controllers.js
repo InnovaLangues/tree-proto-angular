@@ -79,15 +79,15 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             updateDB($scope.path);
         };
 
-        $scope.remove = function(activity) {
-            function walk(target) {
-                var children = target.children,
+        $scope.remove = function(step) {
+            function walk(path) {
+                var children = path.children,
                     i;
 
                 if (children) {
                     i = children.length;
                     while (i--) {
-                        if (children[i] === activity) {
+                        if (children[i] === step) {
                             return children.splice(i, 1);
                         } else {
                             walk(children[i]);
@@ -96,7 +96,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             }
 
-            walk($scope.path.activities[0]);
+            walk($scope.path.steps[0]);
 
             updateDB($scope.path);
         };
