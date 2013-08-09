@@ -1,7 +1,10 @@
+<div id="page-loader">{{ loader }}</div>
 <h1>Démo arbre</h1>
-<input type="button" class="btn" value="init" ng-click="init()">
+<input type="button" class="btn btn-warning" value="init" ng-click="init()">
 <input type="button" class="btn" value="undo" ng-click="undo(path.history)" ng-disabled="undoDisabled">
 <input type="button" class="btn" value="redo" ng-click="redo(path.history)" ng-disabled="redoDisabled">
+<input type="button" class="btn btn-primary" value="save" ng-click="save(path.history)">
+<input type="button" class="btn btn-primary" value="deploy" ng-click="deploy(path.history)">
 <hr>
 <div class="row">
     <div class="span12">

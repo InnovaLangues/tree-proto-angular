@@ -5,6 +5,7 @@
 angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
 
+        $scope.loader = null;
         $scope.isCollapsed = false;
         $scope.clipboard = null;
 
@@ -112,6 +113,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.paste = function(activity) {
+            $scope.loader = 'Loading...';
             // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
             var activityCopy = jQuery.extend(true, {}, $scope.clipboard);
 
@@ -136,6 +138,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         var updateDB = function(path) {
+
             $http
                 .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
                 .success(function(path) {
@@ -143,6 +146,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $scope.path = pathFactory.getPath();
                     $scope.undoDisabled = false;
                     $scope.redoDisabled = true;
+                    $scope.loader = null; //TODO boolean
                 });
         };
 

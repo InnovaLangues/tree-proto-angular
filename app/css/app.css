@@ -54,3 +54,18 @@ ul {
   background: blue;
 
 }
+
+
+
+
+
+
+
+#page-loader {
+  font-size: 140px;
+  position: absolute;
+  top: 500px;
+  left: 30%;
+  color: #f00;
+  z-index: 9999;
+}

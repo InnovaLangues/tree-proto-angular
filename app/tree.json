@@ -3,14 +3,15 @@
         "name"  : "My Path Name",
         "steps" : [
             {
-                "id"       : 0,
-                "name"     : "Etape",
-                "parentId" : null,
-                "type"     : "seq",
-                "expanded" : true,
-                "dataType" : "activity",
-                "dataId"   : 123,
-                "children" : []
+                "id"         : 0,
+                "name"       : "Etape",
+                "parentId"   : null,
+                "type"       : "seq",
+                "expanded"   : true,
+                "dataType"   : "activity",
+                "dataId"     : 123,
+                "children"   : [],
+                "templateId" : null
             }
         ],
         "history": null
