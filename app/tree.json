@@ -1,21 +1,19 @@
 {
-    "workspace" : {
-        "path" : {
-            "name"  : "My Path Name",
-            "steps" : [
-                {
-                    "id"         : null,
-                    "name"       : "Step",
-                    "parentId"   : null,
-                    "type"       : "seq",
-                    "expanded"   : true,
-                    "data"       : "activity",
-                    "dataId"     : 123,
-                    "templateId" : null,
-                    "children"   : []
-                }
-            ]
-        },
+    "path" : {
+        "name"  : "My Path Name",
+        "steps" : [
+            {
+                "id"         : null,
+                "name"       : "Step",
+                "parentId"   : null,
+                "type"       : "seq",
+                "expanded"   : true,
+                "data"       : "activity",
+                "dataId"     : 123,
+                "templateId" : null,
+                "children"   : []
+            }
+        ],
         "actvities" : [
             {
                 "123" : {
@@ -31,7 +29,6 @@
 
                 }
             }
-        ],
-        "history": null
+        ]
     }
 }

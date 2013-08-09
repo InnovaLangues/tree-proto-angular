@@ -8,15 +8,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui'])
     $routeProvider.when('/view2', {templateUrl: 'partials/tree-view2.html', controller: 'TreeContoller'});
     $routeProvider.otherwise({redirectTo: '/view'});
   }])
-  .factory('workspaceFactory', function() {
-    var workspace = {};
+  .factory('pathFactory', function() {
+    var path = {};
 
     return {
-            setWorkspace:function (data) {
-                workspace = data;
+            setPath:function (data) {
+                path = data;
             },
-            getWorkspace:function () {
-                return workspace;
+            getPath:function () {
+                return path;
             }
         };
   });

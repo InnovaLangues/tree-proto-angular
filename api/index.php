@@ -17,7 +17,9 @@ $app->post('/pathversions', function () use($app, $db) {
 
     $body = json_decode($body);
 
-    $history = $body->workspace->history;
+    if (isset($body->path->history)) {
+        $history = $body->path->history;
+    }
 
     // Delete all future versions
     if ($history) {
@@ -34,7 +36,7 @@ $app->post('/pathversions', function () use($app, $db) {
 
     $sql = "INSERT INTO pathversions (path, user, edit_date) VALUES (:path, :user, :edit_date)";
 
-    unset($body->workspace->history);
+    unset($body->history);
 
     try {
         $user = "Donovan";
@@ -56,13 +58,13 @@ $app->post('/pathversions', function () use($app, $db) {
 
 
         if ($result) {
-            $json = json_decode($result->path);
+            $path = json_decode($result->path);
 
             $history = $result->id;
 
-            $json->workspace->history = $history;
+            $path->history = $history;
 
-            echo json_encode($json);
+            echo json_encode($path);
         }
 
         $db = null;
@@ -85,10 +87,9 @@ $app->get('/pathversions/undo/:id', function ($id) use($app, $db) {
 
         $result = $stmt->fetchObject();
 
-
         if ($result) {
             $path = json_decode($result->path);
-            $path->workspace->history = $result->id;
+            $path->history = $result->id;
             echo json_encode($path);
         } else {
             echo "end";
@@ -114,7 +115,7 @@ $app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
 
         if ($result) {
             $path = json_decode($result->path);
-            $path->workspace->history = $result->id;
+            $path->history = $result->id;
             echo json_encode($path);
         } else {
             echo "end";

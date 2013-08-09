@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ui.bootstrap'])
-    .controller('TreeContoller', ['$scope', '$http', 'workspaceFactory', function($scope, $http, workspaceFactory) {
+    .controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
 
         $scope.loader = null;
         $scope.isCollapsed = false;
@@ -11,6 +11,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.history = null;
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
+        $scope.path = null;
+        $scope.json = null;
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
@@ -33,7 +35,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 .success(function() {
                     $http.get('tree.json')
                         .success(function(data) {
-                            $scope.json = data;
                             updateDB(data);
                         }
                     );
@@ -46,8 +47,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        workspaceFactory.setWorkspace(data);
-                        $scope.json = workspaceFactory.getWorkspace();
+                        pathFactory.setPath(data.path);
+                        $scope.path = pathFactory.getPath();
+                        $scope.json = data;
                     } else {
                         $scope.undoDisabled = true;
                     }
@@ -61,8 +63,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
-                        workspaceFactory.setWorkspace(data);
-                        $scope.json = workspaceFactory.getWorkspace();
+                        pathFactory.setPath(data.path);
+                        $scope.path = pathFactory.getPath();
+                        $scope.json = data;
                     } else {
                         $scope.redoDisabled = true;
                     }
@@ -92,7 +95,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             }
 
-            walk($scope.json.workspace.path.steps[0]);
+            walk($scope.path.steps[0]);
 
             updateDB($scope.json);
         };
@@ -144,14 +147,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // $http ... etc
         };
 
-        var updateDB = function(workspace) {
+        var updateDB = function(json) {
             $http
-                .post('../api/index.php/pathversions', workspace) //TODO prefix path comme dans la video d'angular
+                .post('../api/index.php/pathversions', json) //TODO prefix path comme dans la video d'angular
                 .success(
                     function(data) {
-                        console.log(data);
-                        workspaceFactory.setWorkspace(data);
-                        $scope.json = workspaceFactory.getWorkspace();
+                        pathFactory.setPath(data.path);
+                        $scope.path = pathFactory.getPath();
+                        $scope.json = data;
                         $scope.undoDisabled = false;
                         $scope.redoDisabled = true;
                         $scope.loader = null; //TODO boolean
