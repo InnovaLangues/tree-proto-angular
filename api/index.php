@@ -122,12 +122,24 @@ $app->get('/pathversions/redo/:id', function ($id) use($app, $db) {
     }
 });
 
-$app->get('/pathversions/init', function () use($app, $db) {
+$app->get('/pathtemplates/init', function () use($app, $db) {
 
     // TODO REMOVE ME
 
     $sql = "TRUNCATE TABLE pathversions";
 
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $db = null;
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+});
+
+// TODO
+$app->post('/pathtemplates', function () use($app, $db) {
+    $sql = ""; //Save json into new table (pathtemplates)
     try {
         $stmt = $db->prepare($sql);
         $stmt->execute();

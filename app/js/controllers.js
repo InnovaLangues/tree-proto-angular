@@ -137,6 +137,11 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             updateDB($scope.path);
         };
 
+        $scope.saveTemplate = function(activity) {
+            // TODO
+            // $http ... etc
+        };
+
         var updateDB = function(path) {
 
             $http
