@@ -19,7 +19,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
         $scope.path = pathFactory.getPath();
-        $scope.historyState = null;
+        $scope.historyState = -1;
         $scope.histArray = [];
 
         $scope.update = function() {
@@ -72,13 +72,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             //console.log("array: " + $scope.histArray[0]);
 
-            console.log("id: " + id);
-
-            $scope.historyState = id - 1;
-
-            console.log("historyState: " + $scope.historyState);
-
-
+            $scope.historyState = $scope.historyState -1;
             $scope.path = $scope.histArray[$scope.historyState];
 
             console.log("path: " + $scope.path);
@@ -205,34 +199,40 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // Clone
             var pathCopy = jQuery.extend(true, {}, path);
 
-            if( $scope.historyState === null) {
-                $scope.histArray.push(pathCopy);
-                $scope.historyState = 0;
+            // if( $scope.historyState === null) {
+            //     $scope.histArray.push(pathCopy);
+            //     $scope.historyState = 0;
 
-                console.log("HistoryState: " + $scope.historyState);
-                console.log("HistoryArray length:" + $scope.histArray.length);
-            } else if($scope.historyState === $scope.histArray.length - 1) {
-                //console.log("push");
-                $scope.histArray.push(pathCopy);
-                $scope.historyState = $scope.histArray.length - 1;
+            //     console.log("HistoryState: " + $scope.historyState);
+            //     console.log("HistoryArray length:" + $scope.histArray.length);
+            // } else if($scope.historyState === $scope.histArray.length - 1) {
+            //     //console.log("push");
+            //     $scope.histArray.push(pathCopy);
+            //     $scope.historyState = $scope.histArray.length - 1;
 
-                console.log("HistoryState: " + $scope.historyState);
-                console.log("HistoryArray length:" + $scope.histArray.length);
-            }
+            //     console.log("HistoryState: " + $scope.historyState);
+            //     console.log("HistoryArray length:" + $scope.histArray.length);
+            // }
 
-            else {
-                console.log("HistoryState: "+$scope.historyState);
-                console.log("HistoryArray length:"+$scope.histArray.length);
-                console.log("XXXXXXXXXX");
-                //$scope.histArray.splice($scope.historyState, $scope.histArray.length);
-            }
+            // else {
+            //     console.log("HistoryState: "+$scope.historyState);
+            //     console.log("HistoryArray length:"+$scope.histArray.length);
+            //     console.log("XXXXXXXXXX");
+            //     //$scope.histArray.splice($scope.historyState, $scope.histArray.length);
+            // }
 
 
-            //Get last item of the array
-            $scope.path = $scope.histArray.last();
+            // //Get last item of the array
+            // $scope.path = $scope.histArray.last();
 
             $scope.undoDisabled = false;
             $scope.redoDisabled = true;
+
+            $scope.histArray.push(pathCopy);
+            $scope.historyState = $scope.historyState +1;
+            var pathCopy = jQuery.extend(true, {}, $scope.histArray.last());
+            $scope.path = pathCopy;
+            console.log($scope.historyState);
         }
 
     }]
