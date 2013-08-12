@@ -143,9 +143,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             updateDB($scope.path);
         };
 
-        $scope.saveTemplate = function(activity) {
+        $scope.saveTemplate = function(path) {
             // TODO
             // $http ... etc
+            $http
+                .post('../api/index.php/pathtemplates', path)
+                .success ( function (data) {
+                    alert(data);
+                });
         };
 
         var updateDB = function(path) {
