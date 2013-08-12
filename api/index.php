@@ -143,10 +143,40 @@ $app->get('/pathversions/init', function () use($app, $db) {
 
 // TODO
 $app->post('/pathtemplates', function () use($app, $db) {
-    $sql = ""; //Save json into new table (pathtemplates)
+
+    $user="Donovan";
+
+    $request = $app->request();
+
+    $body = $request->getBody();
+
+    $body = json_decode($body);
+
+    // unset($body->history);
+    $sql = "INSERT INTO pathtemplates (path, user, edit_date) VALUES (:path, :user, :edit_date)"; //Save json into new table (pathtemplates)
     try {
+
         $stmt = $db->prepare($sql);
+        // $stmt->bindParam("path", json_encode($body));
+        $toto = "toto";
+        $stmt->bindParam("path", $toto);
+        $stmt->bindParam("user", $user);
+        $stmt->bindParam("edit_date", $date);
         $stmt->execute();
+        $lastId = $db->lastInsertId();
+        // echo $stmt->queryString;
+
+        $sql = "SELECT id, path FROM pathtemplates WHERE pathtemplates.id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("id", $lastId);
+        $stmt->execute();
+
+        $result = $stmt->fetchObject();
+
+        if ($result) {
+            echo "ok";
+        }
+
         $db = null;
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
