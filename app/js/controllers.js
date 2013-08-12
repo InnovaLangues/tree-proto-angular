@@ -5,6 +5,13 @@
 angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
 
+
+        if (!Array.prototype.last){
+            Array.prototype.last = function(){
+                return this[this.length - 1];
+            };
+        }
+
         $scope.loader = null;
         $scope.isCollapsed = false;
         $scope.clipboard = null;
@@ -12,7 +19,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
         $scope.path = pathFactory.getPath();
-
+        $scope.historyState = null;
         $scope.histArray = [];
 
         $scope.update = function() {
@@ -32,20 +39,23 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.init = function() {
+            $scope.histArray = [];
             $http.get('../api/index.php/pathversions/init')
                 .success(function() {
                     $http.get('tree.json')
                         .success(function(data) {
-                            updateDB(data);
+                            updateHistory(data);
                         }
                     );
                 }
             );
 
+
         };
 
         $scope.undo = function(id) {
-            $scope.loader = 'Loading...';
+
+            /*$scope.loader = 'Loading...';
             $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
                 .success(function(data) {
                     if(data != 'end') {
@@ -58,7 +68,23 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $scope.redoDisabled = false;
                     $scope.loader = null; //TODO boolean
                 }
-            );
+            );*/
+
+            //console.log("array: " + $scope.histArray[0]);
+
+            console.log("id: " + id);
+
+            $scope.historyState = id - 1;
+
+            console.log("historyState: " + $scope.historyState);
+
+
+            $scope.path = $scope.histArray[$scope.historyState];
+
+            console.log("path: " + $scope.path);
+
+
+            //alert(historyState);
         };
 
         $scope.redo = function(id) {
@@ -101,6 +127,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             walk($scope.path.steps[0]);
 
             updateDB($scope.path);
+
         };
 
         $scope.removeChildren = function(step) {
@@ -142,7 +169,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             );
 
-            updateDB($scope.path);
+            //updateDB($scope.path);
+            updateHistory($scope.path);
+            //$scope.histArray.push($scope.path);
         };
 
         $scope.saveTemplate = function(path) {
@@ -156,7 +185,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         var updateDB = function(path) {
-            $http
+            /*$http
                 .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
                 .success(
                     function(data) {
@@ -166,10 +195,45 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         $scope.redoDisabled = true;
                         $scope.loader = null; //TODO boolean
                     }
-                );
+                );*/
 
-            $scope.histArray.push('toto');
+                updateHistory(path);
+
         };
+
+        var updateHistory = function(path) {
+            // Clone
+            var pathCopy = jQuery.extend(true, {}, path);
+
+            if( $scope.historyState === null) {
+                $scope.histArray.push(pathCopy);
+                $scope.historyState = 0;
+
+                console.log("HistoryState: " + $scope.historyState);
+                console.log("HistoryArray length:" + $scope.histArray.length);
+            } else if($scope.historyState === $scope.histArray.length - 1) {
+                //console.log("push");
+                $scope.histArray.push(pathCopy);
+                $scope.historyState = $scope.histArray.length - 1;
+
+                console.log("HistoryState: " + $scope.historyState);
+                console.log("HistoryArray length:" + $scope.histArray.length);
+            }
+
+            else {
+                console.log("HistoryState: "+$scope.historyState);
+                console.log("HistoryArray length:"+$scope.histArray.length);
+                console.log("XXXXXXXXXX");
+                //$scope.histArray.splice($scope.historyState, $scope.histArray.length);
+            }
+
+
+            //Get last item of the array
+            $scope.path = $scope.histArray.last();
+
+            $scope.undoDisabled = false;
+            $scope.redoDisabled = true;
+        }
 
     }]
 );

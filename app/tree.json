@@ -12,21 +12,5 @@
             "templateId" : null,
             "children"   : []
         }
-    ],
-    "actvities" : [
-        {
-            "123" : {
-                "name"       : "My Activity Name",
-                "resourceIn" : [
-                    {
-                        "id"             : 321,
-                        "name"           : "toto",
-                        "isInstanciated" : false,
-                        "uri"            : "www.google.com"
-                    }
-                ]
-
-            }
-        }
     ]
 }
