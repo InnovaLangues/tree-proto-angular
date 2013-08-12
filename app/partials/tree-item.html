@@ -31,9 +31,19 @@
         <button class="btn btn-primary" ng-click="view(step)">
             Espace d'interaction
         </button>
-        <button class="btn" ng-click="saveTemplate(path)">
-            <i class="icon-heart"></i>
-        </button>
+        <span ng-switch="isTemplateSaved">
+            <span ng-switch-when="false">
+                <button class="btn" ng-click="saveTemplate(path)">
+                    <i class="icon-heart"></i>
+                </button>
+            </span>
+            <span ng-switch-when="true">
+               <button class="btn btn-success" ng-click="removeTemplate(path)">
+                    <i class="icon-heart icon-white"></i>
+                </button>
+            </span>
+
+        </span>
 </form>
 
 <ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children">
