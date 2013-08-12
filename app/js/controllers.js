@@ -53,52 +53,26 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
         };
 
-        $scope.undo = function(id) {
-
-            /*$scope.loader = 'Loading...';
-            $http.get('../api/index.php/pathversions/undo/' + id) //TODO prefix path comme dans la video d'angular
-                .success(function(data) {
-                    if(data != 'end') {
-                        pathFactory.setPath(data);
-                        $scope.path = pathFactory.getPath();
-                    } else {
-                        $scope.undoDisabled = true;
-                    }
-
-                    $scope.redoDisabled = false;
-                    $scope.loader = null; //TODO boolean
-                }
-            );*/
-
-            //console.log("array: " + $scope.histArray[0]);
-
+        $scope.undo = function() {
             $scope.historyState = $scope.historyState -1;
             $scope.path = $scope.histArray[$scope.historyState];
-
-            console.log("path: " + $scope.path);
-
-
-            //alert(historyState);
+            $scope.redoDisabled = false;
+            if ($scope.historyState == -1) {
+                $scope.undoDisabled = true;
+            }
         };
 
-        $scope.redo = function(id) {
-            $scope.loader = 'Loading...';
-            $http.get('../api/index.php/pathversions/redo/' + id) //TODO prefix path comme dans la video d'angular
-                .success(function(data) {
-                    if(data != 'end') {
-                        pathFactory.setPath(data);
-                        $scope.path = pathFactory.getPath();
-                    } else {
-                        $scope.redoDisabled = true;
-                    }
-                    $scope.undoDisabled = false;
-                    $scope.loader = null; //TODO boolean
-                }
-            );
+        $scope.redo = function() {
+            $scope.historyState = $scope.historyState + 1;
+            $scope.path = $scope.histArray[$scope.historyState];
+            $scope.undoDisabled = false;
+            if ($scope.historyState == $scope.histArray.length - 1) {
+                $scope.redoDisabled = true;
+            }
         };
 
         $scope.rename = function() {
-            updateDB($scope.path);
+            updateHistory($scope.path);
         };
 
         $scope.remove = function(step) {
@@ -120,14 +94,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             walk($scope.path.steps[0]);
 
-            updateDB($scope.path);
+            updateHistory($scope.path);
 
         };
 
         $scope.removeChildren = function(step) {
             step.children = [];
 
-            updateDB($scope.path);
+            updateHistory($scope.path);
         };
 
         $scope.copy = function(step) {
@@ -142,7 +116,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             stepCopy.name = stepCopy.name + '_copy';
 
             step.children.push(stepCopy);
-            updateDB($scope.path);
+            updateHistory($scope.path);
         };
 
         $scope.addChild = function(step) {
