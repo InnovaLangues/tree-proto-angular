@@ -13,6 +13,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.undoDisabled = true;
         $scope.path = pathFactory.getPath();
 
+        $scope.histArray = [];
+
         $scope.update = function() {
           var e, i, _i, _len, _ref;
           _ref = $scope.path;
@@ -101,35 +103,35 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             updateDB($scope.path);
         };
 
-        $scope.removeChildren = function(activity) {
-            activity.children = [];
+        $scope.removeChildren = function(step) {
+            step.children = [];
 
             updateDB($scope.path);
         };
 
-        $scope.copy = function(activity) {
-            $scope.clipboard = activity;
+        $scope.copy = function(step) {
+            $scope.clipboard = step;
         };
 
-        $scope.paste = function(activity) {
+        $scope.paste = function(step) {
             $scope.loader = 'Loading...';
             // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
-            var activityCopy = jQuery.extend(true, {}, $scope.clipboard);
+            var stepCopy = jQuery.extend(true, {}, $scope.clipboard);
 
-            activityCopy.name = activityCopy.name + '_copy';
+            stepCopy.name = stepCopy.name + '_copy';
 
-            activity.children.push(activityCopy);
+            step.children.push(stepCopy);
             updateDB($scope.path);
         };
 
-        $scope.addChild = function(activity) {
-            var post = activity.children.length + 1;
-            var newName = activity.name + '-' + post;
+        $scope.addChild = function(step) {
+            var post = step.children.length + 1;
+            var newName = step.name + '-' + post;
 
-            activity.children.push(
+            step.children.push(
                 {
                     id         : null,
-                    name       : 'Step',
+                    name       : newName,
                     parentId   : null,
                     type       : 'seq',
                     expanded   : true,
@@ -143,7 +145,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             updateDB($scope.path);
         };
 
-        $scope.saveTemplate = function(activity) {
+        $scope.saveTemplate = function(step) {
             // TODO
             // $http ... etc
         };
@@ -160,6 +162,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         $scope.loader = null; //TODO boolean
                     }
                 );
+
+            $scope.histArray.push('toto');
         };
 
     }]
