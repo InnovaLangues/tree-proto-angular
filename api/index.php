@@ -145,6 +145,7 @@ $app->get('/pathversions/init', function () use($app, $db) {
 $app->post('/pathtemplates', function () use($app, $db) {
 
     $user="Donovan";
+    $date = "";
 
     $request = $app->request();
 
@@ -152,19 +153,18 @@ $app->post('/pathtemplates', function () use($app, $db) {
 
     $body = json_decode($body);
 
-    // unset($body->history);
+    unset($body->history);
+
     $sql = "INSERT INTO pathtemplates (path, user, edit_date) VALUES (:path, :user, :edit_date)"; //Save json into new table (pathtemplates)
+
     try {
 
         $stmt = $db->prepare($sql);
-        // $stmt->bindParam("path", json_encode($body));
-        $toto = "toto";
-        $stmt->bindParam("path", $toto);
+        $stmt->bindParam("path", json_encode($body));
         $stmt->bindParam("user", $user);
         $stmt->bindParam("edit_date", $date);
         $stmt->execute();
         $lastId = $db->lastInsertId();
-        // echo $stmt->queryString;
 
         $sql = "SELECT id, path FROM pathtemplates WHERE pathtemplates.id = :id";
         $stmt = $db->prepare($sql);
