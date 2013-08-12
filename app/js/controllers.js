@@ -40,17 +40,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
         $scope.init = function() {
             $scope.histArray = [];
-            $http.get('../api/index.php/pathversions/init')
-                .success(function() {
-                    $http.get('tree.json')
-                        .success(function(data) {
-                            updateHistory(data);
-                        }
-                    );
+
+            $http.get('tree.json')
+                .success(function(data) {
+                    updateHistory(data);
                 }
             );
-
-
         };
 
         $scope.undo = function() {
@@ -95,7 +90,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             walk($scope.path.steps[0]);
 
             updateHistory($scope.path);
-
         };
 
         $scope.removeChildren = function(step) {
@@ -109,7 +103,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.paste = function(step) {
-            $scope.loader = 'Loading...';
             // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
             var stepCopy = jQuery.extend(true, {}, $scope.clipboard);
 
@@ -137,9 +130,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             );
 
-            //updateDB($scope.path);
             updateHistory($scope.path);
-            //$scope.histArray.push($scope.path);
         };
 
         $scope.saveTemplate = function(path) {
@@ -152,61 +143,22 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 });
         };
 
-        var updateDB = function(path) {
-            /*$http
-                .post('../api/index.php/pathversions', path) //TODO prefix path comme dans la video d'angular
-                .success(
-                    function(data) {
-                        pathFactory.setPath(data);
-                        $scope.path = pathFactory.getPath();
-                        $scope.undoDisabled = false;
-                        $scope.redoDisabled = true;
-                        $scope.loader = null; //TODO boolean
-                    }
-                );*/
-
-                updateHistory(path);
-
-        };
-
         var updateHistory = function(path) {
-            // Clone
+            //TODO:  CA NE MARCHE PAS!
+            if ($scope.historyState !== $scope.histArray.length - 1) {
+                $scope.histArray.splice($scope.historyState + 1, $scope.histArray.length - $scope.historyState);
+            }
+
             var pathCopy = jQuery.extend(true, {}, path);
+            $scope.histArray.push(pathCopy);
 
-            // if( $scope.historyState === null) {
-            //     $scope.histArray.push(pathCopy);
-            //     $scope.historyState = 0;
+            $scope.historyState = $scope.historyState + 1;
 
-            //     console.log("HistoryState: " + $scope.historyState);
-            //     console.log("HistoryArray length:" + $scope.histArray.length);
-            // } else if($scope.historyState === $scope.histArray.length - 1) {
-            //     //console.log("push");
-            //     $scope.histArray.push(pathCopy);
-            //     $scope.historyState = $scope.histArray.length - 1;
-
-            //     console.log("HistoryState: " + $scope.historyState);
-            //     console.log("HistoryArray length:" + $scope.histArray.length);
-            // }
-
-            // else {
-            //     console.log("HistoryState: "+$scope.historyState);
-            //     console.log("HistoryArray length:"+$scope.histArray.length);
-            //     console.log("XXXXXXXXXX");
-            //     //$scope.histArray.splice($scope.historyState, $scope.histArray.length);
-            // }
-
-
-            // //Get last item of the array
-            // $scope.path = $scope.histArray.last();
+            var pathCopy = jQuery.extend(true, {}, $scope.histArray.last());
+            $scope.path = pathCopy;
 
             $scope.undoDisabled = false;
             $scope.redoDisabled = true;
-
-            $scope.histArray.push(pathCopy);
-            $scope.historyState = $scope.historyState +1;
-            var pathCopy = jQuery.extend(true, {}, $scope.histArray.last());
-            $scope.path = pathCopy;
-            console.log($scope.historyState);
         }
 
     }]

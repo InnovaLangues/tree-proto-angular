@@ -8,9 +8,25 @@
             "type"       : "seq",
             "expanded"   : true,
             "data"       : "activity",
-            "dataId"     : 123,
+            "dataId"     : 1231,
             "templateId" : null,
             "children"   : []
+        }
+    ],
+    "actvities" : [
+        {
+            "123" : {
+                "name"       : "My Activity Name",
+                "resourceIn" : [
+                    {
+                        "id"             : 321,
+                        "name"           : "toto",
+                        "isInstanciated" : false,
+                        "uri"            : "www.google.com"
+                    }
+                ]
+
+            }
         }
     ]
 }
