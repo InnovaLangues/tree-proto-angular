@@ -31,7 +31,7 @@
     <button class="btn btn-primary" ng-click="openDialog(step)">
         <i class="icon-list-alt"></i>
     </button>
-    <span ng-switch="isTemplateSaved">
+    <span ng-switch="isTemplateSaved" ng-click="isTemplateSaved = !isTemplateSaved">
         <span ng-switch-when="false">
             <button class="btn" ng-click="saveTemplate(path)">
                 <i class="icon-heart"></i>
