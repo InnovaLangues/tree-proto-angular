@@ -7,17 +7,13 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$scope',
         '$http',
         function($scope, $http) {
-            //$scope.paths = [];
+            $scope.paths = null;
 
-            $scope.init = function() {
-                $http.get('../api/index.php/paths.json')
-                    .success(function(data) {
-                        $scope.paths = data;
-                    }
-                );
-            };
-
-            $scope.init();
+            $http.get('../api/index.php/paths.json')
+                .success(function(data) {
+                    $scope.paths = data;
+                }
+            );
 
             $scope.delete = function(id) {
                 $http.delete('../api/index.php/paths/' + id + '.json')
@@ -25,7 +21,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         alert('deleted: ' + data);
                     }
                 );
-            }
+            };
         }
     ])
     .controller('TreeContoller', [
