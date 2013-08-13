@@ -144,15 +144,15 @@ $app->get('/pathtemplates.json', function () use($app, $db)
     $sql = "SELECT * FROM pathtemplates";
     $stmt = $db->prepare($sql);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $results = $stmt->fetchAll(PDO::FETCH_CLASS);
 
-    $templates = array();
+    $paths = array();
 
-    foreach ($results as $value) {
-        $templates[] = $value->path;
+    foreach ($results as $result) {
+        $paths[$result->id] = json_decode($result->path);
     }
 
-    echo ($templates);
+    echo json_encode($paths);
 });
 
 // Add new Path Template
