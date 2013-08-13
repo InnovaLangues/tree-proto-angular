@@ -7,8 +7,7 @@ $user = "protojpp";
 $pass = "protojpp";
 $db = new PDO('mysql:host=localhost;dbname=protojpp', $user, $pass);
 
-// TODO
-$app->post('/path(/:id)', function ($id = null) use($app, $db) {
+$app->post('/paths.json', function () use($app, $db) {
 
     $user="Donovan";
     $date = "";
@@ -23,28 +22,12 @@ $app->post('/path(/:id)', function ($id = null) use($app, $db) {
 
     $sql = "INSERT INTO paths (path, user, edit_date) VALUES (:path, :user, :edit_date)";
 
-    if ($id) {
-        //TODO update
-        $sql = "UPDATE paths
-                SET
-                    path = :path,
-                    user = :user,
-                    edit_date = :edit_date
-                WHERE id = :id";
-    }
-
-
     try {
 
         $stmt = $db->prepare($sql);
         $stmt->bindParam("path", json_encode($body));
         $stmt->bindParam("user", $user);
         $stmt->bindParam("edit_date", $date);
-
-        if ($id) {
-            $stmt->bindParam("id", $id);
-        }
-
         $stmt->execute();
         $lastId = $db->lastInsertId();
 
@@ -65,22 +48,72 @@ $app->post('/path(/:id)', function ($id = null) use($app, $db) {
     }
 });
 
-$app->get('/pathtemplate', function () use($app, $db) {
+$app->put('/paths/:id.json', function ($id) use($app, $db) {
+
+    $user="Donovan";
+    $date = "";
+
+    $request = $app->request();
+
+    $body = $request->getBody();
+
+    $body = json_decode($body);
+
+    unset($body->history);
+
+    $sql = "UPDATE paths
+            SET
+                path = :path,
+                user = :user,
+                edit_date = :edit_date
+            WHERE id = :id";
+
+    try {
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("path", json_encode($body));
+        $stmt->bindParam("user", $user);
+        $stmt->bindParam("edit_date", $date);
+        $stmt->bindParam("id", $id);
+        $stmt->execute();
+        $lastId = $db->lastInsertId();
+
+        $sql = "SELECT id, path FROM paths WHERE paths.id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("id", $lastId);
+        $stmt->execute();
+
+        $result = $stmt->fetchObject();
+
+        if ($result) {
+            echo $lastId;
+        }
+
+        $db = null;
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+});
+
+$app->get('/pathtemplates.json', function () use($app, $db) {
     $sql = "SELECT * FROM pathtemplates";
     $stmt = $db->prepare($sql);
     $stmt->execute();
-    $results = $stmt->fetchAll();
+    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
     //TODO
-    foreach ($results as $result) {
-        $result = "toto";
+
+    $templates = array();
+
+    foreach ($results as $value) {
+        $templates[] = $value->path;
     }
 
-    echo json_encode($results);
+    echo ($templates);
 });
 
 
-$app->post('/pathtemplate', function () use($app, $db) {
+$app->post('/pathtemplates.json', function () use($app, $db) {
 
     $user="Donovan";
     $date = "";
@@ -121,7 +154,7 @@ $app->post('/pathtemplate', function () use($app, $db) {
     }
 });
 
-$app->post('/pathtemplate/remove', function () use($app, $db) {
+$app->post('/pathtemplates/remove.json', function () use($app, $db) {
 
     $user="Donovan";
     $date = "";

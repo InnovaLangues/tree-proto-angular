@@ -59,7 +59,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // TODO
             // $http ... etc
             $http
-                .get('../api/index.php/pathtemplate')
+                .get('../api/index.php/pathtemplates.json')
                 .success ( function (data) {
                     $scope.templates = data;
                 });
@@ -154,7 +154,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // TODO
             // $http ... etc
             $http
-                .post('../api/index.php/pathtemplate', step)
+                .post('../api/index.php/pathtemplates.json', step)
                 .success ( function (data) {
                     step.templateId = data;
                 });
@@ -162,14 +162,18 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
         $scope.save = function(path) {
             if (path.id === null ) {
+
+                //Create new path
                 $http
-                    .post('../api/index.php/path', path)
+                    .post('../api/index.php/paths.json', path)
                     .success ( function (data) {
                         path.id = data;
                     });
             } else {
+
+                //Update existing path
                 $http
-                    .post('../api/index.php/path/' + path.id, path)
+                    .put('../api/index.php/paths/' + path.id + '.json', path)
                     .success ( function (data) {
                         alert('updated');
                     });
@@ -181,7 +185,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // $http ... etc
             var id = step.templateId;
             $http
-                .post('../api/index.php/pathtemplate/remove', id)
+                .post('../api/index.php/pathtemplates/remove.json', id)
                 .success ( function (data) {
                     step.templateId = null;
                 });

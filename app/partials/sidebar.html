@@ -1,7 +1,9 @@
-SIDEBAR
-<pre>
-{{ templates | json}}
-</pre>
 <ul>
-	<li ng-repeat="template in templates">{{ template }}</li>
+	<li ng-repeat="template in templates">
+		<pre>
+		+++
+			{{ template }}
+		+++
+		</pre>
+	</li>
 </ul>
