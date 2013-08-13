@@ -7,6 +7,7 @@ $user = "protojpp";
 $pass = "protojpp";
 $db = new PDO('mysql:host=localhost;dbname=protojpp', $user, $pass);
 
+// List Paths
 $app->get('/paths.json', function () use($app, $db)
 {
     $sql = "SELECT * FROM paths";
@@ -23,6 +24,7 @@ $app->get('/paths.json', function () use($app, $db)
     echo json_encode($paths);
 });
 
+// Add new Path
 $app->post('/paths.json', function () use($app, $db)
 {
     $user="Donovan";
@@ -31,10 +33,7 @@ $app->post('/paths.json', function () use($app, $db)
     $request = $app->request();
 
     $body = $request->getBody();
-
     $body = json_decode($body);
-
-    unset($body->history);
 
     $sql = "INSERT INTO paths (path, user, edit_date) VALUES (:path, :user, :edit_date)";
 
@@ -61,6 +60,7 @@ $app->post('/paths.json', function () use($app, $db)
     }
 });
 
+// Edit existing Path
 $app->put('/paths/:id.json', function ($id) use($app, $db)
 {
     $user="Donovan";
@@ -69,10 +69,7 @@ $app->put('/paths/:id.json', function ($id) use($app, $db)
     $request = $app->request();
 
     $body = $request->getBody();
-
     $body = json_decode($body);
-
-    unset($body->history);
 
     $sql = "UPDATE paths
             SET
@@ -82,7 +79,6 @@ $app->put('/paths/:id.json', function ($id) use($app, $db)
             WHERE id = :id";
 
     try {
-
         $stmt = $db->prepare($sql);
         $stmt->bindParam("path", json_encode($body));
         $stmt->bindParam("user", $user);
@@ -108,14 +104,13 @@ $app->put('/paths/:id.json', function ($id) use($app, $db)
     }
 });
 
+// Delete single Path
 $app->delete('/paths/:id.json', function ($id) use($app, $db)
 {
     $sql = "DELETE FROM paths WHERE paths.id = :id"; //Save json into new table (pathtemplate)
 
     try {
-
         $stmt = $db->prepare($sql);
-
         $stmt->bindParam("id", $id);
         $stmt->execute();
 
@@ -128,14 +123,28 @@ $app->delete('/paths/:id.json', function ($id) use($app, $db)
     }
 });
 
+// Show single Path
+$app->get('/paths/:id.json', function ($id) use($app, $db)
+{
+    $sql = "SELECT * FROM paths WHERE paths.id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam("id", $id);
+    $stmt->execute();
+
+    $result = $stmt->fetchObject();
+
+    echo $result->path;
+
+    $db = null;
+});
+
+// List Path Templates
 $app->get('/pathtemplates.json', function () use($app, $db)
 {
     $sql = "SELECT * FROM pathtemplates";
     $stmt = $db->prepare($sql);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-    //TODO
 
     $templates = array();
 
@@ -146,7 +155,7 @@ $app->get('/pathtemplates.json', function () use($app, $db)
     echo ($templates);
 });
 
-
+// Add new Path Template
 $app->post('/pathtemplates.json', function () use($app, $db)
 {
     $user="Donovan";
@@ -157,8 +166,6 @@ $app->post('/pathtemplates.json', function () use($app, $db)
     $body = $request->getBody();
 
     $body = json_decode($body);
-
-    unset($body->history);
 
     $sql = "INSERT INTO pathtemplates (path, user, edit_date) VALUES (:path, :user, :edit_date)"; //Save json into new table (pathtemplate)
 
@@ -188,23 +195,20 @@ $app->post('/pathtemplates.json', function () use($app, $db)
     }
 });
 
+// Delete single Path Template
 $app->delete('/pathtemplates/:id.json', function ($id) use($app, $db)
 {
     $sql = "DELETE FROM pathtemplates WHERE pathtemplates.id = :id"; //Save json into new table (pathtemplate)
 
     try {
-
         $stmt = $db->prepare($sql);
-
         $stmt->bindParam("id", $id);
         $stmt->execute();
-
-
         $db = null;
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
 });
 
-
+// Run app
 $app->run();

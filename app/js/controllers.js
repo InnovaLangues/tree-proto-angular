@@ -71,7 +71,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         if ($routeParams.id) {
-            $http.get('../api/index.php/pathtemplates' + $routeParams.id + '.json')
+            $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
                 .success(function(data) {
                     updateHistory(data);
                     getTemplates();
