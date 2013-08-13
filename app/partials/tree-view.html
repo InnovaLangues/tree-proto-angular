@@ -1,10 +1,10 @@
 <div id="page-loader">{{ loader }}</div>
-<h1>Démo arbre</h1>
-<input type="button" class="btn btn-warning" value="init" ng-click="init()">
-<input type="button" class="btn" value="undo" ng-click="undo()" ng-disabled="undoDisabled">
-<input type="button" class="btn" value="redo" ng-click="redo()" ng-disabled="redoDisabled">
-<input type="button" class="btn btn-primary" value="save" ng-click="save(path)">
-<input type="button" class="btn btn-primary" value="deploy" ng-click="deploy(path)">
+<h1>Editeur de parcours</h1>
+<button class="btn btn-warning" ng-click="init()"><i class="icon-off"></i></button>
+<button class="btn" ng-click="undo()" ng-disabled="undoDisabled"><i class="icon-reply"></i></button>
+<button class="btn" ng-click="redo()" ng-disabled="redoDisabled"><i class="icon-share-alt"></i></button>
+<button class="btn btn-primary" ng-click="save(path)"><i class="icon-save"></i></button>
+<button class="btn btn-primary" ng-click="deploy(path)"><i class="icon-signout"></i></button>
 <hr>
 <div class="row">
     <div class="span12">
