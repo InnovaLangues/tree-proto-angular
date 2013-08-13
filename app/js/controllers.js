@@ -9,16 +9,20 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         function($scope, $http) {
             $scope.paths = null;
 
-            $http.get('../api/index.php/paths.json')
-                .success(function(data) {
-                    $scope.paths = data;
-                }
-            );
+            $scope.getPaths = function(id) {
+                $http.get('../api/index.php/paths.json')
+                    .success(function(data) {
+                        $scope.paths = data;
+                    }
+                );
+            };
+
+            $scope.getPaths();
 
             $scope.delete = function(id) {
                 $http.delete('../api/index.php/paths/' + id + '.json')
                     .success(function(data) {
-                        alert('deleted: ' + data);
+                        $scope.getPaths();
                     }
                 );
             };
