@@ -20,6 +20,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.isCollapsed = false;
         $scope.clipboard = null;
         $scope.history = null;
+        $scope.templates = [];
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
         $scope.isTemplateSaved = false;
@@ -49,8 +50,19 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $http.get('tree.json')
                 .success(function(data) {
                     updateHistory(data);
+                    getTemplates();
                 }
             );
+        };
+
+        var getTemplates = function() {
+            // TODO
+            // $http ... etc
+            $http
+                .get('../api/index.php/pathtemplate')
+                .success ( function (data) {
+                    $scope.templates = data;
+                });
         };
 
         $scope.undo = function() {
@@ -142,10 +154,26 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // TODO
             // $http ... etc
             $http
-                .post('../api/index.php/pathtemplates', step)
+                .post('../api/index.php/pathtemplate', step)
                 .success ( function (data) {
                     step.templateId = data;
                 });
+        };
+
+        $scope.save = function(path) {
+            if (path.id === null ) {
+                $http
+                    .post('../api/index.php/path', path)
+                    .success ( function (data) {
+                        path.id = data;
+                    });
+            } else {
+                $http
+                    .post('../api/index.php/path/' + path.id, path)
+                    .success ( function (data) {
+                        alert('updated');
+                    });
+            }
         };
 
         $scope.removeTemplate = function(step) {
@@ -153,7 +181,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             // $http ... etc
             var id = step.templateId;
             $http
-                .post('../api/index.php/pathtemplates/remove', id)
+                .post('../api/index.php/pathtemplate/remove', id)
                 .success ( function (data) {
                     step.templateId = null;
                 });
@@ -182,7 +210,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             keyboard: true,
             backdropClick: true,
             templateUrl:  'partials/activity-list.html', // OR: templateUrl: 'path/to/view.html',
-            controller: 'TestDialogController'
+            controller: 'DialogController'
         };
 
         $scope.openDialog = function(){
@@ -196,7 +224,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
     }
     ])
-    .controller('TestDialogController', [
+    .controller('DialogController', [
         '$scope',
         '$dialog',
         function($scope, $dialog) {
@@ -204,5 +232,4 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 dialog.close(result);
             };
         }
-    ]
-);
+    ]);
