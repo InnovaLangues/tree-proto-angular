@@ -40,7 +40,7 @@ $app->post('/pathtemplates', function () use($app, $db) {
         $result = $stmt->fetchObject();
 
         if ($result) {
-            echo "ok";
+            echo $lastId;
         }
 
         $db = null;
@@ -48,5 +48,31 @@ $app->post('/pathtemplates', function () use($app, $db) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
 });
+
+$app->post('/pathtemplates/remove', function () use($app, $db) {
+
+    $user="Donovan";
+    $date = "";
+
+    $request = $app->request();
+
+    $body = $request->getBody();
+
+    $sql = "DELETE FROM pathtemplates WHERE pathtemplates.id = :id"; //Save json into new table (pathtemplates)
+
+    try {
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam("id", $body);
+        $stmt->execute();
+
+
+        $db = null;
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+});
+
 
 $app->run();

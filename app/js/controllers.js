@@ -22,6 +22,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.history = null;
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
+        $scope.isTemplateSaved = false;
         $scope.path = pathFactory.getPath();
         $scope.historyState = -1;
         $scope.histArray = [];
@@ -137,13 +138,24 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             updateHistory($scope.path);
         };
 
-        $scope.saveTemplate = function(path) {
+        $scope.saveTemplate = function(step) {
             // TODO
             // $http ... etc
             $http
-                .post('../api/index.php/pathtemplates', path)
+                .post('../api/index.php/pathtemplates', step)
                 .success ( function (data) {
-                    alert(data);
+                    step.templateId = data;
+                });
+        };
+
+        $scope.removeTemplate = function(step) {
+            // TODO
+            // $http ... etc
+            var id = step.templateId;
+            $http
+                .post('../api/index.php/pathtemplates/remove', id)
+                .success ( function (data) {
+                    step.templateId = null;
                 });
         };
 
