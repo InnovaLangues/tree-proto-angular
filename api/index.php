@@ -51,11 +51,10 @@ $app->post('/paths.json', function () use($app, $db) {
         $stmt->bindParam("id", $lastId);
         $stmt->execute();
 
-        if ($result) {
-            echo $lastId;
-        }
-
         $db = null;
+
+        echo $lastId;
+
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
