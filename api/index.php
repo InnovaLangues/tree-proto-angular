@@ -7,7 +7,8 @@ $user = "protojpp";
 $pass = "protojpp";
 $db = new PDO('mysql:host=localhost;dbname=protojpp', $user, $pass);
 
-$app->get('/paths.json', function () use($app, $db) {
+$app->get('/paths.json', function () use($app, $db)
+{
     $sql = "SELECT * FROM paths";
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -22,8 +23,8 @@ $app->get('/paths.json', function () use($app, $db) {
     echo json_encode($paths);
 });
 
-$app->post('/paths.json', function () use($app, $db) {
-
+$app->post('/paths.json', function () use($app, $db)
+{
     $user="Donovan";
     $date = "";
 
@@ -60,8 +61,8 @@ $app->post('/paths.json', function () use($app, $db) {
     }
 });
 
-$app->put('/paths/:id.json', function ($id) use($app, $db) {
-
+$app->put('/paths/:id.json', function ($id) use($app, $db)
+{
     $user="Donovan";
     $date = "";
 
@@ -107,7 +108,8 @@ $app->put('/paths/:id.json', function ($id) use($app, $db) {
     }
 });
 
-$app->delete('/paths/:id.json', function ($id) use($app, $db) {
+$app->delete('/paths/:id.json', function ($id) use($app, $db)
+{
     $sql = "DELETE FROM paths WHERE paths.id = :id"; //Save json into new table (pathtemplate)
 
     try {
@@ -126,7 +128,8 @@ $app->delete('/paths/:id.json', function ($id) use($app, $db) {
     }
 });
 
-$app->get('/pathtemplates.json', function () use($app, $db) {
+$app->get('/pathtemplates.json', function () use($app, $db)
+{
     $sql = "SELECT * FROM pathtemplates";
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -144,8 +147,8 @@ $app->get('/pathtemplates.json', function () use($app, $db) {
 });
 
 
-$app->post('/pathtemplates.json', function () use($app, $db) {
-
+$app->post('/pathtemplates.json', function () use($app, $db)
+{
     $user="Donovan";
     $date = "";
 
@@ -185,22 +188,15 @@ $app->post('/pathtemplates.json', function () use($app, $db) {
     }
 });
 
-$app->post('/pathtemplates/remove.json', function () use($app, $db) {
-
-    $user="Donovan";
-    $date = "";
-
-    $request = $app->request();
-
-    $body = $request->getBody();
-
+$app->delete('/pathtemplates/:id.json', function ($id) use($app, $db)
+{
     $sql = "DELETE FROM pathtemplates WHERE pathtemplates.id = :id"; //Save json into new table (pathtemplate)
 
     try {
 
         $stmt = $db->prepare($sql);
 
-        $stmt->bindParam("id", $body);
+        $stmt->bindParam("id", $id);
         $stmt->execute();
 
 

@@ -212,11 +212,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.removeTemplate = function(step) {
-            // TODO
-            // $http ... etc
-            var id = step.templateId;
             $http
-                .post('../api/index.php/pathtemplates/remove.json', id)
+                .delete('../api/index.php/pathtemplates/' + step.templateId + '.json')
                 .success ( function (data) {
                     step.templateId = null;
                 });
