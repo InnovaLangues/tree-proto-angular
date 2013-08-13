@@ -3,8 +3,12 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ui.bootstrap'])
-    .controller('TreeContoller', ['$scope', '$http', 'pathFactory', function($scope, $http, pathFactory) {
-
+    .controller('TreeContoller', [
+        '$scope',
+        '$http',
+        '$dialog',
+        'pathFactory',
+        function($scope, $http, $dialog, pathFactory) {
 
         if (!Array.prototype.last){
             Array.prototype.last = function(){
@@ -159,7 +163,34 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             $scope.undoDisabled = false;
             $scope.redoDisabled = true;
-        }
+        };
 
-    }]
+        $scope.opts = {
+            backdrop: true,
+            keyboard: true,
+            backdropClick: true,
+            templateUrl:  'partials/activity-list.html', // OR: templateUrl: 'path/to/view.html',
+            controller: 'TestDialogController'
+        };
+
+        $scope.openDialog = function(){
+            var d = $dialog.dialog($scope.opts);
+            d.open().then(function(result){
+                if (result)
+                {
+                    alert('dialog closed with result: ' + result);
+                }
+            });
+        };
+    }
+    ])
+    .controller('TestDialogController', [
+        '$scope',
+        '$dialog',
+        function($scope, $dialog) {
+            $scope.close = function(result){
+                dialog.close(result);
+            };
+        }
+    ]
 );

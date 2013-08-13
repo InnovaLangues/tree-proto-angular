@@ -3,8 +3,8 @@
     <a class="btn"
             ng-click="isCollapsed = !isCollapsed"
             ng-switch on="isCollapsed">
-        <span ng-switch-when="true"><i class="icon-plus"></i></span>
-        <span ng-switch-default><i class="icon-minus"></i></span>
+        <span ng-switch-when="true"><i class="icon-collapse"></i></span>
+        <span ng-switch-default><i class="icon-collapse-top"></i></span>
     </a>
     <input
         type="text"
@@ -13,39 +13,37 @@
         title="step.name"
         ng-model="step.name"
         ng-blur="rename()" />
-        <button class="btn" ng-click="addChild(step)">
-            <i class="icon-plus"></i>
-        </button>
-        <button class="btn" ng-click="copy(step)">
-            Copy
-        </button>
-        <button class="btn" ng-click="paste(step)">
-            Paste
-        </button>
-        <button class="btn btn-danger" ng-click="remove(step)">
-            <i class="icon-trash"></i>
-        </button>
-        <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
-            <i class="icon-tasks"></i>
-        </button>
-        <button class="btn btn-primary" ng-click="view(step)">
-            Espace d'interaction
-        </button>
-        <span ng-switch="isTemplateSaved">
-            <span ng-switch-when="false">
-                <button class="btn" ng-click="saveTemplate(path)">
-                    <i class="icon-heart"></i>
-                </button>
-            </span>
-            <span ng-switch-when="true">
-               <button class="btn btn-success" ng-click="removeTemplate(path)">
-                    <i class="icon-heart icon-white"></i>
-                </button>
-            </span>
-
+    <button class="btn" ng-click="addChild(step)">
+        <i class="icon-plus"></i>
+    </button>
+    <button class="btn" ng-click="copy(step)">
+        <i class="icon-copy"></i>
+    </button>
+    <button class="btn" ng-click="paste(step)">
+        <i class="icon-paste"></i>
+    </button>
+    <button class="btn btn-danger" ng-click="remove(step)">
+        <i class="icon-trash"></i>
+    </button>
+    <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
+        <i class="icon-list"></i>
+    </button>
+    <button class="btn btn-primary" ng-click="openDialog(step)">
+        <i class="icon-list-alt"></i>
+    </button>
+    <span ng-switch="isTemplateSaved">
+        <span ng-switch-when="false">
+            <button class="btn" ng-click="saveTemplate(path)">
+                <i class="icon-heart"></i>
+            </button>
         </span>
+        <span ng-switch-when="true">
+           <button class="btn btn-success" ng-click="removeTemplate(path)">
+                <i class="icon-heart icon-white"></i>
+            </button>
+        </span>
+    </span>
 </form>
-
 <ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children">
     <li style="position:relative;"
         ng-repeat="step in step.children"
