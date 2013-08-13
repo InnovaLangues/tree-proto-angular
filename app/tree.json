@@ -1,6 +1,7 @@
 {
     "id"    : null,
     "name"  : "My Path Name",
+    "description"  : "This is the path description",
     "steps" : [
         {
             "id"         : null,

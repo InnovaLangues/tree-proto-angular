@@ -3,12 +3,38 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ui.bootstrap'])
+    .controller('PathContoller', [
+        '$scope',
+        '$http',
+        function($scope, $http) {
+            //$scope.paths = [];
+
+            $scope.init = function() {
+                $http.get('../api/index.php/paths.json')
+                    .success(function(data) {
+                        $scope.paths = data;
+                    }
+                );
+            };
+
+            $scope.init();
+
+            $scope.delete = function(id) {
+                $http.delete('../api/index.php/paths/' + id + '.json')
+                    .success(function(data) {
+                        alert('deleted: ' + data);
+                    }
+                );
+            }
+        }
+    ])
     .controller('TreeContoller', [
         '$scope',
         '$http',
         '$dialog',
+        '$routeParams',
         'pathFactory',
-        function($scope, $http, $dialog, pathFactory) {
+        function($scope, $http, $dialog, $routeParams, pathFactory) {
 
         if (!Array.prototype.last){
             Array.prototype.last = function(){
@@ -44,16 +70,21 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             connectWith: '.ui-sortable'
         };
 
-        $scope.init = function() {
-            $scope.histArray = [];
-
+        if ($routeParams.id) {
+            $http.get('../api/index.php/pathtemplates' + $routeParams.id + '.json')
+                .success(function(data) {
+                    updateHistory(data);
+                    getTemplates();
+                }
+            );
+        } else {
             $http.get('tree.json')
                 .success(function(data) {
                     updateHistory(data);
                     getTemplates();
                 }
             );
-        };
+        }
 
         var getTemplates = function() {
             // TODO
