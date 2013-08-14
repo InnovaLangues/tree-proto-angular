@@ -3,6 +3,31 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ui.bootstrap'])
+    .controller('TemplateController', [
+        '$scope',
+        '$http',
+        function($scope, $http) {
+            $scope.templates = null;
+
+            var getTemplates = function() {
+                $http
+                    .get('../api/index.php/pathtemplates.json')
+                    .success ( function (data) {
+                        $scope.templates = data;
+                    });
+            };
+
+            $scope.delete = function(template) {
+                $http.delete('../api/index.php/templates/' + id + '.json')
+                    .success(function() {
+                        getTemplates();
+                    }
+                );
+            };
+
+            getTemplates();
+        }
+    ])
     .controller('PathContoller', [
         '$scope',
         '$http',
@@ -49,6 +74,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.templates = [];
         $scope.redoDisabled = true;
         $scope.undoDisabled = true;
+        $scope.pasteDisabled = true;
         $scope.isTemplateSaved = false;
         $scope.path = pathFactory.getPath();
         $scope.historyState = -1;
@@ -74,27 +100,15 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
                 .success(function(data) {
                     updateHistory(data);
-                    getTemplates();
                 }
             );
         } else {
             $http.get('tree.json')
                 .success(function(data) {
                     updateHistory(data);
-                    getTemplates();
                 }
             );
         }
-
-        var getTemplates = function() {
-            // TODO
-            // $http ... etc
-            $http
-                .get('../api/index.php/pathtemplates.json')
-                .success ( function (data) {
-                    $scope.templates = data;
-                });
-        };
 
         $scope.undo = function() {
             $scope.historyState = $scope.historyState -1;
@@ -148,6 +162,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
         $scope.copy = function(step) {
             $scope.clipboard = step;
+            $scope.pasteDisabled = false;
         };
 
         $scope.paste = function(step) {
