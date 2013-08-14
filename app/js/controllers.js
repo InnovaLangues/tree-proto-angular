@@ -11,14 +11,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             var getTemplates = function() {
                 $http
-                    .get('../api/index.php/pathtemplates.json')
+                    .get('../api/index.php/path/templates.json')
                     .success ( function (data) {
                         $scope.templates = data;
                     });
             };
 
-            $scope.delete = function(template) {
-                $http.delete('../api/index.php/templates/' + id + '.json')
+            $scope.delete = function(id) {
+                $http.delete('../api/index.php/path/templates/' + id + '.json')
                     .success(function() {
                         getTemplates();
                     }
@@ -34,7 +34,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         function($scope, $http) {
             $scope.paths = null;
 
-            $scope.getPaths = function(id) {
+            $scope.getPaths = function() {
                 $http.get('../api/index.php/paths.json')
                     .success(function(data) {
                         $scope.paths = data;
@@ -44,8 +44,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             $scope.getPaths();
 
-            $scope.delete = function(id) {
-                $http.delete('../api/index.php/paths/' + id + '.json')
+            $scope.delete = function(path) {
+                $http.delete('../api/index.php/paths/' + path.id + '.json')
                     .success(function(data) {
                         $scope.getPaths();
                     }
@@ -79,6 +79,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.path = pathFactory.getPath();
         $scope.historyState = -1;
         $scope.histArray = [];
+        $scope.pathId = null;
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
@@ -197,42 +198,32 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         };
 
         $scope.saveTemplate = function(step) {
-            // TODO
-            // $http ... etc
             $http
-                .post('../api/index.php/pathtemplates.json', step)
+                .post('../api/index.php/path/templates.json', step)
                 .success ( function (data) {
                     step.templateId = data;
                 });
         };
 
         $scope.save = function(path) {
-            if (path.id === null ) {
-
+            if ($scope.pathId === null) {
                 //Create new path
                 $http
                     .post('../api/index.php/paths.json', path)
                     .success ( function (data) {
-                        path.id = data;
+                        $scope.pathId = data;
+                        //TODO: show message
                     });
             } else {
-
                 //Update existing path
                 $http
                     .put('../api/index.php/paths/' + path.id + '.json', path)
                     .success ( function (data) {
-                        alert('updated');
+                        //TODO: show message
                     });
             }
         };
 
-        $scope.removeTemplate = function(step) {
-            $http
-                .delete('../api/index.php/pathtemplates/' + step.templateId + '.json')
-                .success ( function (data) {
-                    step.templateId = null;
-                });
-        };
 
         var updateHistory = function(path) {
             //TODO:  CA NE MARCHE PAS!

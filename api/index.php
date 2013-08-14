@@ -46,11 +46,6 @@ $app->post('/paths.json', function () use($app, $db)
         $stmt->execute();
         $lastId = $db->lastInsertId();
 
-        $sql = "SELECT id, path FROM paths WHERE paths.id = :id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam("id", $lastId);
-        $stmt->execute();
-
         $db = null;
 
         echo $lastId;
@@ -139,24 +134,24 @@ $app->get('/paths/:id.json', function ($id) use($app, $db)
 });
 
 // List Path Templates
-$app->get('/pathtemplates.json', function () use($app, $db)
+$app->get('/path/templates.json', function () use($app, $db)
 {
     $sql = "SELECT * FROM pathtemplates";
     $stmt = $db->prepare($sql);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_CLASS);
 
-    $paths = array();
+    $templates = array();
 
     foreach ($results as $result) {
-        $paths[$result->id] = json_decode($result->path);
+        $templates[$result->id] = json_decode($result->path);
     }
 
-    echo json_encode($paths);
+    echo json_encode($templates);
 });
 
 // Add new Path Template
-$app->post('/pathtemplates.json', function () use($app, $db)
+$app->post('/path/templates.json', function () use($app, $db)
 {
     $user="Donovan";
     $date = "";
@@ -196,7 +191,7 @@ $app->post('/pathtemplates.json', function () use($app, $db)
 });
 
 // Delete single Path Template
-$app->delete('/pathtemplates/:id.json', function ($id) use($app, $db)
+$app->delete('/path/templates/:id.json', function ($id) use($app, $db)
 {
     $sql = "DELETE FROM pathtemplates WHERE pathtemplates.id = :id"; //Save json into new table (pathtemplate)
 
