@@ -69,3 +69,7 @@ ul {
   color: #f00;
   z-index: 9999;
 }
+
+#favtemplates{
+  display: none;
+}
