@@ -1,22 +1,19 @@
 <div id="page-loader">{{ loader }}</div>
-<h1>Editeur de parcours</h1>
-<a href="#favtemplates" class="sidebar">Link text</a>
+<h1>Path editor : Tree view</h1><!-- TODO: edit/new-->
 <a href="#/path/list" class="btn" ng-disabled="undoDisabled"><i class="icon-list"></i></a>
-                    <button class="btn" ng-click="undo()" ng-disabled="undoDisabled"><i class="icon-reply"></i></button>
-                    <button class="btn" ng-click="redo()" ng-disabled="redoDisabled"><i class="icon-share-alt"></i></button>
-                    <button class="btn btn-primary" ng-click="save(path)"><i class="icon-save"></i></button>
-                    <button class="btn btn-success" ng-click="deploy(path)"><i class="icon-signout"></i></button>
+<button class="btn" ng-click="undo()" ng-disabled="undoDisabled"><i class="icon-reply"></i></button>
+<button class="btn" ng-click="redo()" ng-disabled="redoDisabled"><i class="icon-share-alt"></i></button>
+<button class="btn btn-primary" ng-click="save(path)"><i class="icon-save"></i></button>
+<button class="btn btn-success" ng-click="deploy(path)"><i class="icon-signout"></i></button>
 <hr>
 <div class="row">
     <div class="span12">
-
-            <div class="control-group">
-                <label class="control-label" for="path-name">Path name : </label>
-                <div class="controls">
-                    <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name"></input>
-                </div>
+        <div class="control-group">
+            <label class="control-label" for="path-name">Path name : </label>
+            <div class="controls">
+                <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name"></input>
             </div>
-
+        </div>
         <div class="well" id="zone">
             <ul>
                 <li ng-repeat="step in path.steps" ng-include="'partials/tree-item.html'" ></li>
@@ -24,11 +21,9 @@
         </div>
     </div>
 </div>
-
 <div class="footer">
     <a href="#" class="btn" id="show-debug"><i class="icon-cog"></i></a>
 </div>
-
 <div id="debug" class="hidden">
     <div>
         <h4>Path</h4>

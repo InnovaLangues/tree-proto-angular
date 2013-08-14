@@ -8,7 +8,7 @@
             "type"       : "seq",
             "expanded"   : true,
             "data"       : "activity",
-            "dataId"     : 1231,
+            "dataId"     : 123,
             "templateId" : null,
             "children"   : []
         }

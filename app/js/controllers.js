@@ -83,8 +83,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.histArray = [];
         $scope.pathId = null;
 
-        $(".sidebar").pageslide({ direction: "left", modal: true });
-
         $scope.update = function() {
           var e, i, _i, _len, _ref;
           _ref = $scope.path;
@@ -186,7 +184,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             step.children.push(
                 {
-                    id         : null,
                     name       : newName,
                     parentId   : null,
                     type       : 'seq',

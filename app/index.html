@@ -5,19 +5,35 @@
     <title>Simple MVC Model demo</title>
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="lib/jquery-pageslide/jquery.pageslide.css">
+    <link rel="stylesheet" type="text/css" href="lib/ng-pageslide/css/angular-pageslide.less.css">
     <link rel="stylesheet" href="css/app.css"/>
 </head>
-<body ng-cloak>
-    <ul class="menu">
-      <li><a href="#/path/list">List existing paths</a></li>
-      <li><a href="#/view">view</a></li>
-      <li><a href="#/view2">view2</a></li>
-    </ul>
-
-    <div ng-view class="container"></div>
-    <div ng-include="'partials/sidebar.html'" ng-controller='TemplateController'></div>
-
+<body ng-cloak class="ps-push">
+    <div class="container">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <ul class="nav">
+                    <li><a href="#/path/list">List paths</a></li>
+                    <li><a href="#/template/list">List templates</a></li>
+                    <li><a href="#/tree">Tree view</a></li>
+                    <li><a href="#/timeline">Timeline view</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li><a pageslide="left" ps-speed="0.5" href="#secondary-sidebar"><i class="icon-list"></i></a></li>
+                    <li><a pageslide="right" ps-speed="0.5" href="#primary-sidebar"><i class="icon-heart"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div ng-view></div>
+        <div id="primary-sidebar"  style="display:none" >
+            <div ng-include="'partials/primary-sidebar.html'" ng-controller="TemplateController"></div>
+            <a id="primary-sidebar-close" href="#" class="btn">Close</a>
+        </div>
+        <div id="secondary-sidebar"  style="display:none" >
+            <div ng-include="'partials/primary-sidebar.html'" ng-controller="TemplateController"></div>
+            <a id="secondary-sidebar-close" href="#" class="btn">Close</a>
+        </div>
+    </div>
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     -->
@@ -27,9 +43,9 @@
     <script src="lib/angular/angular.js"></script>
     <script src="lib/ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="lib/angular-ui/angular-ui.js"></script>
-    <script src="lib/jquery-pageslide/jquery.pageslide.min.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
+    <script src="lib/ng-pageslide/js/angular-pageslide-directive.js"></script>
 </body>
 </html>
