@@ -199,6 +199,8 @@ $app->delete('/path/templates/:id.json', function ($id) use($app, $db)
         $stmt = $db->prepare($sql);
         $stmt->bindParam("id", $id);
         $stmt->execute();
+
+        echo $id;
         $db = null;
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';

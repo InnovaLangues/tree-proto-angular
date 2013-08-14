@@ -35,7 +35,6 @@ pageslideDirective.directive('pageslide', [
                 var content = document.getElementById(attrs.href.substr(1));
                 var slider = document.createElement('div');
                 var body = document.getElementsByTagName('body')[0];
-                console.log(body);
                 slider.id = "ng-pageslide";
                 slider.className = css_class;
 
@@ -85,7 +84,6 @@ pageslideDirective.directive('pageslide', [
 
                             if (slider.className.indexOf('ps-right') != -1) {
                                 body.className = body.className.replace(' ps-push-right','');
-                                console.log(body.className);
                             }
                             content.style.display = 'none';
                             slider.className = slider.className.replace(' ps-shown','');

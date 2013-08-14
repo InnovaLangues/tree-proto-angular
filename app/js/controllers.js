@@ -18,27 +18,19 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     ])
     .controller('TemplateController', [
         '$scope',
-        '$http',
-        function($scope, $http) {
-            $scope.templates = null;
+        'templateFactory',
+        function($scope, templateFactory) {
+            /*$scope.templates = templateFactory.getTemplates();*/
+            templateFactory.getTemplates().then(function(data){
+                $scope.templates = data;
+            });
 
-            var getTemplates = function() {
-                $http
-                    .get('../api/index.php/path/templates.json')
-                    .success ( function (data) {
-                        $scope.templates = data;
-                    });
+            $scope.remove = function(id) {
+
+                templateFactory.remove(id).then(function(data){
+                    $scope.templates = data;
+                });
             };
-
-            $scope.delete = function(id) {
-                $http.delete('../api/index.php/path/templates/' + id + '.json')
-                    .success(function() {
-                        getTemplates();
-                    }
-                );
-            };
-
-            getTemplates();
         }
     ])
     .controller('PathContoller', [
@@ -57,7 +49,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             $scope.getPaths();
 
-            $scope.delete = function(id) {
+            $scope.remove = function(id) {
                 $http.delete('../api/index.php/paths/' + id + '.json')
                     .success(function(data) {
                         $scope.getPaths();
@@ -102,7 +94,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             e = _ref[i];
             e.pos = i;
           }
-          return console.log(['Updated', $scope.path]);
         };
 
         $scope.sortableOptions = {
