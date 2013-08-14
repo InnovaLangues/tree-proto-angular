@@ -1,9 +1,12 @@
-<h3>Templates</h3>
-<ul>
-	<li ng-repeat="template in templates">
-		{{ template.name }}
-		<button class="btn btn-small" ng-click="copy(template)"><i class="icon-copy"></i></button>
-		<button class="btn btn-small" ng-click="edit(template)"><i class="icon-edit"></i></button>
-		<button class="btn btn-small btn-danger" ng-click="delete(template)"><i class="icon-trash"></i></button>
-	</li>
-</ul>
+<div id="favtemplates">
+    <h3>Templates</h3>
+    <ul>
+    	<li ng-repeat="template in templates">
+    		{{ template.name }}
+    		<button class="btn btn-small" ng-click="copy(template)"><i class="icon-copy"></i></button>
+    		<button class="btn btn-small" ng-click="edit(template)"><i class="icon-edit"></i></button>
+    		<button class="btn btn-small btn-danger" ng-click="delete(template)"><i class="icon-trash"></i></button>
+    	</li>
+    </ul>
+    <a href="javascript:$.pageslide.close()">Close</a>
+</div>

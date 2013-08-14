@@ -2,6 +2,8 @@
 
 /* Controllers */
 
+
+
 angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('TemplateController', [
         '$scope',
@@ -79,6 +81,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.path = pathFactory.getPath();
         $scope.historyState = -1;
         $scope.histArray = [];
+
+        $(".sidebar").pageslide({ direction: "right", modal: true });
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
