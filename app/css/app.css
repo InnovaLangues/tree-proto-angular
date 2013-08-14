@@ -56,11 +56,6 @@ ul {
 }
 
 
-
-
-
-
-
 #page-loader {
   font-size: 140px;
   position: absolute;
@@ -68,8 +63,4 @@ ul {
   left: 30%;
   color: #f00;
   z-index: 9999;
-}
-
-#favtemplates{
-  display: none;
 }
