@@ -5,6 +5,17 @@
 
 
 angular.module('myApp.controllers', ['ui.bootstrap'])
+    .controller('AlertController', [
+        '$scope',
+        'alertFactory',
+        function($scope, alertFactory) {
+            $scope.alerts = alertFactory.getAlerts();
+
+            $scope.closeAlert  = function() {
+                alertFactory.closeAlert();
+            };
+        }
+    ])
     .controller('TemplateController', [
         '$scope',
         '$http',
@@ -46,8 +57,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             $scope.getPaths();
 
-            $scope.delete = function(path) {
-                $http.delete('../api/index.php/paths/' + path.id + '.json')
+            $scope.delete = function(id) {
+                $http.delete('../api/index.php/paths/' + id + '.json')
                     .success(function(data) {
                         $scope.getPaths();
                     }
@@ -60,8 +71,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$http',
         '$dialog',
         '$routeParams',
+        '$location',
         'pathFactory',
-        function($scope, $http, $dialog, $routeParams, pathFactory) {
+        'alertFactory',
+        function($scope, $http, $dialog, $routeParams, $location, pathFactory, alertFactory) {
 
         if (!Array.prototype.last){
             Array.prototype.last = function(){
@@ -81,7 +94,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         $scope.path = pathFactory.getPath();
         $scope.historyState = -1;
         $scope.histArray = [];
-        $scope.pathId = null;
 
         $scope.update = function() {
           var e, i, _i, _len, _ref;
@@ -203,24 +215,25 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 .post('../api/index.php/path/templates.json', step)
                 .success ( function (data) {
                     step.templateId = data;
+                    alertFactory.addAlert("Template saved!", "success");
                 });
         };
 
         $scope.save = function(path) {
-            if ($scope.pathId === null) {
+            if ($routeParams.id === undefined) {
                 //Create new path
                 $http
                     .post('../api/index.php/paths.json', path)
                     .success ( function (data) {
-                        $scope.pathId = data;
-                        //TODO: show message
+                        $location.path("/tree/edit/" + data);
+                        alertFactory.addAlert("Path saved!", "success");
                     });
             } else {
                 //Update existing path
                 $http
                     .put('../api/index.php/paths/' + path.id + '.json', path)
                     .success ( function (data) {
-                        //TODO: show message
+                        alertFactory.addAlert("Path saved!", "success");
                     });
             }
         };

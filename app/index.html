@@ -24,6 +24,9 @@
                 </ul>
             </div>
         </div>
+        <div ng-controller="AlertController">
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
         <div ng-view></div>
         <div id="primary-sidebar"  style="display:none" >
             <div ng-include="'partials/primary-sidebar.html'" ng-controller="TemplateController"></div>
@@ -34,9 +37,6 @@
             <a id="secondary-sidebar-close" href="#" class="btn">Close</a>
         </div>
     </div>
-    <!-- In production use:
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    -->
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

@@ -20,13 +20,10 @@
 				{{ path.description }}
 			</td>
 			<td>
-				<a href="#/view/{{ id }}" class="btn btn-small"><i class="icon-edit"></i></a>
+				<a href="#/tree/edit/{{ id }}" class="btn btn-small"><i class="icon-edit"></i></a>
 				<button class="btn btn-danger btn-small" ng-click="delete(id)"><i class="icon-trash"></i></button>
-				<!--
-					<pre>{{ path | json }}</pre>
-				-->
 			</td>
 		</tr>
 	</tbody>
 </table>
-<a href="#/view" class="btn btn-primary"><i class="icon-plus"></i></a>
+<a href="#/tree" class="btn btn-primary"><i class="icon-plus"></i></a>
