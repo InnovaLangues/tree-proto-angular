@@ -25,28 +25,18 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             }
         };
     })
-    .factory('templateFactory', ['$http',function($http) {
-
-        var templates = [];
+    .factory('templateFactory', function() {
+        var templates = {};
 
         return {
             getTemplates : function() {
-                return $http
-                    .get('../api/index.php/path/templates.json')
-                    .then(function(response) {
-                        return response.data;
-                    });
+                return templates;
             },
-            delete : function(id) {
-                return $http
-                    .delete('../api/index.php/path/templates/' + id + '.json')
-                    .then( function(response) {
-                        return response.data;
-                    });
+            setTemplates : function(data) {
+                templates = data;
             }
-        }
-
-    }])
+        };
+    })
     .factory('alertFactory', function() {
         var alerts = [];
 

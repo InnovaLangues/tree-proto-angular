@@ -144,7 +144,10 @@ $app->get('/path/templates.json', function () use($app, $db)
     $templates = array();
 
     foreach ($results as $result) {
-        $templates[$result->id] = json_decode($result->path);
+        $path = json_decode($result->path);
+        $path->id = $result->id;
+
+        $templates[] = $path;
     }
 
     echo json_encode($templates);

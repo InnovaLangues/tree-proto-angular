@@ -14,14 +14,17 @@
 				{{ id }}
 			</td>
 			<td>
+				{{ template.id }}
+			</td>
+			<td>
 				{{ template.name }}
 			</td>
 			<td>
 				{{ template.description }}
 			</td>
 			<td>
-				<a href="#/view/{{ id }}" class="btn btn-small"><i class="icon-edit"></i></a>
-				<button class="btn btn-danger btn-small" ng-click="delete(id)"><i class="icon-trash"></i></button>
+				<a href="#/template/edit/{{ id }}" class="btn btn-small"><i class="icon-edit"></i></a>
+				<button class="btn btn-danger btn-small" ng-click="delete(template, id)"><i class="icon-trash"></i></button>
 			</td>
 		</tr>
 	</tbody>
