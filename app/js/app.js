@@ -26,24 +26,23 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         };
     })
     .factory('templateFactory', ['$http',function($http) {
-        var templates = $http
-            .get('../api/index.php/path/templates.json')
-            .then( function(response) {
-                return response.data;
-            }
-        );
+
+        var templates = [];
 
         return {
             getTemplates : function() {
-                return templates;
-            },
-            remove : function(id) {
-                $http.delete('../api/index.php/path/templates/' + id + '.json')
+                return $http
+                    .get('../api/index.php/path/templates.json')
                     .then(function(response) {
-                        console.log(response.data);
-                    }
-                );
-                return templates;
+                        return response.data;
+                    });
+            },
+            delete : function(id) {
+                return $http
+                    .delete('../api/index.php/path/templates/' + id + '.json')
+                    .then( function(response) {
+                        return response.data;
+                    });
             }
         }
 

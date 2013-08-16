@@ -19,16 +19,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('TemplateController', [
         '$scope',
         'templateFactory',
-        function($scope, templateFactory) {
-            /*$scope.templates = templateFactory.getTemplates();*/
-            templateFactory.getTemplates().then(function(data){
-                $scope.templates = data;
-            });
+        'alertFactory',
+        function($scope, templateFactory, alertFactory) {
+            $scope.templates = templateFactory.getTemplates();
 
-            $scope.remove = function(id) {
-
-                templateFactory.remove(id).then(function(data){
-                    $scope.templates = data;
+            $scope.delete = function(id) {
+                templateFactory.delete(id).then(function(){
+                    $scope.templates = templateFactory.getTemplates();
+                    alertFactory.addAlert("Template deleted!", "success");
                 });
             };
         }
