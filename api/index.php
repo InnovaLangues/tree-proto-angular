@@ -144,7 +144,10 @@ $app->get('/path/templates.json', function () use($app, $db)
     $templates = array();
 
     foreach ($results as $result) {
-        $templates[$result->id] = json_decode($result->path);
+        $path = json_decode($result->path);
+        $path->id = $result->id;
+
+        $templates[] = $path;
     }
 
     echo json_encode($templates);
@@ -199,6 +202,8 @@ $app->delete('/path/templates/:id.json', function ($id) use($app, $db)
         $stmt = $db->prepare($sql);
         $stmt->bindParam("id", $id);
         $stmt->execute();
+
+        echo $id;
         $db = null;
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';

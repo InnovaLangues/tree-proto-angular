@@ -9,24 +9,24 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="(id, path) in paths">
+		<tr ng-repeat="(id, template) in templates">
 			<td>
 				{{ id }}
 			</td>
 			<td>
-				{{ path.name }}
+				{{ template.id }}
 			</td>
 			<td>
-				{{ path.description }}
+				{{ template.name }}
 			</td>
 			<td>
-				<a href="#/view/{{ id }}" class="btn btn-small" tooltip="Edit"><i class="icon-edit"></i></a>
-				<button class="btn btn-danger btn-small" ng-click="delete(id)" tooltip="Delete"><i class="icon-trash"></i></button>
-				<!--
-					<pre>{{ path | json }}</pre>
-				-->
+				{{ template.description }}
+			</td>
+			<td>
+				<a href="#/template/edit/{{ id }}" class="btn btn-small" tooltip="Edit"><i class="icon-edit"></i></a>
+				<button class="btn btn-danger btn-small" ng-click="delete(template, id)" tooltip="Delete"><i class="icon-trash"></i></button>
 			</td>
 		</tr>
 	</tbody>
 </table>
-<a href="#/view" class="btn btn-primary"><i class="icon-plus"></i></a>
+<a href="#/tree/" class="btn btn-primary"><i class="icon-plus"></i></a>

@@ -35,7 +35,6 @@ pageslideDirective.directive('pageslide', [
                 var content = document.getElementById(attrs.href.substr(1));
                 var slider = document.createElement('div');
                 var body = document.getElementsByTagName('body')[0];
-                console.log(body);
                 slider.id = "ng-pageslide";
                 slider.className = css_class;
 
@@ -58,11 +57,11 @@ pageslideDirective.directive('pageslide', [
                     e.preventDefault();
                     if (/ps-hidden/.exec(slider.className)){
                         if (slider.className.indexOf('ps-left') != -1) {
-                            body.className = 'ps-push-left';
+                            body.className += ' ps-push-left';
                         }
 
                         if (slider.className.indexOf('ps-right') != -1) {
-                            body.className = 'ps-push-right';
+                            body.className += ' ps-push-right';
                         }
                         content.style.display = 'none';
                         slider.className = slider.className.replace(' ps-hidden','');
@@ -80,12 +79,11 @@ pageslideDirective.directive('pageslide', [
                         e.preventDefault();
                         if (/ps-shown/.exec(slider.className)){
                             if (slider.className.indexOf('ps-left') != -1) {
-                                body.className = body.className.replace('ps-push-left','');
+                                body.className = body.className.replace(' ps-push-left','');
                             }
 
                             if (slider.className.indexOf('ps-right') != -1) {
-                                body.className = body.className.replace('ps-push-right','');
-                                console.log(body.className);
+                                body.className = body.className.replace(' ps-push-right','');
                             }
                             content.style.display = 'none';
                             slider.className = slider.className.replace(' ps-shown','');
