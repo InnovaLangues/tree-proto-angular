@@ -5,7 +5,12 @@ $app = new \Slim\Slim();
 
 $user = "protojpp";
 $pass = "protojpp";
-$db = new PDO('mysql:host=localhost;dbname=protojpp', $user, $pass);
+
+$db = new PDO(
+    'mysql:host=localhost;dbname=protojpp',
+    $user,
+    $pass
+);
 
 // List Paths
 $app->get('/paths.json', function () use($app, $db)
@@ -27,8 +32,8 @@ $app->get('/paths.json', function () use($app, $db)
 // Add new Path
 $app->post('/paths.json', function () use($app, $db)
 {
-    $user="Donovan";
-    $date = "";
+    $user="Donovan"; //TODO
+    $date = ""; //TODO
 
     $request = $app->request();
 
@@ -58,8 +63,8 @@ $app->post('/paths.json', function () use($app, $db)
 // Edit existing Path
 $app->put('/paths/:id.json', function ($id) use($app, $db)
 {
-    $user="Donovan";
-    $date = "";
+    $user="Donovan"; //TODO
+    $date = ""; //TODO
 
     $request = $app->request();
 
@@ -156,24 +161,29 @@ $app->get('/path/templates.json', function () use($app, $db)
 // Add new Path Template
 $app->post('/path/templates.json', function () use($app, $db)
 {
-    $user="Donovan";
-    $date = "";
+    $user="Donovan"; //TODO
+    $date = ""; //TODO
 
     $request = $app->request();
 
     $body = $request->getBody();
-
     $body = json_decode($body);
 
-    $sql = "INSERT INTO pathtemplates (path, user, edit_date) VALUES (:path, :user, :edit_date)"; //Save json into new table (pathtemplate)
+    $name        = $body->name;
+    $description = $body->description;
+    $step        = $body->step;
+
+    $sql = "INSERT INTO pathtemplates (name step, user, edit_date) VALUES (:name, :description, :step, :user, :edit_date)"; //Save json into new table (pathtemplate)
 
     try {
-
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("path", json_encode($body));
+        $stmt->bindParam("name", $name);
+        $stmt->bindParam("description", $description);
+        $stmt->bindParam("step", json_encode($step));
         $stmt->bindParam("user", $user);
         $stmt->bindParam("edit_date", $date);
         $stmt->execute();
+
         $lastId = $db->lastInsertId();
 
         $sql = "SELECT id, path FROM pathtemplates WHERE pathtemplates.id = :id";
