@@ -3,8 +3,8 @@
     <a class="btn"
             ng-click="isCollapsed = !isCollapsed"
             ng-switch on="isCollapsed">
-        <span ng-switch-when="true"><i class="icon-collapse"></i></span>
-        <span ng-switch-default><i class="icon-collapse-top"></i></span>
+        <span ng-switch-when="true"><i class="icon-collapse" tooltip="Fold"></i></span>
+        <span ng-switch-default><i class="icon-collapse-top" tooltip="Unfold"></i></span>
     </a>
     <input
         type="text"
@@ -13,29 +13,29 @@
         title="step.name"
         ng-model="step.name"
         ng-blur="rename()" />
-    <button class="btn btn-primary" ng-click="openDialog(step)">
+    <button class="btn btn-primary" ng-click="openDialog(step)" tooltip="Activities list">
         <i class="icon-list-alt"></i>
     </button>
-    <button class="btn" ng-click="addChild(step)">
+    <button class="btn" ng-click="addChild(step)" tooltip="Add a child">
         <i class="icon-plus"></i>
     </button>
-    <button class="btn" ng-click="copy(step)">
+    <button class="btn" ng-click="copy(step)" tooltip="Copy">
         <i class="icon-copy"></i>
     </button>
-    <button class="btn" ng-click="paste(step)" ng-disabled="pasteDisabled">
+    <button class="btn" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
         <i class="icon-paste"></i>
     </button>
-    <button class="btn" ng-click="openTemplateModal(step)">
+    <button class="btn" ng-click=""openTemplateModal(step)" tooltip="Save">
         <i class="icon-heart"></i>
     </button>
-    <button class="btn btn-danger" ng-click="remove(step)">
+    <button class="btn btn-danger" ng-click="remove(step)" tooltip="Delete">
         <i class="icon-trash"></i>
     </button>
-    <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
+    <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Remove children">
         <i class="icon-list"></i>
     </button>
 </form>
-<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children">
+<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children" tooltip="Unfold">
     <li style="position:relative;"
         ng-repeat="step in step.children"
         ng-include="'partials/tree-item.html'"
