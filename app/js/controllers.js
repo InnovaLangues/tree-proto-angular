@@ -287,10 +287,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     ])
     .controller('DialogController', [
         '$scope',
-        '$dialog',
-        function($scope, $dialog) {
+        'dialog',
+        function($scope, dialog) {
             $scope.close = function(){
-                //dialog.close(result);
+                dialog.close();
             };
         }
     ])
@@ -298,12 +298,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$scope',
         'dialog',
         function($scope, dialog) {
-            $scope.open = function () {
-                console.log("Open");
-            };
-
             $scope.close = function () {
-                console.log("Close");
                 dialog.close();
             };
         }
