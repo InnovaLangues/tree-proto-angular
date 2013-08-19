@@ -105,7 +105,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             $scope.sortableOptions = {
                 update: $scope.update,
-                axis: 'y',
+                placeholder: "placeholder",
                 connectWith: '.ui-sortable'
             };
 

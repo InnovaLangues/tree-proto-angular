@@ -1,11 +1,5 @@
 <form class="form-inline">
     <i class="icon-move"></i>
-    <a class="btn"
-            ng-click="isCollapsed = !isCollapsed"
-            ng-switch on="isCollapsed">
-        <span ng-switch-when="true"><i class="icon-collapse"></i></span>
-        <span ng-switch-default><i class="icon-collapse-top"></i></span>
-    </a>
     <input
         type="text"
         value="{{step.name}}"
@@ -35,7 +29,7 @@
         <i class="icon-list"></i>
     </button>
 </form>
-<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children">
+<ul ui-sortable="sortableOptions" ng-model="step.children">
     <li style="position:relative;"
         ng-repeat="step in step.children"
         ng-include="'partials/tree-item.html'"
