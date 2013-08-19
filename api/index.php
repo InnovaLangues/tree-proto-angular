@@ -171,9 +171,9 @@ $app->post('/path/templates.json', function () use($app, $db)
 
     $name        = $body->name;
     $description = $body->description;
-    $step        = $body->step;
+    $steps       = $body->steps;
 
-    $sql = "INSERT INTO pathtemplates (name step, user, edit_date) VALUES (:name, :description, :step, :user, :edit_date)"; //Save json into new table (pathtemplate)
+    $sql = "INSERT INTO pathtemplates (name steps, user, edit_date) VALUES (:name, :description, :steps, :user, :edit_date)"; //Save json into new table (pathtemplate)
 
     try {
         $stmt = $db->prepare($sql);
