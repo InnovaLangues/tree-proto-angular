@@ -1,11 +1,5 @@
 <form class="form-inline">
     <i class="icon-move"></i>
-    <a class="btn"
-            ng-click="isCollapsed = !isCollapsed"
-            ng-switch on="isCollapsed">
-        <span ng-switch-when="true"><i class="icon-collapse" tooltip="Fold"></i></span>
-        <span ng-switch-default><i class="icon-collapse-top" tooltip="Unfold"></i></span>
-    </a>
     <input
         type="text"
         value="{{step.name}}"
@@ -22,7 +16,7 @@
     <button class="btn" ng-click="copy(step)" tooltip="Copy">
         <i class="icon-copy"></i>
     </button>
-    <button class="btn" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
+    <button class="btn" ng-click="paste(step)" ng-disabled="pasteDisabled">
         <i class="icon-paste"></i>
     </button>
     <button class="btn" ng-click=""openTemplateModal(step)" tooltip="Save">
@@ -31,7 +25,7 @@
     <button class="btn btn-danger" ng-click="remove(step)" tooltip="Delete">
         <i class="icon-trash"></i>
     </button>
-    <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Remove children">
+    <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
         <i class="icon-list"></i>
     </button>
 </form>
