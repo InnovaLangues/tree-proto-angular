@@ -268,57 +268,38 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 $scope.redoDisabled = true;
             };
 
-            $scope.openDialog = function(){
-                var d = $dialog.dialog({
+            var dialogOptions = {
                 backdrop: true,
                 keyboard: true,
-                backdropClick: true,
-                templateUrl:  'partials/activity-list.html', // OR: templateUrl: 'path/to/view.html',
-                controller: 'DialogController'
-            });
-                d.open().then(function(result){
-                    if (result)
-                    {
-                        alert('dialog closed with result: ' + result);
-                    }
-                });
+                backdropClick: true
+            };
+
+            $scope.openDialog = function(){
+                var d = $dialog.dialog(dialogOptions);
+                d.open('partials/activity-list.html', 'DialogController');
             };
 
             $scope.openTemplateModal = function(){
-                var d = $dialog.dialog({
-                backdrop: true,
-                keyboard: true,
-                backdropClick: true,
-                dialogFade:true,
-                backdropFade: true,
-                templateUrl:  'partials/modal-template.html', // OR: templateUrl: 'path/to/view.html',
-                controller: 'TemplateModalController'
-            });
-                d.open();
+                var d = $dialog.dialog(dialogOptions);
+                d.open('partials/modal-template.html', 'TemplateModalController');
             };
         }
     ])
     .controller('DialogController', [
         '$scope',
-        '$dialog',
-        function($scope, $dialog) {
-            $scope.close = function(result){
-                dialog.close(result);
+        'dialog',
+        function($scope, dialog) {
+            $scope.close = function(){
+                dialog.close();
             };
         }
     ])
     .controller('TemplateModalController', [
         '$scope',
-        '$dialog',
-        function($scope, $dialog) {
-            $scope.open = function () {
-                $scope.shouldBeOpen = true;
-                console.log("luhlum");
-            }
-
+        'dialog',
+        function($scope, dialog) {
             $scope.close = function () {
-                // $scope.closeMsg = 'I was closed at: ' + new Date();
-                $scope.shouldBeOpen = false;
+                dialog.close();
             };
         }
     ]);
