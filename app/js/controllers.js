@@ -296,10 +296,21 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     ])
     .controller('TemplateModalController', [
         '$scope',
+        '$http',
         'dialog',
-        function($scope, dialog) {
+        function($scope, $http, dialog) {
             $scope.close = function () {
                 dialog.close();
             };
+
+            $scope.save = function () {
+                //TODO
+                $http
+                    .post('../api/index.php/path/templates.json')
+                    .then(function(response) {
+                        templateFactory.setTemplates(response.data);
+                        $rootScope.templates = templateFactory.getTemplates();
+                    });
+            }
         }
     ]);
