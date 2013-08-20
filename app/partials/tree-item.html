@@ -29,7 +29,7 @@
         <i class="icon-list"></i>
     </button>
 </form>
-<ul collapse="isCollapsed" ui-sortable="sortableOptions" ng-model="step.children" tooltip="Unfold">
+<ul ui-sortable="sortableOptions" ng-model="step.children">
     <li style="position:relative;"
         ng-repeat="step in step.children"
         ng-include="'partials/tree-item.html'"
