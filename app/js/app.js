@@ -25,6 +25,18 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             }
         };
     })
+    .factory('stepFactory', function() {
+        var step = null;
+
+        return {
+            setStep : function (data) {
+                step = data;
+            },
+            getStep : function () {
+                return step;
+            }
+        };
+    })
     .factory('templateFactory', function() {
         var templates = {};
 
