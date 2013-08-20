@@ -149,10 +149,13 @@ $app->get('/path/templates.json', function () use($app, $db)
     $templates = array();
 
     foreach ($results as $result) {
-        $path = json_decode($result->path);
-        $path->id = $result->id;
+        $template = new stdClass();
+        $template->id = $result->id;
+        $template->name = $result->name;
+        $template->description = $result->description;
+        $template->step = json_decode($result->step);
 
-        $templates[] = $path;
+        $templates[] = $template;
     }
 
     echo json_encode($templates);
@@ -168,11 +171,10 @@ $app->post('/path/templates.json', function () use($app, $db)
 
     $body = $request->getBody();
     $body = json_decode($body);
-    print_r($body);
 
     $name        = $body->name;
     $description = $body->description;
-    $step       = $body->step;
+    $step        = $body->step;
 
     $sql = "INSERT INTO pathtemplates (name, description, step, user, edit_date) VALUES (:name, :description, :step, :user, :edit_date)"; //Save json into new table (pathtemplate)
 
@@ -185,7 +187,8 @@ $app->post('/path/templates.json', function () use($app, $db)
         $stmt->bindParam("edit_date", $date);
         $stmt->execute();
 
-        $lastId = $db->lastInsertId();
+        echo $lastId = $db->lastInsertId();
+        die();
 
         $sql = "SELECT id, path FROM pathtemplates WHERE pathtemplates.id = :id";
         $stmt = $db->prepare($sql);

@@ -45,7 +45,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.paths = null;
 
             $scope.getPaths = function() {
-                $http.get('../api/index.php/paths.json')
+                $http
+                    .get('../api/index.php/paths.json')
                     .success(function(data) {
                         $scope.paths = data;
                     }
@@ -55,7 +56,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.getPaths();
 
             $scope.delete = function(id) {
-                $http.delete('../api/index.php/paths/' + id + '.json')
+                $http
+                    .delete('../api/index.php/paths/' + id + '.json')
                     .success(function(data) {
                         $scope.getPaths();
                     }
@@ -297,25 +299,32 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         }
     ])
     .controller('TemplateModalController', [
+        '$rootScope',
         '$scope',
         '$http',
         'dialog',
         'stepFactory',
-        function($scope, $http, dialog, stepFactory) {
-
+        'templateFactory',
+        'alertFactory',
+        function($rootScope, $scope, $http, dialog, stepFactory, templateFactory, alertFactory) {
             $scope.step = stepFactory.getStep();
+
+            $scope.formTemplate = {
+                step: stepFactory.getStep()
+            };
 
             $scope.close = function () {
                 dialog.close();
             };
 
             $scope.save = function (formTemplate) {
-                //TODO
                 $http
                     .post('../api/index.php/path/templates.json', formTemplate)
                     .success(function(response) {
-                        templateFactory.setTemplates(response.data);
+                        alertFactory.addAlert("Template saved!", "success");
+                        //templateFactory.addTemplate(response.data);
                         $rootScope.templates = templateFactory.getTemplates();
+                        dialog.close();
                     });
             }
         }

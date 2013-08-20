@@ -41,6 +41,12 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         var templates = {};
 
         return {
+            addTemplate : function(template) {
+                templates.push(template);
+            },
+            /*removeTemplate : function(template) {
+                $this->steps->removeElement($steps);
+            },**/
             getTemplates : function() {
                 return templates;
             },

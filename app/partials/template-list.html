@@ -2,6 +2,7 @@
 <table class="table table-condensed">
 	<thead>
 		<tr>
+			<th>Index</th>
 			<th>ID</th>
 			<th>Name</th>
 			<th>Description</th>
@@ -9,9 +10,9 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="(id, template) in templates">
+		<tr ng-repeat="(index, template) in templates">
 			<td>
-				{{ id }}
+				{{ index }}
 			</td>
 			<td>
 				{{ template.id }}
@@ -23,7 +24,7 @@
 				{{ template.description }}
 			</td>
 			<td>
-				<a href="#/template/edit/{{ id }}" class="btn btn-small" tooltip="Edit"><i class="icon-edit"></i></a>
+				<a href="#/template/edit/{{ template.id }}" class="btn btn-small" tooltip="Edit"><i class="icon-edit"></i></a>
 				<button class="btn btn-danger btn-small" ng-click="delete(template, id)" tooltip="Delete"><i class="icon-trash"></i></button>
 			</td>
 		</tr>
