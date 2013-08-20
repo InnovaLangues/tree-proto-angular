@@ -168,10 +168,11 @@ $app->post('/path/templates.json', function () use($app, $db)
 
     $body = $request->getBody();
     $body = json_decode($body);
+    print_r($body);
 
     $name        = $body->name;
     $description = $body->description;
-    $steps       = $body->steps;
+    $step       = $body->step;
 
     $sql = "INSERT INTO pathtemplates (name, description, step, user, edit_date) VALUES (:name, :description, :step, :user, :edit_date)"; //Save json into new table (pathtemplate)
 

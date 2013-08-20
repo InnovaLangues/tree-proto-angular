@@ -71,9 +71,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$routeParams',
         '$location',
         'pathFactory',
+        'stepFactory',
         'templateFactory',
         'alertFactory',
-        function($rootScope, $scope, $http, $dialog, $routeParams, $location, pathFactory, templateFactory, alertFactory) {
+        function($rootScope, $scope, $http, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory) {
 
             if (!Array.prototype.last){
                 Array.prototype.last = function(){
@@ -279,7 +280,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 d.open('partials/activity-list.html', 'DialogController');
             };
 
-            $scope.openTemplateModal = function(){
+            $scope.openTemplateModal = function(step){
+                stepFactory.setStep(step);
                 var d = $dialog.dialog(dialogOptions);
                 d.open('partials/modal-template.html', 'TemplateModalController');
             };
@@ -298,16 +300,20 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$scope',
         '$http',
         'dialog',
-        function($scope, $http, dialog) {
+        'stepFactory',
+        function($scope, $http, dialog, stepFactory) {
+
+            $scope.step = stepFactory.getStep();
+
             $scope.close = function () {
                 dialog.close();
             };
 
-            $scope.save = function () {
+            $scope.save = function (formTemplate) {
                 //TODO
                 $http
-                    .post('../api/index.php/path/templates.json')
-                    .then(function(response) {
+                    .post('../api/index.php/path/templates.json', formTemplate)
+                    .success(function(response) {
                         templateFactory.setTemplates(response.data);
                         $rootScope.templates = templateFactory.getTemplates();
                     });
