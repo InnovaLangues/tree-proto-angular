@@ -2,7 +2,7 @@
     <h3>Saving template</h3>
 </div>
 <div class="modal-body">
-<form novalidate ng-init >
+<form novalidate>
     <fieldset>
         <label for="template-name">Name</label>
         <input type="text" name="template-name" ng-model="formTemplate.name">
@@ -19,5 +19,5 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
-    <button class="btn btn-primary" ng-click="save(formTemplate)">Save</button>
+    <button class="btn btn-primary" ng-click="save(formTemplate)">Add to favorites</button>
 </div>
