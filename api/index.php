@@ -187,10 +187,9 @@ $app->post('/path/templates.json', function () use($app, $db)
         $stmt->bindParam("edit_date", $date);
         $stmt->execute();
 
-        echo $lastId = $db->lastInsertId();
-        die();
+        $lastId = $db->lastInsertId();
 
-        $sql = "SELECT id, path FROM pathtemplates WHERE pathtemplates.id = :id";
+        $sql = "SELECT * FROM pathtemplates WHERE pathtemplates.id = :id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("id", $lastId);
         $stmt->execute();
@@ -198,7 +197,7 @@ $app->post('/path/templates.json', function () use($app, $db)
         $result = $stmt->fetchObject();
 
         if ($result) {
-            echo $lastId;
+            echo json_encode($result);
         }
 
         $db = null;
