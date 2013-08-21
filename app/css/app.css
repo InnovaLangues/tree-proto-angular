@@ -66,3 +66,14 @@ ul {
   color: #f00;
   z-index: 9999;
 }
+
+input.ng-invalid {
+  border: 1px solid red;
+}
+
+input.ng-invalid {
+  border: 1px solid red;
+}
+input.ng-valid {
+  border: 1px solid green;
+}
