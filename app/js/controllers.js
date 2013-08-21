@@ -322,7 +322,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     .post('../api/index.php/path/templates.json', formTemplate)
                     .success(function(response) {
                         alertFactory.addAlert("Template saved!", "success");
-                        //templateFactory.addTemplate(response.data);
+                        templateFactory.addTemplate(response);
                         $rootScope.templates = templateFactory.getTemplates();
                         dialog.close();
                     });
