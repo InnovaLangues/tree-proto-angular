@@ -211,28 +211,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 updateHistory($scope.path);
             };
 
-            $scope.saveTemplate = function(step) {
-                $http
-                    .post('../api/index.php/path/templates.json', step)
-                    .success ( function (data) {
-
-
-
-                                            //TODO: Move this block outa here
-                                            $http
-                                                .get('../api/index.php/path/templates.json')
-                                                .then(function(response) {
-                                                    templateFactory.setTemplates(response.data);
-                                                    $rootScope.templates = templateFactory.getTemplates();
-                                                });
-
-
-
-                        step.templateId = data;
-                        alertFactory.addAlert("Template saved!", "success");
-                    });
-            };
-
             $scope.save = function(path) {
                 if ($routeParams.id === undefined) {
                     //Create new path
@@ -310,9 +288,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.step = stepFactory.getStep();
 
             $scope.formTemplate = {
+                name : "",
+                description : "",
                 step: stepFactory.getStep()
             };
-
             $scope.close = function () {
                 dialog.close();
             };
