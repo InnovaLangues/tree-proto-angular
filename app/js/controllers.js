@@ -69,6 +69,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$rootScope',
         '$scope',
         '$http',
+        '$notification',
         '$dialog',
         '$routeParams',
         '$location',
@@ -76,7 +77,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'stepFactory',
         'templateFactory',
         'alertFactory',
-        function($rootScope, $scope, $http, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory) {
+        function($rootScope, $scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory) {
 
             if (!Array.prototype.last){
                 Array.prototype.last = function(){
@@ -217,8 +218,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $http
                         .post('../api/index.php/paths.json', path)
                         .success ( function (data) {
-                            $location.path("/tree/edit/" + data);
                             $notification.success("Success!", "Path saved!");
+                            $location.path("/tree/edit/" + data);
                         });
                 } else {
                     //Update existing path
