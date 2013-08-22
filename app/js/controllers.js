@@ -218,14 +218,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         .post('../api/index.php/paths.json', path)
                         .success ( function (data) {
                             $location.path("/tree/edit/" + data);
-                            alertFactory.addAlert("Path saved!", "success");
+                            $notification.success("Success!", "Path saved!");
                         });
                 } else {
                     //Update existing path
                     $http
                         .put('../api/index.php/paths/' + path.id + '.json', path)
                         .success ( function (data) {
-                            alertFactory.addAlert("Path saved!", "success");
+                            $notification.success("Success!", "Path saved!");
                         });
                 }
             };
@@ -280,11 +280,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$rootScope',
         '$scope',
         '$http',
+        '$notification',
         'dialog',
         'stepFactory',
         'templateFactory',
         'alertFactory',
-        function($rootScope, $scope, $http, dialog, stepFactory, templateFactory, alertFactory) {
+        function($rootScope, $scope, $http, $notification, dialog, stepFactory, templateFactory, alertFactory) {
             $scope.step = stepFactory.getStep();
 
             $scope.formTemplate = {
@@ -300,7 +301,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 $http
                     .post('../api/index.php/path/templates.json', formTemplate)
                     .success(function(response) {
-                        alertFactory.addAlert("Template saved!", "success");
+                        $notification.success("Success!", "Template saved!");
                         templateFactory.addTemplate(response);
                         $rootScope.templates = templateFactory.getTemplates();
                         dialog.close();

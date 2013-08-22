@@ -2,7 +2,7 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pageslide-directive'])
+angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pageslide-directive', 'notifications'])
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/404', {templateUrl: 'partials/404.html'});
         $routeProvider.when('/path/list', {templateUrl: 'partials/path-list.html', controller: 'PathContoller'});
