@@ -12,23 +12,30 @@
 
         {{ showEdit }}
         </span>
-
-        <i class="icon-list-alt" ng-click="openDialog(step)" tooltip="Activities list"></i>
-
-        <i class="icon-plus" ng-click="addChild(step)" tooltip="Add a child"></i>
-
-        <i class="icon-copy" ng-click="copy(step)" tooltip="Copy"></i>
-
-        <i class="icon-paste" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste"></i>
-
-        <i class="icon-heart" ng-click="openTemplateModal(step)" tooltip="Add to favorites"></i>
-
-        <i class="icon-pencil" ng-model="showEdit" ng-init="showEdit=true" ng-click="showEdit=!showEdit" tooltip="Edit"></i>
-
-        <i class="icon-trash" ng-click="remove(step)" tooltip="Delete"></i>
-
-        <i class="icon-list" ng-click="removeChildren(step)" ng-show="step.children.length > 0"></i>
-
+    <button class="btn btn-primary btn-mini" ng-click="openDialog(step)" tooltip="Activities list">
+        <i class="icon-list-alt"></i>
+    </button>
+    <button class="btn btn-mini" ng-click="addChild(step)" tooltip="Add a child">
+        <i class="icon-plus"></i>
+    </button>
+    <button class="btn btn-mini" ng-click="copy(step)" tooltip="Copy">
+        <i class="icon-copy"></i>
+    </button>
+    <button class="btn btn-mini" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
+        <i class="icon-paste"></i>
+    </button>
+    <button class="btn btn-mini" ng-click="openTemplateModal(step)" tooltip="Add to favorites">
+        <i class="icon-heart"></i>
+    </button>
+    <button class="btn btn-mini" ng-model="showEdit" ng-init="showEdit=true" ng-click="showEdit=!showEdit" tooltip="Edit">
+        <i class="icon-pencil"></i>
+    </button>
+    <button class="btn btn-danger btn-mini" ng-click="remove(step)" tooltip="Delete">
+        <i class="icon-trash"></i>
+    </button>
+    <button class="btn btn-danger btn-mini" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
+        <i class="icon-list"></i>
+    </button>
 </form>
 <ul ui-sortable="sortableOptions" ng-model="step.children">
     <li style="position:relative;"
