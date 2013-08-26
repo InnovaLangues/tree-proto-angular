@@ -1,4 +1,4 @@
-<form class="form-inline">
+<form class="form-inline" >
     <i class="icon-move"></i>
     <input
         type="text"
@@ -6,28 +6,29 @@
         class="step-name"
         title="step.name"
         ng-model="step.name"
-        ng-blur="rename()" />
-    <button class="btn btn-primary" ng-click="openDialog(step)" tooltip="Activities list">
-        <i class="icon-list-alt"></i>
-    </button>
-    <button class="btn" ng-click="addChild(step)" tooltip="Add a child">
-        <i class="icon-plus"></i>
-    </button>
-    <button class="btn" ng-click="copy(step)" tooltip="Copy">
-        <i class="icon-copy"></i>
-    </button>
-    <button class="btn" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
-        <i class="icon-paste"></i>
-    </button>
-    <button class="btn" ng-click="openTemplateModal(step)" tooltip="Add to favorites">
-        <i class="icon-heart"></i>
-    </button>
-    <button class="btn btn-danger" ng-click="remove(step)" tooltip="Delete">
-        <i class="icon-trash"></i>
-    </button>
-    <button class="btn btn-danger" ng-click="removeChildren(step)" ng-show="step.children.length > 0">
-        <i class="icon-list"></i>
-    </button>
+        ng-blur="rename()" ng-show="showEdit"/>
+        <span ng-hide="showEdit">
+        {{ step.name }}
+
+        {{ showEdit }}
+        </span>
+
+        <i class="icon-list-alt" ng-click="openDialog(step)" tooltip="Activities list"></i>
+
+        <i class="icon-plus" ng-click="addChild(step)" tooltip="Add a child"></i>
+
+        <i class="icon-copy" ng-click="copy(step)" tooltip="Copy"></i>
+
+        <i class="icon-paste" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste"></i>
+
+        <i class="icon-heart" ng-click="openTemplateModal(step)" tooltip="Add to favorites"></i>
+
+        <i class="icon-pencil" ng-model="showEdit" ng-init="showEdit=true" ng-click="showEdit=!showEdit" tooltip="Edit"></i>
+
+        <i class="icon-trash" ng-click="remove(step)" tooltip="Delete"></i>
+
+        <i class="icon-list" ng-click="removeChildren(step)" ng-show="step.children.length > 0"></i>
+
 </form>
 <ul ui-sortable="sortableOptions" ng-model="step.children">
     <li style="position:relative;"

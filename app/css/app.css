@@ -46,14 +46,18 @@ li {
 }
 
 ul {
-  min-height: : 5px;
+  min-height: 5px;/*
+  border: 1px solid red;*/
+}
 
+form {
+  margin: 0 0 5px;
 }
 
 .placeholder {
   background: #CCCCCC;
-  min-height: 33px;
-  border: 2px dashed #010101;
+  min-height: 10px;
+  border: 1px dashed #010101;
   margin-bottom: 15px;
 }
 
