@@ -117,6 +117,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
                     .success(function(data) {
                         updateHistory(data);
+                        // pathFactory.setPath(data);
+                        // $rootScope.path = pathFactory.getPath();
+                        $rootScope.path = data;
+                        $rootScope.path.id = $routeParams.id;
                     }
                 );
             } else {
