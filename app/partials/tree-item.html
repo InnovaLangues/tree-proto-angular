@@ -1,4 +1,4 @@
-<form class="form-inline">
+<form class="form-inline" ng-app>
     <i class="icon-move"></i>
     <input
         type="text"
@@ -6,12 +6,12 @@
         class="step-name"
         title="step.name"
         ng-model="step.name"
-        ng-blur="rename()" ng-show="showEdit"/>
-        <span ng-hide="showEdit" ng-mouseenter="show = true" ng-mouseleave="show = false" >
+        ng-blur="rename()" ng-show="tree-item.showEdit"/>
+        <span ng-hide="tree-item.showEdit" ng-mouseenter="show = true" ng-mouseleave="show = false" >
         {{ step.name }}
 
+        {{ tree-item.showEdit }}
         </span>
-        {{ showEdit }}
     <span ng-show="show" ng-mouseenter="show = true" ng-mouseleave="show = false">
         <button class="btn btn-primary btn-mini" ng-click="openDialog(step)" tooltip="Activities list">
             <i class="icon-list-alt"></i>
@@ -28,7 +28,7 @@
         <button class="btn btn-mini" ng-click="openTemplateModal(step)" tooltip="Add to favorites">
             <i class="icon-heart"></i>
         </button>
-        <button class="btn btn-mini" ng-click="showEdit=!showEdit" tooltip="Edit">
+        <button class="btn btn-mini" ng-click="tree-item.showEdit=!tree-item.showEdit" tooltip="Edit">
             <i class="icon-pencil"></i>
         </button>
         <button class="btn btn-danger btn-mini" ng-click="remove(step)" tooltip="Delete">
@@ -40,6 +40,7 @@
     </span>
 </form>
 <ul ui-sortable="sortableOptions" ng-model="step.children">
+
     <li style="position:relative;"
         ng-repeat="step in step.children"
         ng-include="'partials/tree-item.html'"
