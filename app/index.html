@@ -32,6 +32,7 @@
                     <tab-heading>
                         <a href="#/path/global/{{ path.id }}">Global</a>
                         <!-- CONTENT -->
+                        <div ng-include="partial/global.html"></div>
                         <div id="primary-sidebar"  style="display:none" >
                             <div ng-include="'partials/primary-sidebar.html'" ng-controller="TemplateController"></div>
                             <a id="primary-sidebar-close" href="#" class="btn">Close</a>
