@@ -9,7 +9,11 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         $routeProvider.when('/template/list', {templateUrl: 'partials/template-list.html', controller: 'TemplateController'});
         $routeProvider.when('/template/edit/:id', {templateUrl: 'partials/template-edit.html', controller: 'TemplateController'});
         $routeProvider.when('/tree', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
-        $routeProvider.when('/tree/edit/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/global/:id', {templateUrl: 'partials/global.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/skills/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/scenario/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/validation/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/planner/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
         $routeProvider.when('/timeline/', {templateUrl: 'partials/tree-view2.html', controller: 'TreeContoller'});
         $routeProvider.when('/timeline/edit/:id', {templateUrl: 'partials/tree-view2.html', controller: 'TreeContoller'});
         $routeProvider.otherwise({redirectTo: '/404'});
