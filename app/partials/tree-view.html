@@ -11,7 +11,7 @@
         <div class="control-group">
             <label class="control-label" for="path-name">Path name : </label>
             <div class="controls">
-                <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name"></input>
+                <input type="text" value="{{ path.name }}" ng-model="path.name" ng-blur="rename()" id="path-name"></input>
             </div>
         </div>
         <div class="well" id="zone">

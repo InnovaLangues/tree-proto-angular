@@ -18,18 +18,53 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         $routeProvider.when('/timeline/edit/:id', {templateUrl: 'partials/tree-view2.html', controller: 'TreeContoller'});
         $routeProvider.otherwise({redirectTo: '/404'});
     }])
-    .factory('pathFactory', function() {
+    .factory('pathFactory', ['$rootScope', function($rootScope) {
         var path = null;
+        $rootScope.rootPath = null; //Debug
+
+        var history = [];
+        $rootScope.rootHistory = []; //Debug
+
+        var historyState = -1;
+        $rootScope.rootHistoryState = -1; //Debug
 
         return {
-            setPath : function (data) {
-                path = data;
-            },
             getPath : function () {
                 return path;
-            }
+            },
+            setPath : function (data) {
+                path = data;
+                $rootScope.rootPath = data; //Debug
+            },
+            getHistory : function () {
+                return history;
+            },
+            addPathToHistory : function(data) {
+                // Clone object
+                var pathCopy = jQuery.extend(true, {}, data);
+
+                history.push(pathCopy);
+                $rootScope.rootHistory.push(pathCopy); //Debug
+            },
+            removeLastPathsFromHistory : function(index) {
+                history.splice(index,history.length-index);
+                $rootScope.rootHistory.splice(index,$rootScope.rootHistory.length-index); //Debug
+            },
+            getPathFromHistory : function (key) {
+                return history[key];
+            },
+            getLastHistoryState : function () {
+                return history[history.length-1];
+            },
+            getHistoryState : function () {
+                return historyState;
+            },
+            setHistoryState : function (data) {
+                historyState = data;
+                $rootScope.rootHistoryState = data; //Debug
+            },
         };
-    })
+    }])
     .factory('stepFactory', function() {
         var step = null;
 

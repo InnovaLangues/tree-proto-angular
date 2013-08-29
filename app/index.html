@@ -74,6 +74,28 @@
         </div>
         <div ng-view></div>
         <div notifications="top right"></div>
+        <div>
+            <h4>DEBUG :</h4>
+            <h5>Root History State</h5>
+            <pre>
+            {{ rootHistoryState }}
+            </pre>
+
+            <h5>Root path :</h5>
+            <pre>
+            {{ rootPath | json }}
+            </pre>
+
+            <h5>Scope path :</h5>
+            <pre>
+            {{ path | json }}
+            </pre>
+
+            <h5>Root History</h5>
+            <pre>
+            {{ rootHistory | json }}
+            </pre>
+        </div>
     </div>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>

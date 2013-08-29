@@ -21,7 +21,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'alertFactory',
         // TODO: There has to be a better way than using rootScope
         function($rootScope, $scope, $http, templateFactory, alertFactory) {
-
             $http
                 .get('../api/index.php/path/templates.json')
                 .then(function(response) {
@@ -95,8 +94,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.pasteDisabled = true;
             $scope.isTemplateSaved = false;
             $scope.path = pathFactory.getPath();
-            $scope.historyState = -1;
-            $scope.histArray = [];
+            //$scope.historyState = -1;
+            //$scope.histArray = [];
 
             $scope.update = function() {
               var e, i, _i, _len, _ref;
@@ -105,11 +104,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 e = _ref[i];
                 e.pos = i;
               }
+              updateHistory(_ref);
             };
 
             $scope.sortableOptions = {
                 update: $scope.update,
-                placeholder: "placeholder",
+                placeholder: 'placeholder',
                 connectWith: '.ui-sortable'
             };
 
@@ -117,10 +117,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
                     .success(function(data) {
                         updateHistory(data);
-                        // pathFactory.setPath(data);
+                        pathFactory.setPath(data);
                         // $rootScope.path = pathFactory.getPath();
-                        $rootScope.path = data;
-                        $rootScope.path.id = $routeParams.id;
+                        $rootScope.path = data; //TODO : remove
+                        $rootScope.path.id = $routeParams.id; //TODO : remove
                     }
                 );
             } else {
@@ -132,19 +132,47 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             }
 
             $scope.undo = function() {
-                $scope.historyState = $scope.historyState -1;
-                $scope.path = $scope.histArray[$scope.historyState];
+                // Decrement history state
+                pathFactory.setHistoryState(
+                    pathFactory.getHistoryState() - 1
+                );
+
+                var historyState = pathFactory.getHistoryState();
+
+                var path = pathFactory.getPathFromHistory(historyState);
+
+                // Clone object
+                var pathCopy = jQuery.extend(true, {}, path);
+
+                pathFactory.setPath(pathCopy);
+
+                $scope.path = pathFactory.getPath();
+
                 $scope.redoDisabled = false;
-                if ($scope.historyState == -1) {
+                if (historyState === 0) {
                     $scope.undoDisabled = true;
                 }
             };
 
             $scope.redo = function() {
-                $scope.historyState = $scope.historyState + 1;
-                $scope.path = $scope.histArray[$scope.historyState];
+                // Increment history state
+                pathFactory.setHistoryState(
+                    pathFactory.getHistoryState() + 1
+                );
+
+                var historyState = pathFactory.getHistoryState();
+
+                var path = pathFactory.getPathFromHistory(historyState);
+
+                // Clone object
+                var pathCopy = jQuery.extend(true, {}, path);
+
+                pathFactory.setPath(pathCopy);
+
+                $scope.path = pathFactory.getPath();
+
                 $scope.undoDisabled = false;
-                if ($scope.historyState == $scope.histArray.length - 1) {
+                if (historyState == pathFactory.getHistory().length - 1) {
                     $scope.redoDisabled = true;
                 }
             };
@@ -222,7 +250,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $http
                         .post('../api/index.php/paths.json', path)
                         .success ( function (data) {
-                            $notification.success("Success!", "Path saved!");
+                            $notification.success("Success", "New path saved!");
                             $location.path("/tree/edit/" + data);
                         });
                 } else {
@@ -230,27 +258,25 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $http
                         .put('../api/index.php/paths/' + path.id + '.json', path)
                         .success ( function (data) {
-                            $notification.success("Success!", "Path saved!");
+                            $notification.success("Success", "Path updated!");
                         });
                 }
             };
 
 
             var updateHistory = function(path) {
-                //TODO:  CA NE MARCHE PAS!
-                if ($scope.historyState !== $scope.histArray.length - 1) {
-                    $scope.histArray.splice($scope.historyState + 1, $scope.histArray.length - $scope.historyState);
+                // Increment history state
+                pathFactory.setHistoryState(
+                    pathFactory.getHistoryState() + 1
+                );
+
+                pathFactory.addPathToHistory(path);
+
+                pathFactory.setPath(path);
+                $scope.path = pathFactory.getPath();
+                if (pathFactory.getHistoryState() !== 0) {
+                    $scope.undoDisabled = false;
                 }
-
-                var pathCopy = jQuery.extend(true, {}, path);
-                $scope.histArray.push(pathCopy);
-
-                $scope.historyState = $scope.historyState + 1;
-
-                var pathCopy = jQuery.extend(true, {}, $scope.histArray.last());
-                $scope.path = pathCopy;
-
-                $scope.undoDisabled = false;
                 $scope.redoDisabled = true;
             };
 
