@@ -1,6 +1,8 @@
-<div>
-    <label class="control-label" for="path-name">Path name : </label>
-    <div class="controls">
-        <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name"></input>
-    </div>
+<div ng-include="'partials/tabs.html'"></div>
+<h1>Path editor : Global</h1>
+<div ng-include="'partials/top-toolbar.html'"></div>
+<label class="control-label" for="path-name">Path name : </label>
+<div class="controls">
+    <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name"></input>
 </div>
+<a href="#/path/skills/" class="btn btn-primary">Next step</a>

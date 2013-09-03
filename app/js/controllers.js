@@ -114,15 +114,30 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
 
             if ($routeParams.id) {
-                $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
-                    .success(function(data) {
-                        updateHistory(data);
-                        pathFactory.setPath(data);
-                        // $rootScope.path = pathFactory.getPath();
-                        $rootScope.path = data; //TODO : remove
-                        $rootScope.path.id = $routeParams.id; //TODO : remove
-                    }
-                );
+                //check if not empty factory
+                //alert(pathFactory.getPath());
+
+                if (!pathFactory.getPathInstanciated($routeParams.id)) {
+                    alert("req");
+                    pathFactory.addPathInstanciated($routeParams.id);
+                    $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
+                        .success(function(data) {
+                            if(pathFactory.getHistoryState() === -1) {
+                                updateHistory(data);
+                            }
+
+                            pathFactory.setPath(data);
+                            $scope.path = data;
+                            $scope.path.id = $routeParams.id; //TODO : remove
+                        }
+                    );
+                }
+                else{
+                     alert("pas req");
+                }
+
+
+
             } else {
                 $http.get('tree.json')
                     .success(function(data) {
@@ -251,12 +266,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         .post('../api/index.php/paths.json', path)
                         .success ( function (data) {
                             $notification.success("Success", "New path saved!");
-                            $location.path("/tree/edit/" + data);
+                            $location.path("/path/global/" + data);
                         });
                 } else {
                     //Update existing path
                     $http
-                        .put('../api/index.php/paths/' + path.id + '.json', path)
+                        .put('../api/index.php/paths/' + $routeParams.id + '.json', path)
                         .success ( function (data) {
                             $notification.success("Success", "Path updated!");
                         });

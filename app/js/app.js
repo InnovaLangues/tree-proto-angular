@@ -8,14 +8,13 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         $routeProvider.when('/path/list', {templateUrl: 'partials/path-list.html', controller: 'PathContoller'});
         $routeProvider.when('/template/list', {templateUrl: 'partials/template-list.html', controller: 'TemplateController'});
         $routeProvider.when('/template/edit/:id', {templateUrl: 'partials/template-edit.html', controller: 'TemplateController'});
-        $routeProvider.when('/tree', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
+        $routeProvider.when('/tree', {templateUrl: 'partials/skills.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/global', {templateUrl: 'partials/global.html', controller: 'TreeContoller'});
         $routeProvider.when('/path/global/:id', {templateUrl: 'partials/global.html', controller: 'TreeContoller'});
-        $routeProvider.when('/path/skills/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
-        $routeProvider.when('/path/scenario/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
-        $routeProvider.when('/path/validation/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
-        $routeProvider.when('/path/planner/:id', {templateUrl: 'partials/tree-view.html', controller: 'TreeContoller'});
-        $routeProvider.when('/timeline/', {templateUrl: 'partials/tree-view2.html', controller: 'TreeContoller'});
-        $routeProvider.when('/timeline/edit/:id', {templateUrl: 'partials/tree-view2.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/skills/:id', {templateUrl: 'partials/skills.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/scenario/:id', {templateUrl: 'partials/skills.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/validation/:id', {templateUrl: 'partials/skills.html', controller: 'TreeContoller'});
+        $routeProvider.when('/path/planner/:id', {templateUrl: 'partials/skills.html', controller: 'TreeContoller'});
         $routeProvider.otherwise({redirectTo: '/404'});
     }])
     .factory('pathFactory', ['$rootScope', function($rootScope) {
@@ -27,6 +26,11 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
 
         var historyState = -1;
         $rootScope.rootHistoryState = -1; //Debug
+
+        var pathInstanciated = [];
+        $rootScope.rootPathInstanciated  = [];
+
+
 
         return {
             getPath : function () {
@@ -63,6 +67,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 historyState = data;
                 $rootScope.rootHistoryState = data; //Debug
             },
+            addPathInstanciated : function(id) {
+                alert("ajout" + id);
+                pathInstanciated[id] = id;
+                $rootScope.rootPathInstanciated[id] = id;
+            },
+            getPathInstanciated : function(id) {
+                var typeOf = typeof pathInstanciated[id] != 'undefined';
+                return typeOf;
+            }
         };
     }])
     .factory('stepFactory', function() {

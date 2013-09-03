@@ -1,0 +1,37 @@
+<div ng-include="'partials/tabs.html'"></div>
+<h1>Path editor : Skills</h1>
+<div ng-include="'partials/top-toolbar.html'"></div>
+<hr>
+<div class="row">
+    <div class="span12">
+        <div class="well" id="zone">
+            <ul>
+                <li ng-repeat="step in path.steps" ng-include="'partials/tree-item.html'" ></li>
+            </ul>
+        </div>
+        <a href="#/path/skills/" class="btn btn-primary">Next step</a>
+    </div>
+</div>
+<!--
+<div class="footer">
+    <a href="#" class="btn" id="show-debug"><i class="icon-cog"></i></a>
+</div>
+<div id="debug" class="hidden">
+    <div>
+        <h4>Path</h4>
+        <pre id="myPath">{{ path | json}}</pre>
+    </div>
+    <div>
+        <h4>Clipboard</h4>
+        <pre id="clipboard">{{ clipboard | json}}</pre>
+    </div>
+    <div>
+        <h4>Hist Array</h4>
+        <pre id="clipboard">{{ histArray | json}}</pre>
+    </div>
+    <div>
+        <h4>Hist State</h4>
+        <pre id="clipboard">{{ historyState }}</pre>
+    </div>
+</div>
+-->
