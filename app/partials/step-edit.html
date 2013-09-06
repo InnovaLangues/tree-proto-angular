@@ -1,0 +1,11 @@
+<h1>Step editor : {{ step.name }}</h1>
+
+<form name="stepForm">
+    <fieldset>
+        <label for="step-name">Step name :</label>
+        <input type="text" id="step-name" ng-model="step.name" value="{{ step.name }}" />
+    </fieldset>
+	
+    <a class="btn btn-warning" href="#/path/scenario/{{ path.id }}">Cancel</a>
+    <a class="btn btn-primary" ng-click="updateStep(step)" href="#/path/scenario/{{ path.id }}">Edit</a>
+</form>

@@ -4,8 +4,9 @@
 angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pageslide-directive', 'notifications'])
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/404', {templateUrl: 'partials/404.html'});
-        $routeProvider.when('/path/list', {templateUrl: 'partials/path-list.html', controller: 'PathController'});
-        $routeProvider.when('/template/list', {templateUrl: 'partials/template-list.html', controller: 'TemplateController'});
+        $routeProvider.when('/path/list', {templateUrl: 'partials/path-list.html', controller: 'PathController', clearPath: true, clearClipboard: true, clearHistory: true});
+        $routeProvider.when('/template/list', {templateUrl: 'partials/template-list.html', controller: 'TemplateController', clearPath: true, clearClipboard: true, clearHistory: true});
+        $routeProvider.when('/template/edit', {templateUrl: 'partials/template-edit.html', controller: 'TemplateController'});
         $routeProvider.when('/template/edit/:id', {templateUrl: 'partials/template-edit.html', controller: 'TemplateController'});
         
         // Editing Steps
@@ -16,76 +17,207 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         $routeProvider.when('/path/validation/:id', {templateUrl: 'partials/editing-steps/validation.html', controller: 'TreeController'});
         $routeProvider.when('/path/planner/:id', {templateUrl: 'partials/editing-steps/planner.html', controller: 'TreeController'});
         
+        $routeProvider.when('/step/edit', {templateUrl: 'partials/step-edit.html', controller: 'StepController'});
         $routeProvider.when('/step/edit/:id', {templateUrl: 'partials/step-edit.html', controller: 'StepController'});
         
         $routeProvider.otherwise({redirectTo: '/404'});
     }])
     
-    .factory('clipboardFactory', ['$rootScope', function($rootScope) {
-        var clipboardContent = null;
-        var clipboardContentFromTemplates = false;
+    .run([
+        '$location',
+        '$route',
+        'pathFactory',
+        'clipboardFactory',
+        'historyFactory',
+        function($location, $route, pathFactory, clipboardFactory, historyFactory) {
+            $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
+                if (next.clearClipboard) {
+                    clipboardFactory.clear();
+                }
+                
+                if (next.clearHistory) {
+                    historyFactory.clear();
+                }
+                
+                if (next.clearPath) {
+                    pathFactory.clear();
+                }
+            });
+        }
+    ])
+    
+    .factory('historyFactory', [
+        'pathFactory', 
+        function(pathFactory) {
+            var redoDisabled = true;
+            var undoDisabled = true;
+            
+            var history = [];
+            var historyState = -1;
+            
+            return {
+                get: function() {
+                    return history;
+                },
+                
+                clear: function() {
+                    this.setRedoDisabled(true);
+                    this.setUndoDisabled(true);
+                    
+                    history = [];
+                    historyState = -1;
+                },
+                
+                update: function(path) {
+                    // Increment history state
+                    this.incrementHistoryState();
+                    
+                    this.addPathToHistory(path);
+                    
+                    if (this.getHistoryState() !== 0) {
+                        this.setUndoDisabled(false);
+                    }
+                    this.setRedoDisabled(true);
+                },
+                
+                undo: function() {
+                    // Decrement history state
+                    this.decrementHistoryState();
+                    
+                    var path = this.getPathFromHistory(historyState);
+                    
+                    // Clone object
+                    var pathCopy = jQuery.extend(true, {}, path);
+                    
+                    this.setRedoDisabled(false);
+                    if (0 === historyState) {
+                        this.setUndoDisabled(true);
+                    }
+                    
+                    // Inject new path
+                    pathFactory.setPath(pathCopy);
+                },
+                
+                redo: function() {
+                    // Increment history state
+                    this.incrementHistoryState();
+                    
+                    var path = this.getPathFromHistory(historyState);
+                    
+                    // Clone object
+                    var pathCopy = jQuery.extend(true, {}, path);
+                    
+                    this.setUndoDisabled(false);
+                    if (historyState == history.length - 1) {
+                        this.setRedoDisabled(true);
+                    }
+                    
+                    // Inject new path
+                    pathFactory.setPath(pathCopy);
+                },
+                
+                incrementHistoryState: function() {
+                    // Increment history state
+                    this.setHistoryState(this.getHistoryState() + 1);
+                },
+                
+                decrementHistoryState: function() {
+                    // Decrement history state
+                    this.setHistoryState(this.getHistoryState() - 1);
+                },
+                
+                getHistoryState: function() {
+                    return historyState;
+                },
+                
+                setHistoryState: function(data) {
+                    historyState = data;
+                },
+                
+                getPathFromHistory : function(index) {
+                    return history[index];
+                },
+                
+                addPathToHistory : function(data) {
+                    // Clone object
+                    var pathCopy = jQuery.extend(true, {}, data);
+                    history.push(pathCopy);
+                },
+                
+                getRedoDisabled: function() {
+                    return redoDisabled;
+                },
+                
+                setRedoDisabled: function(data) {
+                    redoDisabled = data;
+                },
+                
+                getUndoDisabled: function() {
+                    return undoDisabled;
+                },
+                
+                setUndoDisabled: function(data) {
+                    undoDisabled = data;
+                }
+            }
+        }
+    ])
+    
+    .factory('clipboardFactory', function($rootScope) {
+        var clipboard = null;
+        var clipboardFromTemplates = false;
         
-        $rootScope.pasteDisabled = true;
+        var pasteDisabled = true;
         
         return {
-            clearClipboard: function() {
-                clipboardContent = null;
-                clipboardContentFromTemplates = false;
-                $rootScope.pasteDisabled = true;
+            clear: function() {
+                clipboard = null;
+                clipboardFromTemplates = false;
+                this.setPasteDisabled(true);
             },
             
             isEmpty: function() {
-                return null === clipboardContent;
+                return null === clipboard;
             },
             
             copy: function(steps, fromTemplates) {
-                clipboardContent = steps;
-                clipboardContentFromTemplates = fromTemplates || false;
-                $rootScope.pasteDisabled = false;
+                clipboard = steps;
+                clipboardFromTemplates = fromTemplates || false;
+                this.setPasteDisabled(false);
             },
             
             paste: function(step) {
                 if (!this.isEmpty())
                 {
                     // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
-                    var stepCopy = jQuery.extend(true, {}, clipboardContent);
+                    var stepCopy = jQuery.extend(true, {}, clipboard);
                     
-                    if (!clipboardContentFromTemplates) {
+                    if (!clipboardFromTemplates) {
                         stepCopy.name = stepCopy.name + '_copy';
                     }
                     
                     step.children.push(stepCopy);
                 }
+            },
+            
+            getPasteDisabled: function() {
+                return pasteDisabled;
+            },
+            
+            setPasteDisabled: function(data) {
+                pasteDisabled = data;
             }
         }
-    }])
+    })
     
-    .factory('pathFactory', ['$rootScope', function($rootScope) {
+    .factory('pathFactory', function() {
         var path = null;
-        $rootScope.rootPath = null; //Debug
-
-        var history = [];
-        $rootScope.rootHistory = []; //Debug
-
-        var historyState = -1;
-        $rootScope.rootHistoryState = -1; //Debug
-
         var pathInstanciated = [];
-        $rootScope.rootPathInstanciated  = [];
 
         return {
-            clearHistory: function() {
+            clear: function() {
                 path = null;
-                $rootScope.rootPath = null; //Debug
-
-                var history = [];
-                $rootScope.rootHistory = []; //Debug
-
-                var historyState = -1;
-                $rootScope.rootHistoryState = -1; //Debug
-
-                var pathInstanciated = [];
-                $rootScope.rootPathInstanciated  = [];
+                pathInstanciated = [];
             },
             
             getPath : function() {
@@ -94,53 +226,17 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             setPath : function(data) {
                 path = data;
-                $rootScope.rootPath = data; //Debug
-            },
-            
-            getHistory : function() {
-                return history;
-            },
-            
-            addPathToHistory : function(data) {
-                // Clone object
-                var pathCopy = jQuery.extend(true, {}, data);
-
-                history.push(pathCopy);
-                $rootScope.rootHistory.push(pathCopy); //Debug
-            },
-            
-            removeLastPathsFromHistory : function(index) {
-                history.splice(index,history.length-index);
-                $rootScope.rootHistory.splice(index,$rootScope.rootHistory.length-index); //Debug
-            },
-            
-            getPathFromHistory : function(key) {
-                return history[key];
-            },
-            
-            getLastHistoryState : function() {
-                return history[history.length-1];
-            },
-            
-            getHistoryState : function() {
-                return historyState;
-            },
-            
-            setHistoryState : function(data) {
-                historyState = data;
-                $rootScope.rootHistoryState = data; //Debug
             },
             
             addPathInstanciated : function(id) {
                 pathInstanciated[id] = id;
-                $rootScope.rootPathInstanciated[id] = id;
             },
             
             getPathInstanciated : function(id) {
                 return typeof pathInstanciated[id] != 'undefined';
             }
         };
-    }])
+    })
     
     .factory('stepFactory', function() {
         var step = null;
