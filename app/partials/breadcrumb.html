@@ -1,0 +1,7 @@
+<ul class="breadcrumb" ng-controller="EditingStepsController">
+    <li ng-repeat="(index, step) in editingSteps">
+        <span ng-hide="!step.active">{{ step.title }}</span>
+        <a ng-click="setActive(index)" ng-hide="step.active" href="{{ '#' + step.route + path.id }}">{{ step.title }}</a>
+        <span ng-show="index != editingSteps.length - 1" class="divider">&raquo;</span>
+    </li>
+</ul>

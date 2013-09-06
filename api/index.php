@@ -1,10 +1,12 @@
 <?php
 require '../vendor/autoload.php';
 
+ini_set('display_errors', 'on');
+
 $app = new \Slim\Slim();
 
-$user = "protojpp";
-$pass = "protojpp";
+$user = "root";
+$pass = "root";
 
 $db = new PDO(
     'mysql:host=localhost;dbname=protojpp',
@@ -33,7 +35,7 @@ $app->get('/paths.json', function () use($app, $db)
 $app->post('/paths.json', function () use($app, $db)
 {
     $user="Donovan"; //TODO
-    $date = ""; //TODO
+    $date = date('Y-m-d H:i:s'); //TODO
 
     $request = $app->request();
 
@@ -64,7 +66,7 @@ $app->post('/paths.json', function () use($app, $db)
 $app->put('/paths/:id.json', function ($id) use($app, $db)
 {
     $user="Donovan"; //TODO
-    $date = ""; //TODO
+    $date = date('Y-m-d H:i:s'); //TODO
 
     $request = $app->request();
 
@@ -165,7 +167,7 @@ $app->get('/path/templates.json', function () use($app, $db)
 $app->post('/path/templates.json', function () use($app, $db)
 {
     $user="Donovan"; //TODO
-    $date = ""; //TODO
+    $date = date('Y-m-d H:i:s'); //TODO
 
     $request = $app->request();
 

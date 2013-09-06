@@ -1,0 +1,22 @@
+<h1>Path editor : {{ path.name }}</h1>
+
+<ul class="breadcrumb">
+    <li><a href="#/path/global/{{ path.id }}">Global</a> <span class="divider">&raquo;</span></li>
+    <li class="active">Skills <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/scenario/{{ path.id }}">Scenario</a> <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/validation/{{ path.id }}">Validation</a> <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/planner/{{ path.id }}">Planner</a></li>
+</ul>
+
+<div ng-include="'partials/top-toolbar.html'"></div>
+
+<hr />
+
+<div>
+
+</div>
+
+<hr />
+
+<a class="btn btn-small" href="#/path/global/{{ path.id }}"><i class="icon-backward"></i>  Previous step</a>
+<a class="btn btn-small btn-primary" href="#/path/scenario/{{ path.id }}">Next step <i class="icon-forward icon-white"></i></a>

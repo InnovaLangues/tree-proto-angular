@@ -1,0 +1,31 @@
+<h1>Path editor : {{ path.name }}</h1>
+
+<ul class="breadcrumb">
+    <li><a href="#/path/global/{{ path.id }}">Global</a> <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/skills/{{ path.id }}">Skills</a> <span class="divider">&raquo;</span></li>
+    <li class="active">Scenario <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/validation/{{ path.id }}">Validation</a> <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/planner/{{ path.id }}">Planner</a></li>
+</ul>
+
+<div ng-include="'partials/top-toolbar.html'"></div>
+
+<hr />
+
+<div class="row-fluid">
+    <div class="well well-small span6" id="zone">
+        <ul>
+            <li ng-repeat="step in path.steps" ng-include="'partials/tree-item.html'" ></li>
+        </ul>
+    </div>
+	
+    <div class="well well-small span6">
+        <a ng-show="previewStep != null" class="btn pull-right" href="#/step/edit/{{ previewStep.id }}"><i class="icon-pencil"></i></a>
+        <span ng-bind="previewStep.name">{{ previewStep.name }}</span>
+    </div>
+</div>
+
+<hr />
+
+<a class="btn btn-small" href="#/path/skills/{{ path.id }}"><i class="icon-backward"></i> Previous step</a>
+<a class="btn btn-small btn-primary" href="#/path/validation/{{ path.id }}">Next step <i class="icon-forward icon-white"></i></a>

@@ -1,9 +1,0 @@
-<h3>Templates</h3>
-<ul>
-	<li ng-repeat="(id, template) in templates">
-		{{ template.name }} ({{ id }})
-		<button class="btn btn-small" ng-click="copy(template)" tooltip="Copy"><i class="icon-copy"></i></button>
-		<button class="btn btn-small" ng-click="edit(template)" tooltip="Edit"><i class="icon-edit"></i></button>
-		<button class="btn btn-small btn-danger" ng-click="delete(template, id)" tooltip="Delete"><i class="icon-trash"></i></button>
-	</li>
-</ul>

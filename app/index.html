@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="css/notification.css">
     <link rel="stylesheet" href="css/app.css"/>
 </head>
+
 <body ng-cloak class="ps-push">
     <div class="container">
         <div class="navbar">
@@ -17,50 +18,63 @@
                 <ul class="nav">
                     <li><a href="#/path/list">List paths</a></li>
                     <li><a href="#/template/list">List templates</a></li>
-                    <li><a href="#/tree">Tree view</a></li>
-                    <!--
-                    <li><a href="#/timeline">Timeline view</a></li>
-                    -->
                 </ul>
+                
                 <ul class="nav pull-right">
-                    <li><a pageslide="left" ps-speed="0.5" href="#secondary-sidebar"><i class="icon-list"></i></a></li>
-                    <li><a pageslide="right" ps-speed="0.5" href="#primary-sidebar"><i class="icon-heart"></i></a></li>
+                    <li><a pageslide="right" ps-speed="0.5" href="#secondary-sidebar"><i class="icon-list"></i></a></li>
+                    <li><a pageslide="left" ps-speed="0.5" href="#templates-sidebar"><i class="icon-heart"></i></a></li>
                 </ul>
             </div>
         </div>
+        
         <div ng-controller="AlertController">
             <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
         </div>
-        <div ng-view></div>
-        <div notifications="top right"></div>
-        <div ng-hide="false">
-            <h4>DEBUG :</h4>
-            <h5>Root History State</h5>
-            <pre>
-            {{ rootHistoryState }}
-            </pre>
 
-            <h5>Root path :</h5>
-            <pre>
-            {{ rootPath | json }}
-            </pre>
-
-            <h5>Scope path :</h5>
-            <pre>
-            {{ path | json }}
-            </pre>
-
-            <h5>Root History</h5>
-            <pre>
-            {{ rootHistory | json }}
-            </pre>
-
-            <h5>Root PathInstanciated</h5>
-            <pre>
-            {{ rootPathInstanciated }}
-            </pre>
+        <div id="templates-sidebar" style="display:none" ng-controller="TemplateController">
+            <a id="templates-sidebar-close" href="#" class="btn">Close</a>
+            <div ng-include="'partials/sidebars/templates-sidebar.html'"></div>
         </div>
+        <div id="secondary-sidebar" style="display:none">
+            <a id="secondary-sidebar-close" href="#" class="btn">Close</a>
+            <div ng-include="'partials/sidebars/secondary-sidebar.html'"></div>
+        </div>
+
+<!--         <div ng-show="displayBreadcrumb" ng-include="'partials/breadcrumb.html'"></div> -->
+
+        <div ng-view></div>
+        
+        <div notifications="top right"></div>
+        
+<!--         <div ng-hide="false"> -->
+<!--             <h4>DEBUG :</h4> -->
+<!--             <h5>Root History State</h5> -->
+<!--             <pre> -->
+<!--             {{ rootHistoryState }} -->
+<!--             </pre> -->
+
+<!--             <h5>Root path :</h5> -->
+<!--             <pre> -->
+<!--             {{ rootPath | json }} -->
+<!--             </pre> -->
+
+<!--             <h5>Scope path :</h5> -->
+<!--             <pre> -->
+<!--             {{ path | json }} -->
+<!--             </pre> -->
+
+<!--             <h5>Root History</h5> -->
+<!--             <pre> -->
+<!--             {{ rootHistory | json }} -->
+<!--             </pre> -->
+
+<!--             <h5>Root PathInstanciated</h5> -->
+<!--             <pre> -->
+<!--             {{ rootPathInstanciated }} -->
+<!--             </pre> -->
+<!--         </div> -->
     </div>
+    
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

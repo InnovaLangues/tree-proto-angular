@@ -1,0 +1,25 @@
+<h1>Path editor : {{ path.name }}</h1>
+
+<ul class="breadcrumb" ng-controller="EditingStepsController">
+    <li class="active"><i class="icon-ban-circle"></i> Global <span class="divider">&raquo;</span></li>
+    <li><i class="icon-ban-circle"></i> <a href="#/path/skills/{{ path.id }}">Skills</a> <span class="divider">&raquo;</span></li>
+    <li><i class="icon-ban-circle"></i> <a href="#/path/scenario/{{ path.id }}">Scenario</a> <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/validation/{{ path.id }}">Validation</a> <span class="divider">&raquo;</span></li>
+    <li><a href="#/path/planner/{{ path.id }}">Planner</a></li>
+</ul>
+
+<div ng-include="'partials/top-toolbar.html'"></div>
+
+<hr />
+
+<div>
+    <label class="control-label" for="path-name">Path name : </label>
+    <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name" ng-blur="rename()" />
+    
+    <label class="control-label" for="path-description">Path description : </label>
+    <textarea id="path-description" ng-model="path.description" ng-blur="rename()">{{ path.description }}</textarea>
+</div>
+
+<hr />
+
+<a class="btn btn-small btn-primary" href="#/path/skills/{{ path.id }}">Next step <i class="icon-forward icon-white"></i></a>

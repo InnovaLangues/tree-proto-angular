@@ -2,6 +2,39 @@
 
 /* Controllers */
 angular.module('myApp.controllers', ['ui.bootstrap'])
+    /** 
+     * Editing Steps Controller
+     */
+//    .controller('EditingStepsController', [
+//       '$rootScope',
+//       '$scope',
+//       function($rootScope, $scope) {
+//           $scope.editingSteps = [
+//              { title: 'Global', status: 'not_started', route: '/path/global/', active: true },
+//              { title: 'Skills', status: 'not_started', route: '/path/skills/', active: false },
+//              { title: 'Scenario', status: 'not_started', route: '/path/scenario/', active: false },
+//              { title: 'Validation', status: 'not_started', route: '/path/validation/', active: false },
+//              { title: 'Planner', status: 'not_started',  route: '/path/planner/', active: false }
+//           ];
+//           
+//           $scope.setActive = function(index) {
+//               for (var i = 0; i < $scope.editingSteps.length; i++)
+//               {
+//                   $scope.editingSteps[i].active = false;
+//               }
+//               
+//               $scope.editingSteps[index].active = true;
+//           }
+//           
+//           $scope.updateStatus = function(index, status) {
+//               
+//           };
+//       }
+//    ])
+    
+    /**
+     * Alert Controller
+     */
     .controller('AlertController', [
         '$scope',
         'alertFactory',
@@ -13,14 +46,30 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
         }
     ])
+    
+    /**
+     * Step Controller
+     */
+    .controller('StepController', [
+       '$rootScope',
+       '$scope',
+       function($rootScope, $scope) {
+           
+       }
+    ])
+    
+    /**
+     * Template Controller
+     */
     .controller('TemplateController', [
         '$rootScope',
         '$scope',
         '$http',
         'templateFactory',
         'alertFactory',
+        'clipboardFactory',
         // TODO: There has to be a better way than using rootScope
-        function($rootScope, $scope, $http, templateFactory, alertFactory) {
+        function($rootScope, $scope, $http, templateFactory, alertFactory, clipboardFactory) {
             $http
                 .get('../api/index.php/path/templates.json')
                 .then(function(response) {
@@ -28,6 +77,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $rootScope.templates = templateFactory.getTemplates();
                 });
 
+            $scope.copyToClipboard = function(template) {
+                clipboardFactory.copy(template, true);
+            };
+            
             $scope.delete = function(template, id) {
                 $http
                     .delete('../api/index.php/path/templates/' + template.id + '.json')
@@ -37,10 +90,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
         }
     ])
-    .controller('PathContoller', [
+    
+    /**
+     * Path Controller
+     */
+    .controller('PathController', [
         '$scope',
         '$http',
-        function($scope, $http) {
+        function($scope, $http, pathFactory) {
             $scope.paths = null;
 
             $scope.getPaths = function() {
@@ -53,7 +110,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
 
             $scope.getPaths();
-
+            
             $scope.delete = function(id) {
                 $http
                     .delete('../api/index.php/paths/' + id + '.json')
@@ -64,7 +121,11 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
         }
     ])
-    .controller('TreeContoller', [
+    
+    /**
+     * Tree Controller
+     */
+    .controller('TreeController', [
         '$rootScope',
         '$scope',
         '$http',
@@ -76,8 +137,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'stepFactory',
         'templateFactory',
         'alertFactory',
-        function($rootScope, $scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory) {
-
+        'clipboardFactory',
+        function($rootScope, $scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory, clipboardFactory) {
             if (!Array.prototype.last){
                 Array.prototype.last = function(){
                     return this[this.length - 1];
@@ -91,38 +152,23 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.templates = [];
             $scope.redoDisabled = true;
             $scope.undoDisabled = true;
-            $scope.pasteDisabled = true;
             $scope.isTemplateSaved = false;
             $scope.path = pathFactory.getPath();
-            //$scope.historyState = -1;
-            //$scope.histArray = [];
 
-            $scope.update = function() {
-              var e, i, _i, _len, _ref;
-              _ref = $scope.path;
-              for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-                e = _ref[i];
-                e.pos = i;
-              }
-              updateHistory(_ref);
-            };
-
+            $scope.previewStep = null;
+            
             $scope.sortableOptions = {
                 update: $scope.update,
                 placeholder: 'placeholder',
                 connectWith: '.ui-sortable'
             };
-
+            
             if ($routeParams.id) {
-                //check if not empty factory
-                //alert(pathFactory.getPath());
-
                 if (!pathFactory.getPathInstanciated($routeParams.id)) {
-                    alert("req");
                     pathFactory.addPathInstanciated($routeParams.id);
                     $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
                         .success(function(data) {
-                            if(pathFactory.getHistoryState() === -1) {
+                            if (-1 === pathFactory.getHistoryState()) {
                                 updateHistory(data);
                             }
 
@@ -132,13 +178,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         }
                     );
                 }
-                else{
-                     alert("pas req");
-                }
-
-
-
-            } else {
+            } else if (null === $scope.path) {
                 $http.get('tree.json')
                     .success(function(data) {
                         updateHistory(data);
@@ -146,6 +186,24 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 );
             }
 
+            if (null !== $scope.path && undefined !== $scope.path.steps[0]) {
+                $scope.previewStep = $scope.path.steps[0];
+            }
+            
+            $scope.setPreviewStep = function(step) {
+                $scope.previewStep = step;
+            };
+            
+            $scope.update = function() {
+                var e, i, _i, _len, _ref;
+                _ref = $scope.path;
+                for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+                    e = _ref[i];
+                    e.pos = i;
+                }
+                updateHistory(_ref);
+            };
+            
             $scope.undo = function() {
                 // Decrement history state
                 pathFactory.setHistoryState(
@@ -224,18 +282,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 updateHistory($scope.path);
             };
 
-            $scope.copy = function(step) {
-                $scope.clipboard = step;
-                $scope.pasteDisabled = false;
+            $scope.copyToClipboard = function(step) {
+                clipboardFactory.copy(step);
             };
 
             $scope.paste = function(step) {
-                // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
-                var stepCopy = jQuery.extend(true, {}, $scope.clipboard);
-
-                stepCopy.name = stepCopy.name + '_copy';
-
-                step.children.push(stepCopy);
+                clipboardFactory.paste(step);
                 updateHistory($scope.path);
             };
 
@@ -259,6 +311,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 updateHistory($scope.path);
             };
 
+            $scope.addSibling = function(step) {
+                
+            };
+            
             $scope.save = function(path) {
                 if ($routeParams.id === undefined) {
                     //Create new path
@@ -277,7 +333,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         });
                 }
             };
-
 
             var updateHistory = function(path) {
                 // Increment history state
@@ -313,6 +368,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
         }
     ])
+    
+    /**
+     * Dialog Controller
+     */
     .controller('DialogController', [
         '$scope',
         'dialog',
@@ -322,6 +381,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
         }
     ])
+    
+    /**
+     * Template Modal Controller
+     */
     .controller('TemplateModalController', [
         '$rootScope',
         '$scope',
@@ -339,6 +402,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 description : "",
                 step: stepFactory.getStep()
             };
+            
             $scope.close = function () {
                 dialog.close();
             };

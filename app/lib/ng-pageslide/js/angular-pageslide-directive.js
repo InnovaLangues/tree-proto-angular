@@ -1,24 +1,21 @@
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
-    '$http', '$log', '$parse', '$rootScope', function ($http, $log, $parse, $rootScope) {
-
+    '$http', 
+    '$log', 
+    '$parse', 
+    '$rootScope', 
+    function ($http, $log, $parse, $rootScope) {
         var defaults = {};
         var str_inspect_hint = 'Add testing="testing" to inspect this object';
 
         /* Return directive definition object */
-
         return {
             restrict: "A",
             replace: false,
             transclude: false,
             scope: {},
             link: function ($scope, el, attrs) {
-                /* Inspect */
-                //console.log($scope);
-                //console.log(el);
-                //console.log(attrs);
-
                 /* parameters */
                 var param = {};
                 param.side = attrs.pageslide || 'right';
@@ -27,9 +24,6 @@ pageslideDirective.directive('pageslide', [
                 /* init */
                 var css_class = 'ng-pageslide ps-hidden';
                 css_class += ' ps-' + param.side;
-
-                /* expose for debug */
-                //deb = el;
 
                 /* DOM manipulation */
                 var content = document.getElementById(attrs.href.substr(1));
@@ -52,7 +46,6 @@ pageslideDirective.directive('pageslide', [
                 /*
                 * Events
                 * */
-
                 el[0].onclick = function(e){
                     e.preventDefault();
                     if (/ps-hidden/.exec(slider.className)){
