@@ -1,21 +1,9 @@
 <form class="form-inline">
-    <input
-        type="text"
-        value="{{step.name}}"
-        class="step-name"
-        title="step.name"
-        ng-model="step.name"
-        ng-blur="rename()" ng-show="tree-item.showEdit"/>
-        
-    <span ng-hide="tree-item.showEdit" ng-mouseenter="show = true; setPreviewStep(step)" ng-mouseleave="show = false" >
+    <span ng-mouseenter="show = true; setPreviewStep(step)" ng-mouseleave="show = false" >
     {{ step.name }}
     </span>
     
     <span ng-show="show" ng-mouseenter="show = true;" ng-mouseleave="show = false">
-        <button class="btn btn-primary btn-mini" ng-click="openDialog(step)" tooltip="Activities list">
-            <i class="icon-list-alt"></i>
-        </button>
-        
         <button class="btn btn-mini" ng-click="addChild(step)" tooltip="Add a child">
             <i class="icon-plus"></i>
         </button>
@@ -34,10 +22,6 @@
         
         <button class="btn btn-mini" ng-click="openTemplateModal(step)" tooltip="Add to favorites">
             <i class="icon-heart"></i>
-        </button>
-        
-        <button class="btn btn-mini" ng-click="tree-item.showEdit = !tree-item.showEdit" tooltip="Edit">
-            <i class="icon-pencil"></i>
         </button>
         
         <button class="btn btn-danger btn-mini" ng-click="remove(step)" tooltip="Delete">

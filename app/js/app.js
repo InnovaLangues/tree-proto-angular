@@ -4,10 +4,8 @@
 angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pageslide-directive', 'notifications'])
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/404', {templateUrl: 'partials/404.html'});
+        $routeProvider.when('/', {templateUrl: 'partials/path-list.html', controller: 'PathController', clearPath: true, clearClipboard: true, clearHistory: true});
         $routeProvider.when('/path/list', {templateUrl: 'partials/path-list.html', controller: 'PathController', clearPath: true, clearClipboard: true, clearHistory: true});
-        $routeProvider.when('/template/list', {templateUrl: 'partials/template-list.html', controller: 'TemplateController', clearPath: true, clearClipboard: true, clearHistory: true});
-        $routeProvider.when('/template/edit', {templateUrl: 'partials/template-edit.html', controller: 'TemplateController'});
-        $routeProvider.when('/template/edit/:id', {templateUrl: 'partials/template-edit.html', controller: 'TemplateController'});
         
         // Editing Steps
         $routeProvider.when('/path/global', {templateUrl: 'partials/editing-steps/global.html', controller: 'TreeController'});
@@ -24,12 +22,13 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
     }])
     
     .run([
+        '$rootScope',
         '$location',
         '$route',
         'pathFactory',
         'clipboardFactory',
         'historyFactory',
-        function($location, $route, pathFactory, clipboardFactory, historyFactory) {
+        function($rootScope, $location, $route, pathFactory, clipboardFactory, historyFactory) {
             $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
                 if (next.clearClipboard) {
                     clipboardFactory.clear();
@@ -46,11 +45,13 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         }
     ])
     
+    // TODO : remove reference to $rootScope
     .factory('historyFactory', [
+        '$rootScope',
         'pathFactory', 
-        function(pathFactory) {
-            var redoDisabled = true;
-            var undoDisabled = true;
+        function($rootScope, pathFactory) {
+            $rootScope.redoDisabled = true;
+            $rootScope.undoDisabled = true;
             
             var history = [];
             var historyState = -1;
@@ -145,29 +146,30 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 },
                 
                 getRedoDisabled: function() {
-                    return redoDisabled;
+                    return $rootScope.redoDisabled;
                 },
                 
                 setRedoDisabled: function(data) {
-                    redoDisabled = data;
+                    $rootScope.redoDisabled = data;
                 },
                 
                 getUndoDisabled: function() {
-                    return undoDisabled;
+                    return $rootScope.undoDisabled;
                 },
                 
                 setUndoDisabled: function(data) {
-                    undoDisabled = data;
+                    $rootScope.undoDisabled = data;
                 }
             }
         }
     ])
     
+    // TODO : remove reference to $rootScope
     .factory('clipboardFactory', function($rootScope) {
         var clipboard = null;
         var clipboardFromTemplates = false;
         
-        var pasteDisabled = true;
+        $rootScope.pasteDisabled = true;
         
         return {
             clear: function() {
@@ -201,11 +203,11 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             },
             
             getPasteDisabled: function() {
-                return pasteDisabled;
+                return $rootScope.pasteDisabled;
             },
             
             setPasteDisabled: function(data) {
-                pasteDisabled = data;
+                $rootScope.pasteDisabled = data;
             }
         }
     })
@@ -220,19 +222,19 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 pathInstanciated = [];
             },
             
-            getPath : function() {
+            getPath: function() {
                 return path;
             },
             
-            setPath : function(data) {
+            setPath: function(data) {
                 path = data;
             },
             
-            addPathInstanciated : function(id) {
+            addPathInstanciated: function(id) {
                 pathInstanciated[id] = id;
             },
             
-            getPathInstanciated : function(id) {
+            getPathInstanciated: function(id) {
                 return typeof pathInstanciated[id] != 'undefined';
             }
         };
@@ -242,30 +244,55 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         var step = null;
 
         return {
-            setStep : function (data) {
+            setStep: function (data) {
                 step = data;
             },
             
-            getStep : function () {
+            getStep: function () {
                 return step;
             }
         };
     })
     
     .factory('templateFactory', function() {
-        var templates = {};
-
+        var templates = [];
+        var currentTemplate = null;
+        
         return {
-            addTemplate : function(template) {
+            addTemplate: function(template) {
                 templates.push(template);
             },
             
-            getTemplates : function() {
+            replaceTemplate: function(template) {
+                var templateFound = false;
+                for (var i = 0; i < templates.length; i++) {
+                    if (templates[i].id === template.id)
+                    {
+                        templates[i] = template;
+                        templateFound = true;
+                        break;
+                    }
+                }
+                
+                if (!templateFound) {
+                    this.addTemplate(template)
+                }
+            },
+            
+            getTemplates: function() {
                 return templates;
             },
             
-            setTemplates : function(data) {
+            setTemplates: function(data) {
                 templates = data;
+            },
+            
+            getCurrentTemplate: function() {
+                return currentTemplate;
+            },
+            
+            setCurrentTemplate: function(data) {
+                currentTemplate = data;
             }
         };
     })
@@ -274,15 +301,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         var alerts = [];
 
         return {
-            getAlerts : function() {
+            getAlerts: function() {
                 return alerts;
             },
             
-            addAlert : function(msg, type) {
+            addAlert: function(msg, type) {
                 alerts.push({ type: type, msg: msg });
             },
             
-            closeAlert : function(index) {
+            closeAlert: function(index) {
                 alerts.splice(index, 1);
             }
         };

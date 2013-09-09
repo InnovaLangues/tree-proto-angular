@@ -21,7 +21,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
      * Step Controller
      */
     .controller('StepController', [
-       '$rootScope',
        '$scope',
        'pathFactory',
        'stepFactory',
@@ -42,11 +41,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$rootScope',
         '$scope',
         '$http',
+        '$dialog',
         'templateFactory',
         'alertFactory',
         'clipboardFactory',
         // TODO: There has to be a better way than using rootScope
-        function($rootScope, $scope, $http, templateFactory, alertFactory, clipboardFactory) {
+        function($rootScope, $scope, $http, $dialog, templateFactory, alertFactory, clipboardFactory) {
             $http
                 .get('../api/index.php/path/templates.json')
                 .then(function(response) {
@@ -56,6 +56,19 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
 
             $scope.copyToClipboard = function(template) {
                 clipboardFactory.copy(template, true);
+            };
+            
+            $scope.edit = function(template) {
+                templateFactory.setCurrentTemplate(template);
+                
+                var dialogOptions = {
+                    backdrop: true,
+                    keyboard: true,
+                    backdropClick: true
+                };
+                
+                var d = $dialog.dialog(dialogOptions);
+                d.open('partials/modals/template-edit.html', 'TemplateModalController');
             };
             
             $scope.delete = function(template, id) {
@@ -116,12 +129,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'clipboardFactory',
         'historyFactory',
         function($scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory, clipboardFactory, historyFactory) {
-            $scope.redoDisabled = historyFactory.getRedoDisabled();
-            $scope.undoDisabled = historyFactory.getUndoDisabled();
-            $scope.pasteDisabled = cliboardFactory.getPasteDisabled();
-            
-            if (!Array.prototype.last){
-                Array.prototype.last = function(){
+            if (!Array.prototype.last) {
+                Array.prototype.last = function() {
                     return this[this.length - 1];
                 };
             }
@@ -241,6 +250,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.removeChildren = function(step) {
                 step.children = [];
                 historyFactory.update($scope.path);
+
             };
             
             $scope.copyToClipboard = function(step) {
@@ -267,7 +277,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.save = function(path) {
-                if ($routeParams.id === undefined) {
+                if (undefined === $routeParams.id) {
                     // Create new path
                     $http
                         .post('../api/index.php/paths.json', path)
@@ -292,15 +302,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 backdropClick: true
             };
             
-            $scope.openDialog = function() {
-                var d = $dialog.dialog(dialogOptions);
-                d.open('partials/activity-list.html', 'DialogController');
-            };
-            
             $scope.openTemplateModal = function(step) {
                 stepFactory.setStep(step);
                 var d = $dialog.dialog(dialogOptions);
-                d.open('partials/modal-template.html', 'TemplateModalController');
+                d.open('partials/modals/template-edit.html', 'TemplateModalController');
             };
             
             $scope.openStepEdit = function(step) {
@@ -335,27 +340,53 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'templateFactory',
         'alertFactory',
         function($rootScope, $scope, $http, $notification, dialog, stepFactory, templateFactory, alertFactory) {
-            $scope.step = stepFactory.getStep();
+            var editTemplate = false;
+            
+            var currentTemplate = templateFactory.getCurrentTemplate();
+            if (null === currentTemplate) {
+                $scope.step = stepFactory.getStep();
 
-            $scope.formTemplate = {
-                name : "",
-                description : "",
-                step: stepFactory.getStep()
-            };
+                $scope.formTemplate = {
+                    name : 'Template ' + $scope.step.name,
+                    description : '',
+                    step: stepFactory.getStep()
+                };
+            }
+            else {
+                editTemplate = true;
+                
+                templateFactory.setCurrentTemplate(null);
+                var localCurrentTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
+                $scope.formTemplate = localCurrentTemplate;
+            }
             
             $scope.close = function () {
                 dialog.close();
             };
             
             $scope.save = function (formTemplate) {
-                $http
-                    .post('../api/index.php/path/templates.json', formTemplate)
-                    .success(function(response) {
-                        $notification.success("Success!", "Template saved!");
-                        templateFactory.addTemplate(response);
-                        $rootScope.templates = templateFactory.getTemplates();
-                        dialog.close();
-                    });
+                if (!editTemplate) {
+                    // Create new template
+                    $http
+                        .post('../api/index.php/path/templates.json', formTemplate)
+                        .success(function(response) {
+                            $notification.success("Success!", "Template saved!");
+                            templateFactory.addTemplate(response);
+                            $rootScope.templates = templateFactory.getTemplates();
+                            dialog.close();
+                        });
+                }
+                else {
+                    // Update existing template
+                    $http
+                        .put('../api/index.php/path/templates/' + formTemplate.id + '.json', formTemplate)
+                        .success ( function (response) {
+                            $notification.success("Success", "Template updated!");
+                            templateFactory.replaceTemplate(formTemplate);
+                            $rootScope.templates = templateFactory.getTemplates();
+                            dialog.close();
+                        });
+                }
             }
         }
     ]);

@@ -87,18 +87,8 @@ $app->put('/paths/:id.json', function ($id) use($app, $db)
         $stmt->bindParam("edit_date", $date);
         $stmt->bindParam("id", $id);
         $stmt->execute();
-        $lastId = $db->lastInsertId();
 
-        $sql = "SELECT id, path FROM paths WHERE paths.id = :id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam("id", $lastId);
-        $stmt->execute();
-
-        $result = $stmt->fetchObject();
-
-        if ($result) {
-            echo $lastId;
-        }
+        echo $id;
 
         $db = null;
     } catch(PDOException $e) {
@@ -118,7 +108,7 @@ $app->delete('/paths/:id.json', function ($id) use($app, $db)
 
         $db = null;
 
-        echo('ok');
+        echo 'ok';
 
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
@@ -201,6 +191,48 @@ $app->post('/path/templates.json', function () use($app, $db)
         if ($result) {
             echo json_encode($result);
         }
+
+        $db = null;
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+});
+
+// Edit existing Template
+$app->put('/path/templates/:id.json', function ($id) use($app, $db)
+{
+    $user="Donovan"; //TODO
+    $date = date('Y-m-d H:i:s'); //TODO
+
+    $request = $app->request();
+
+    $body = $request->getBody();
+    $body = json_decode($body);
+
+    $name        = $body->name;
+    $description = $body->description;
+    $step        = $body->step;
+    
+    $sql = "UPDATE pathtemplates
+            SET
+                name = :name,
+                description = :description,
+                step = :step,
+                user = :user,
+                edit_date = :edit_date
+            WHERE id = :id";
+
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("name", $name);
+        $stmt->bindParam("description", $description);
+        $stmt->bindParam("step", json_encode($step));
+        $stmt->bindParam("user", $user);
+        $stmt->bindParam("edit_date", $date);
+        $stmt->bindParam("id", $id);
+        $stmt->execute();
+
+        echo $id;
 
         $db = null;
     } catch(PDOException $e) {
