@@ -18,40 +18,23 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     ])
     
     /**
-     * Step Controller
-     */
-    .controller('StepController', [
-       '$scope',
-       'pathFactory',
-       'stepFactory',
-       function($rootScope, $scope, pathFactory, stepFactory) {
-           $scope.step = stepFactory.getStep();
-           $scope.path = pathFactory.getPath();
-           
-           $scope.updateStep = function(step) {
-               
-           };
-       }
-    ])
-    
-    /**
      * Template Controller
      */
     .controller('TemplateController', [
-        '$rootScope',
         '$scope',
         '$http',
         '$dialog',
         'templateFactory',
         'alertFactory',
         'clipboardFactory',
-        // TODO: There has to be a better way than using rootScope
-        function($rootScope, $scope, $http, $dialog, templateFactory, alertFactory, clipboardFactory) {
+        function($scope, $http, $dialog, templateFactory, alertFactory, clipboardFactory) {
+            $scope.templates = [];
+            
             $http
                 .get('../api/index.php/path/templates.json')
                 .then(function(response) {
                     templateFactory.setTemplates(response.data);
-                    $rootScope.templates = templateFactory.getTemplates();
+                    $scope.templates = templateFactory.getTemplates();
                 });
 
             $scope.copyToClipboard = function(template) {
@@ -75,7 +58,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 $http
                     .delete('../api/index.php/path/templates/' + template.id + '.json')
                     .then( function(response) {
-                        $rootScope.templates.splice(id, 1);
+                        $scope.templates.splice(id, 1);
                     });
             };
         }
@@ -129,13 +112,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'clipboardFactory',
         'historyFactory',
         function($scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory, clipboardFactory, historyFactory) {
-            if (!Array.prototype.last) {
-                Array.prototype.last = function() {
-                    return this[this.length - 1];
-                };
-            }
-            
-            $scope.templates = [];
             $scope.path = pathFactory.getPath();
             
             $scope.previewStep = null;
@@ -146,23 +122,16 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 connectWith: '.ui-sortable'
             };
             
-            // Base template used to append new step to tree
-            var baseStep = {
-                name       : 'Step',
-                parentId   : null,
-                type       : 'seq',
-                expanded   : true,
-                dataType   : null,
-                dataId     : null,
-                templateId : null,
-                children   : []
-            };
-            
             if ($routeParams.id) {
+                // Edit existing path
                 if (!pathFactory.getPathInstanciated($routeParams.id)) {
                     pathFactory.addPathInstanciated($routeParams.id);
                     $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
                         .success(function(data) {
+                            // Store Path ID
+                            data.id = $routeParams.id;
+                            
+                            // Update History if needed
                             if (-1 === historyFactory.getHistoryState()) {
                                 historyFactory.update(data);
                             }
@@ -175,6 +144,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 }
             }
             else if (null === $scope.path) {
+                // Create new path
                 $http.get('tree.json')
                     .success(function(data) {
                         pathFactory.setPath(data);
@@ -263,37 +233,63 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.addChild = function(step) {
-                var post = step.children.length + 1;
-                var newStep = jQuery.extend(true, {}, baseStep);
-                newStep.name = step.name + '-' + post;
-                
+                var newStep = stepFactory.generateNewStep(step);
                 step.children.push(newStep);
-                
                 historyFactory.update($scope.path);
             };
             
-            $scope.addSibling = function(stepIndex) {
+            $scope.addSibling = function(step) {
+                var newStep = stepFactory.generateNewStep(step);
+                
+                function insertStep(steps) {
+                    var stepInserted = false;
+                    for (var i = 0; i < steps.length; i++) {
+                        if (steps[i].id === step.id) {
+                            steps.splice(i+1, 0, newStep);
+                            stepInserted = true;
+                        }
+                        else {
+                            stepInserted = insertStep(steps[i].children);
+                        }
+                        
+                        if (stepInserted) {
+                            break;
+                        }
+                    }
+                    return stepInserted;
+                }
+                
+                insertStep($scope.path.steps);
+                
                 historyFactory.update($scope.path);
             };
             
             $scope.save = function(path) {
-                if (undefined === $routeParams.id) {
-                    // Create new path
-                    $http
-                        .post('../api/index.php/paths.json', path)
-                        .success ( function (data) {
-                            $notification.success("Success", "New path saved!");
-                            $location.path("/path/global/" + data);
-                        });
-                } 
-                else {
+                if (undefined != $routeParams.id) {
                     // Update existing path
                     $http
                         .put('../api/index.php/paths/' + $routeParams.id + '.json', path)
                         .success ( function (data) {
-                            $notification.success("Success", "Path updated!");
+                            $notification.success('Success', 'Path updated!');
+                        });
+                } 
+                else {
+                    // Create new path
+                    $http
+                        .post('../api/index.php/paths.json', path)
+                        .success ( function (data) {
+                            // Store generated ID in Path
+                            path.id = data;
+                            pathFactory.setPath(path);
+                            $scope.path = pathFactory.getPath();
+                            
+                            $notification.success('Success', 'New path saved!');
+                            $location.path('/path/global/' + data);
                         });
                 }
+                
+                // Clear history to avoid possibility to get a history state without path ID
+                historyFactory.clear();
             };
             
             var dialogOptions = {
@@ -302,7 +298,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 backdropClick: true
             };
             
-            $scope.openTemplateModal = function(step) {
+            $scope.openTemplateEdit = function(step) {
                 stepFactory.setStep(step);
                 var d = $dialog.dialog(dialogOptions);
                 d.open('partials/modals/template-edit.html', 'TemplateModalController');
@@ -310,28 +306,46 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             
             $scope.openStepEdit = function(step) {
                 stepFactory.setStep(step);
+                var d = $dialog.dialog(dialogOptions);
+                d.open('partials/modals/step-edit.html', 'StepModalController');
             };
         }
     ])
     
     /**
-     * Dialog Controller
+     * Step Modal Controller
      */
-    .controller('DialogController', [
-        '$scope',
-        'dialog',
-        function($scope, dialog) {
-            $scope.close = function(){
-                dialog.close();
-            };
-        }
+    .controller('StepModalController', [
+       '$scope',
+       'dialog',
+       'pathFactory',
+       'stepFactory',
+       'historyFactory',
+       function($scope, dialog, pathFactory, stepFactory, historyFactory) {
+           var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
+           
+           $scope.formStep = localStep;
+           
+           $scope.close = function() {
+               dialog.close();
+           };
+           
+           $scope.save = function(formStep) {
+               // Inject edited step in path
+               pathFactory.replaceStep(formStep);
+               
+               $scope.path = pathFactory.getPath();
+               historyFactory.update($scope.path);
+               
+               dialog.close();
+           };
+       }
     ])
     
     /**
      * Template Modal Controller
      */
     .controller('TemplateModalController', [
-        '$rootScope',
         '$scope',
         '$http',
         '$notification',
@@ -339,11 +353,12 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'stepFactory',
         'templateFactory',
         'alertFactory',
-        function($rootScope, $scope, $http, $notification, dialog, stepFactory, templateFactory, alertFactory) {
+        function($scope, $http, $notification, dialog, stepFactory, templateFactory, alertFactory) {
             var editTemplate = false;
             
             var currentTemplate = templateFactory.getCurrentTemplate();
             if (null === currentTemplate) {
+                // Create new Template
                 $scope.step = stepFactory.getStep();
 
                 $scope.formTemplate = {
@@ -353,6 +368,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 };
             }
             else {
+                // Edit existing template
                 editTemplate = true;
                 
                 templateFactory.setCurrentTemplate(null);
@@ -360,7 +376,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 $scope.formTemplate = localCurrentTemplate;
             }
             
-            $scope.close = function () {
+            $scope.close = function() {
                 dialog.close();
             };
             
@@ -372,7 +388,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         .success(function(response) {
                             $notification.success("Success!", "Template saved!");
                             templateFactory.addTemplate(response);
-                            $rootScope.templates = templateFactory.getTemplates();
                             dialog.close();
                         });
                 }
@@ -383,7 +398,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         .success ( function (response) {
                             $notification.success("Success", "Template updated!");
                             templateFactory.replaceTemplate(formTemplate);
-                            $rootScope.templates = templateFactory.getTemplates();
                             dialog.close();
                         });
                 }

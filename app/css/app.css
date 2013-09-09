@@ -1,55 +1,36 @@
 /* app css stylesheet */
-
-.rotate-90 {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-
-    /* also accepts left, right, top, bottom coordinates; not required, but a good idea for styling */
-    -webkit-transform-origin: 50% 50%;
-    -moz-transform-origin: 50% 50%;
-    -ms-transform-origin: 50% 50%;
-    -o-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-
-    /* Should be unset in IE9+ I think. */
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+.tree-item {
+    cursor: pointer;
 }
 
 .menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+    list-style: none;
+    border-bottom: 0.1em solid black;
+    margin-bottom: 2em;
+    padding: 0 0 0.5em;
 }
 
 .menu:before {
-  content: "[";
+    content: "[";
 }
 
 .menu:after {
-  content: "]";
+    content: "]";
 }
 
 .menu > li {
-  display: inline;
+    display: inline;
 }
 
 .menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
+    content: "|";
+    padding-right: 0.3em;
 }
 
 .menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+    content: "";
+    padding: 0;
 }
-
-
-
-
 
 
 li {
@@ -60,42 +41,41 @@ li {
 
 
 #zone li{
-  position:relative;
+    position:relative;
 }
 
 ul {
-  min-height: 5px;/*
-  border: 1px solid red;*/
+    min-height: 5px;
 }
 
 form {
-  margin: 0 0 5px;
+    margin: 0 0 5px;
 }
 
 .placeholder {
-  background: #CCCCCC;
-  min-height: 10px;
-  border: 1px dashed #010101;
-  margin-bottom: 15px;
+    background: #CCCCCC;
+    min-height: 10px;
+    border: 1px dashed #010101;
+    margin-bottom: 15px;
 }
-
 
 #page-loader {
-  font-size: 140px;
-  position: absolute;
-  top: 500px;
-  left: 30%;
-  color: #f00;
-  z-index: 9999;
+    font-size: 140px;
+    position: absolute;
+    top: 500px;
+    left: 30%;
+    color: #f00;
+    z-index: 9999;
 }
 
 input.ng-invalid {
-  border: 1px solid red;
+    border: 1px solid red;
 }
 
 input.ng-invalid {
-  border: 1px solid red;
+    border: 1px solid red;
 }
+
 input.ng-valid {
-  border: 1px solid green;
+    border: 1px solid green;
 }

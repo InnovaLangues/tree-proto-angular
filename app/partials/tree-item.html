@@ -1,5 +1,5 @@
 <form class="form-inline">
-    <span ng-mouseenter="show = true; setPreviewStep(step)" ng-mouseleave="show = false" >
+    <span class="tree-item" ng-mouseenter="show = true; setPreviewStep(step)" ng-mouseleave="show = false" >
     {{ step.name }}
     </span>
     
@@ -8,7 +8,7 @@
             <i class="icon-plus"></i>
         </button>
         
-        <button class="btn btn-mini" ng-click="addSibling(stepIndex)" tooltip="Add a sibling">
+        <button class="btn btn-mini" ng-click="addSibling(step)" tooltip="Add a sibling">
             <i class="icon-plus-sign"></i>
         </button>
         
@@ -20,7 +20,7 @@
             <i class="icon-paste"></i>
         </button>
         
-        <button class="btn btn-mini" ng-click="openTemplateModal(step)" tooltip="Add to favorites">
+        <button class="btn btn-mini" ng-click="openTemplateEdit(step)" tooltip="Add to favorites">
             <i class="icon-heart"></i>
         </button>
         
@@ -35,5 +35,5 @@
 </form>
 
 <ul ui-sortable="sortableOptions" ng-model="step.children">
-    <li ng-repeat="(stepIndex, step) in step.children" ng-include="'partials/tree-item.html'"></li>
+    <li ng-repeat="step in step.children" ng-include="'partials/tree-item.html'"></li>
 </ul>

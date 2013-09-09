@@ -15,20 +15,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         $routeProvider.when('/path/validation/:id', {templateUrl: 'partials/editing-steps/validation.html', controller: 'TreeController'});
         $routeProvider.when('/path/planner/:id', {templateUrl: 'partials/editing-steps/planner.html', controller: 'TreeController'});
         
-        $routeProvider.when('/step/edit', {templateUrl: 'partials/step-edit.html', controller: 'StepController'});
-        $routeProvider.when('/step/edit/:id', {templateUrl: 'partials/step-edit.html', controller: 'StepController'});
-        
         $routeProvider.otherwise({redirectTo: '/404'});
     }])
     
     .run([
         '$rootScope',
-        '$location',
-        '$route',
         'pathFactory',
         'clipboardFactory',
         'historyFactory',
-        function($rootScope, $location, $route, pathFactory, clipboardFactory, historyFactory) {
+        function($rootScope, pathFactory, clipboardFactory, historyFactory) {
             $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
                 if (next.clearClipboard) {
                     clipboardFactory.clear();
@@ -215,11 +210,13 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
     .factory('pathFactory', function() {
         var path = null;
         var pathInstanciated = [];
-
+        var maxStepId = 1;
+        
         return {
             clear: function() {
                 path = null;
                 pathInstanciated = [];
+                maxStepId = 1;
             },
             
             getPath: function() {
@@ -228,6 +225,9 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             setPath: function(data) {
                 path = data;
+                
+                // Retrieve max step id
+                this.getMaxStepId();
             },
             
             addPathInstanciated: function(id) {
@@ -236,23 +236,113 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             getPathInstanciated: function(id) {
                 return typeof pathInstanciated[id] != 'undefined';
+            },
+            
+            getMaxStepId: function() {
+                if (null !== path && path.steps.length !== 0)
+                {
+                    for (var i = 0; i < path.steps.length; i++) {
+                        this.retrieveMaxStepId(path.steps[i]);
+                    }
+                }
+            },
+            
+            retrieveMaxStepId: function(step) {
+                // Check current step
+                if (step.id > maxStepId) {
+                    maxStepId = step.id;
+                }
+                
+                // Check step children
+                if (step.children.length !== 0) {
+                    for (var i = 0; i < step.children.length; i++) {
+                        this.retrieveMaxStepId(step.children[i]);
+                    }
+                }
+            },
+            
+            getNextStepId: function() {
+                maxStepId++;
+                return maxStepId;
+            },
+            
+            replaceStep: function(newStep) {
+                if (null !== path) {
+                    var stepFound = false;
+                    for (var i = 0; i < path.steps.length; i++) {
+                        stepFound = this.searchStepToReplace(path.steps[i], newStep);
+                        if (stepFound) {
+                            break;
+                        }
+                    }
+                }
+                
+            },
+            
+            searchStepToReplace: function(currentStep, newStep) {
+                var stepFound = false;
+                if (currentStep.id === newStep.id) {
+                    stepFound = true;
+                    this.updateStep(currentStep, newStep);
+                }
+                else if (currentStep.children.length !== 0) {
+                    for (var i = 0; i < currentStep.children.length; i++) {
+                        var stepFound = this.searchStepToReplace(currentStep.children[i], newStep);
+                        if (stepFound) {
+                            break;
+                        }
+                    }
+                }
+                
+                return stepFound;
+            },
+            
+            updateStep: function(oldStep, newStep) {
+                for (var prop in newStep) {
+                    oldStep[prop] = newStep[prop];
+                }
             }
         };
     })
     
-    .factory('stepFactory', function() {
-        var step = null;
-
-        return {
-            setStep: function (data) {
-                step = data;
-            },
+    .factory('stepFactory', [
+        'pathFactory',
+        function(pathFactory) {
+            var step = null;
             
-            getStep: function () {
-                return step;
-            }
-        };
-    })
+            // Base template used to append new step to tree
+            var baseStep = {
+                id         : null,
+                name       : 'Step',
+                parentId   : null,
+                type       : 'seq',
+                expanded   : true,
+                dataType   : null,
+                dataId     : null,
+                templateId : null,
+                children   : []
+            };
+            
+            return {
+                generateNewStep: function(step) {
+                    var stepId = pathFactory.getNextStepId();
+                    var newStep = jQuery.extend(true, {}, baseStep);
+                    newStep.name = step.name + '-' + stepId;
+                    newStep.id = stepId;
+                    
+                    return newStep;
+                },
+                
+                setStep: function (data) {
+                    step = data;
+                },
+                
+                getStep: function () {
+                    return step;
+                }
+            };
+        }
+    ])
     
     .factory('templateFactory', function() {
         var templates = [];

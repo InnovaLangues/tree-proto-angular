@@ -3,6 +3,7 @@
     "description"  : "This is the path description",
     "steps" : [
         {
+            "id"         : 1,
             "name"       : "Step",
             "parentId"   : null,
             "type"       : "seq",
@@ -14,7 +15,7 @@
             "children"   : []
         }
     ],
-    "actvities" : [
+    "activities" : [
         {
             "123" : {
                 "name"       : "My Activity Name",

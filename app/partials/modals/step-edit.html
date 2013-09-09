@@ -1,11 +1,17 @@
-<h1>Step editor : {{ step.name }}</h1>
+<div class="modal-header">
+    <h3>Saving step : {{ step.name }}</h3>
+</div>
 
-<form name="stepForm">
-    <fieldset>
-        <label for="step-name">Step name :</label>
-        <input type="text" id="step-name" ng-model="step.name" value="{{ step.name }}" />
-    </fieldset>
-	
-    <a class="btn btn-warning" href="#/path/scenario/{{ path.id }}">Cancel</a>
-    <a class="btn btn-primary" ng-click="updateStep(step)" href="#/path/scenario/{{ path.id }}">Edit</a>
-</form>
+<div class="modal-body">
+    <form novalidate name="stepForm">
+        <fieldset>
+            <label for="step-name">Name <span>*</span></label>
+            <input type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
+        </fieldset>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+    <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="!stepForm.$valid">Save step</button>
+</div>
