@@ -52,10 +52,10 @@
 
 <div>
     <label class="control-label" for="path-name">Path name : </label>
-    <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name" ng-blur="rename()" />
+    <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name" ng-change="rename()" />
     
     <label class="control-label" for="path-description">Path description : </label>
-    <textarea id="path-description" ng-model="path.description" ng-blur="rename()">{{ path.description }}</textarea>
+    <textarea id="path-description" ng-model="path.description" ng-change="rename()">{{ path.description }}</textarea>
 </div>
 
 <hr />
