@@ -1,14 +1,52 @@
 <h1>Path editor : {{ path.name }}</h1>
 
-<ul class="breadcrumb">
-    <li class="active"><i class="icon-ban-circle"></i> Global <span class="divider">&raquo;</span></li>
-    <li><i class="icon-ban-circle"></i> <a href="#/path/skills/{{ path.id }}">Skills</a> <span class="divider">&raquo;</span></li>
-    <li><i class="icon-ban-circle"></i> <a href="#/path/scenario/{{ path.id }}">Scenario</a> <span class="divider">&raquo;</span></li>
-    <li><a href="#/path/validation/{{ path.id }}">Validation</a> <span class="divider">&raquo;</span></li>
-    <li><a href="#/path/planner/{{ path.id }}">Planner</a></li>
-</ul>
-
-<div ng-include="'partials/top-toolbar.html'"></div>
+<div class="top-toolbar">
+    <div class="buttons pull-right">
+        <div class="btn-group">
+            <button class="btn" ng-click="undo()" ng-disabled="undoDisabled"><i class="icon-reply"></i></button>
+            <button class="btn" ng-click="redo()" ng-disabled="redoDisabled"><i class="icon-share-alt"></i></button>
+        </div>
+        
+        <button class="btn btn-primary" ng-click="save(path)" tooltip="Save"><i class="icon-save"></i></button>
+        
+        <button class="btn btn-success" ng-click="deploy(path)" tooltip="Submit"><i class="icon-share"></i></button>
+    </div>
+    
+    <ul class="nav nav-pills">
+        <li><a href="#/path/list" tooltip="Back to list"><i class="icon-list"></i></a></li>
+        
+        <li class="active">
+            <a href="#/path/global/{{ path.id }}" style="display: inline-block;">Global</a>
+            
+            <div class="btn-group" style="display: inline-block;">
+                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown" tooltip="Change status">
+                    <i class="icon-ban-circle"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="icon-ban-circle"></i> Not started</a></li>
+                    <li><a href="#"><i class="icon-refresh"></i> In progress</a></li>
+                    <li><a href="#"><i class="icon-ok"></i> Completed</a></li>
+                </ul>
+            </div>
+        </li>
+        
+        <li><strong class="divider">&raquo;</strong></li>
+        
+        <li><a href="#/path/skills/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Skills</a></li>
+        
+        <li><strong class="divider">&raquo;</strong></li>
+        
+        <li><a href="#/path/scenario/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Scenario</a></li>
+        
+        <li><strong class="divider">&raquo;</strong></li>
+        
+        <li><a href="#/path/validation/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Validation</a></li>
+        
+        <li><strong class="divider">&raquo;</strong></li>
+        
+        <li><a href="#/path/planner/{{ path.id }}"><i  tooltip="Not started" class="icon-ban-circle"></i> Planner</a></li>
+    </ul>
+</div>
 
 <hr />
 

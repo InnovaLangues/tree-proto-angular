@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3>Saving step : {{ step.name }}</h3>
+    <h3>Saving step : {{ formStep.name }}</h3>
 </div>
 
 <div class="modal-body">
@@ -7,6 +7,14 @@
         <fieldset>
             <label for="step-name">Name <span>*</span></label>
             <input type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
+            
+            <label for="step-instructions">Instructions</label>
+            <textarea id="step-instructions" name="step-instructions" ng-model="formStep.instructions">{{ formStep.instructions }}</textarea>
+            
+            <div ng-model="formStep.duration" class="well well-small">
+                <timepicker minute-step="5" show-meridian="false"></timepicker>
+            </div>
+            
         </fieldset>
     </form>
 </div>

@@ -295,7 +295,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             var dialogOptions = {
                 backdrop: true,
                 keyboard: true,
-                backdropClick: true
+                backdropClick: true,
+                windowClass: 'span12'
             };
             
             $scope.openTemplateEdit = function(step) {

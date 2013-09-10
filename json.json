@@ -3,16 +3,17 @@
     "description"  : "This is the path description",
     "steps" : [
         {
-            "id"         : 1,
-            "name"       : "Step",
-            "parentId"   : null,
-            "type"       : "seq",
-            "expanded"   : true,
-            "data"       : "activity",
-            "dataId"     : 123,
-            "templateId" : null,
-            "instructions": null,
-            "children"   : []
+            "id"           : 1,
+            "name"         : "Step",
+            "parentId"     : null,
+            "type"         : "seq",
+            "expanded"     : true,
+            "data"         : "activity",
+            "dataId"       : 123,
+            "templateId"   : null,
+            "instructions" : null,
+            "duration"     : "15",
+            "children"     : []
         }
     ],
     "activities" : [

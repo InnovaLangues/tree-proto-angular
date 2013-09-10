@@ -4,7 +4,7 @@
 
 <div class="modal-body">
     <form novalidate name="templateForm">
-        <fieldset>
+        <fieldset class="span4">
             <label for="template-name" class="control-label">Name <span>*</span></label>
             <input type="text" name="template-name" ng-model="formTemplate.name" class="warning" required value="{{ formTemplate.name }}" />
             
@@ -19,6 +19,10 @@
             
             <input type="hidden" ng-model="formTemplate.step" value="{{ step }}" name="template-step" />
         </fieldset>
+        
+        <div class="well span4">
+            Step preview
+        </div>
     </form>
 </div>
 

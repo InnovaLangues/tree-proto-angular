@@ -155,7 +155,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 setUndoDisabled: function(data) {
                     $rootScope.undoDisabled = data;
                 }
-            }
+            };
         }
     ])
     
@@ -204,7 +204,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             setPasteDisabled: function(data) {
                 $rootScope.pasteDisabled = data;
             }
-        }
+        };
     })
     
     .factory('pathFactory', function() {
@@ -276,7 +276,6 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                         }
                     }
                 }
-                
             },
             
             searchStepToReplace: function(currentStep, newStep) {
@@ -287,7 +286,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 }
                 else if (currentStep.children.length !== 0) {
                     for (var i = 0; i < currentStep.children.length; i++) {
-                        var stepFound = this.searchStepToReplace(currentStep.children[i], newStep);
+                        stepFound = this.searchStepToReplace(currentStep.children[i], newStep);
                         if (stepFound) {
                             break;
                         }
@@ -312,15 +311,17 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             // Base template used to append new step to tree
             var baseStep = {
-                id         : null,
-                name       : 'Step',
-                parentId   : null,
-                type       : 'seq',
-                expanded   : true,
-                dataType   : null,
-                dataId     : null,
-                templateId : null,
-                children   : []
+                id           : null,
+                name         : 'Step',
+                parentId     : null,
+                type         : 'seq',
+                expanded     : true,
+                dataType     : null,
+                dataId       : null,
+                templateId   : null,
+                instructions : null,
+                duration     : '15',
+                children     : []
             };
             
             return {
@@ -365,7 +366,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 }
                 
                 if (!templateFound) {
-                    this.addTemplate(template)
+                    this.addTemplate(template);
                 }
             },
             

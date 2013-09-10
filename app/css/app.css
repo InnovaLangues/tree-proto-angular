@@ -3,6 +3,23 @@
     cursor: pointer;
 }
 
+/* body .modal { */
+/*   width: 80%; desired relative width */
+/*   left: 10%; (100%-width)/2 */
+/*   place center */
+/*   margin-left:auto; */
+/*   margin-right:auto;  */
+/* } */
+
+.divider {
+    display: inline-block;
+    line-height: 28px;
+    font-size: 24px;
+    padding: 0 4px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
 .menu {
     list-style: none;
     border-bottom: 0.1em solid black;
