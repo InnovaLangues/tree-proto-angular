@@ -32,7 +32,11 @@
         <li><strong class="divider">&raquo;</strong></li>
         
         <!-- Skills Tab -->
-        <li><a href="#/path/skills/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Skills</a></li>
+        <li>
+            <a href="#/path/skills/{{ path.id }}">
+                <i ng-class="{not_started: icon-ban-circle, in_progress: icon-refresh, completed: icon-ok}" ng-model="path.progression.skills"></i> Skills
+            </a>
+        </li>
         
         <li><strong class="divider">&raquo;</strong></li>
         

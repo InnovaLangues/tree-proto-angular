@@ -265,7 +265,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.save = function(path) {
-                if (undefined != $routeParams.id) {
+                if ($routeParams.id) {
                     // Update existing path
                     $http
                         .put('../api/index.php/paths/' + $routeParams.id + '.json', path)

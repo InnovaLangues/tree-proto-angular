@@ -313,14 +313,14 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             var baseStep = {
                 id           : null,
                 name         : 'Step',
-                parentId     : null,
                 type         : 'seq',
                 expanded     : true,
                 dataType     : null,
                 dataId       : null,
-                templateId   : null,
-                instructions : null,
+                instructions : 'Tip step instructions here. If you want...',
                 duration     : '15',
+                who          : null,
+                where        : null,
                 children     : []
             };
             

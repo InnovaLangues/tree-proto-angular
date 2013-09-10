@@ -5,14 +5,14 @@
         {
             "id"           : 1,
             "name"         : "Step",
-            "parentId"     : null,
             "type"         : "seq",
             "expanded"     : true,
             "data"         : "activity",
             "dataId"       : 123,
-            "templateId"   : null,
-            "instructions" : null,
+            "instructions" : "Tip step instructions here. If you want...",
             "duration"     : "15",
+            "who"          : null,
+            "where"        : null,
             "children"     : []
         }
     ],

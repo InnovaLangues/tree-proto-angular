@@ -1,61 +1,20 @@
 /* app css stylesheet */
+li {
+    list-style: none;
+}
+
 .tree-item {
     cursor: pointer;
 }
 
-/* body .modal { */
-/*   width: 80%; desired relative width */
-/*   left: 10%; (100%-width)/2 */
-/*   place center */
-/*   margin-left:auto; */
-/*   margin-right:auto;  */
-/* } */
-
-.divider {
+.top-toolbar .divider {
     display: inline-block;
     line-height: 28px;
     font-size: 24px;
     padding: 0 4px;
-	margin-top: 2px;
-	margin-bottom: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
-
-.menu {
-    list-style: none;
-    border-bottom: 0.1em solid black;
-    margin-bottom: 2em;
-    padding: 0 0 0.5em;
-}
-
-.menu:before {
-    content: "[";
-}
-
-.menu:after {
-    content: "]";
-}
-
-.menu > li {
-    display: inline;
-}
-
-.menu > li:before {
-    content: "|";
-    padding-right: 0.3em;
-}
-
-.menu > li:nth-child(1):before {
-    content: "";
-    padding: 0;
-}
-
-
-li {
-    list-style: none;
-}
-.minimized > ul > li { display:none; }
-.minimized > ul {   border: 0 none transparent; }
-
 
 #zone li{
     position:relative;
@@ -74,15 +33,6 @@ form {
     min-height: 10px;
     border: 1px dashed #010101;
     margin-bottom: 15px;
-}
-
-#page-loader {
-    font-size: 140px;
-    position: absolute;
-    top: 500px;
-    left: 30%;
-    color: #f00;
-    z-index: 9999;
 }
 
 input.ng-invalid {

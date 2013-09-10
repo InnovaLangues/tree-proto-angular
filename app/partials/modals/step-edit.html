@@ -8,10 +8,26 @@
             <label for="step-name">Name <span>*</span></label>
             <input type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
             
+            <label for="step-who">Who ?</label>
+            <select name="step-who" id="step-who">
+                <option value=""></option>
+                <option value="student">Student</option>
+                <option value="group">Group</option>
+                <option value="class">Class</option>
+            </select>
+            
+            <label for="step-where">Where ?</label>
+            <select name="step-where" id="step-where">
+                <option value=""></option>
+                <option value="home">Home</option>
+                <option value="classroom">Classroom</option>
+                <option value="library">Library</option>
+            </select>
+            
             <label for="step-instructions">Instructions</label>
             <textarea id="step-instructions" name="step-instructions" ng-model="formStep.instructions">{{ formStep.instructions }}</textarea>
             
-            <div ng-model="formStep.duration" class="well well-small">
+            <div ng-model="formStep.duration">
                 <timepicker minute-step="5" show-meridian="false"></timepicker>
             </div>
             
