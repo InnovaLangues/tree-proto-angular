@@ -12,7 +12,7 @@
             "dataId"       : 123,
             "templateId"   : null,
             "instructions" : null,
-            "duration"     : '15',
+            "duration"     : "15",
             "children"     : []
         }
     ],
@@ -38,6 +38,6 @@
             "skills"     : "not_started",
             "scenario"   : "not_started",
             "validation" : "not_started",
-            "planner"    : "not_started",
+            "planner"    : "not_started"
         }
 }
