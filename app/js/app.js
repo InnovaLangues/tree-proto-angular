@@ -317,7 +317,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 expanded     : true,
                 dataType     : null,
                 dataId       : null,
-                instructions : 'Tip step instructions here. If you want...',
+                instructions : null,
                 duration     : '15',
                 who          : null,
                 where        : null,

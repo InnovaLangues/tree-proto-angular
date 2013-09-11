@@ -1,0 +1,72 @@
+@CHARSET "UTF-8";
+
+/* START fix new modal width and enable use of grid system */
+.step-edit {
+    left: 0;
+    top: 10%;
+    margin: 0 auto;
+    text-align: center;
+    position: fixed;
+    display: inline-block;
+    width: 100%;
+}
+
+.step-edit .container {
+    text-align: left;
+    position: relative;
+    margin: 0 auto;
+    left: 0;
+}
+
+.step-edit .modal-body {
+    padding-left: 0;
+    padding-right: 0;
+}
+/* END fix new modal width */
+
+.step-edit form {
+    padding: 0 15px;
+}
+
+.step-duration input {
+    text-align: center;
+}
+
+.step-duration span {
+    font-size: 16px;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 5px 4px;
+    vertical-align: top;
+}
+
+.panel-documents h2, .panel-tools h2 {
+    padding-bottom: 4px;
+}
+
+.panel-documents {
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-bottomleft: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.panel-tools {
+    -webkit-border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    -moz-border-radius-topright: 0;
+    -moz-border-radius-bottomright: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.panel-image {
+    text-align: center;
+}
+
+.panel-documents h2 {
+    text-align: right;
+}

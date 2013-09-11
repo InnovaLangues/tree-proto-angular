@@ -9,7 +9,7 @@
             "expanded"     : true,
             "data"         : "activity",
             "dataId"       : 123,
-            "instructions" : "Tip step instructions here. If you want...",
+            "instructions" : null,
             "duration"     : "15",
             "who"          : null,
             "where"        : null,

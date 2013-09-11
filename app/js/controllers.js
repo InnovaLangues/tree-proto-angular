@@ -296,7 +296,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 backdrop: true,
                 keyboard: true,
                 backdropClick: true,
-                windowClass: 'span12'
             };
             
             $scope.openTemplateEdit = function(step) {
@@ -307,6 +306,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             
             $scope.openStepEdit = function(step) {
                 stepFactory.setStep(step);
+                dialogOptions.dialogClass = 'step-edit';
                 var d = $dialog.dialog(dialogOptions);
                 d.open('partials/modals/step-edit.html', 'StepModalController');
             };

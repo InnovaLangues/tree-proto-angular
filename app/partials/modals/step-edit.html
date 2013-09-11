@@ -1,41 +1,121 @@
-<div class="modal-header">
-    <h3>Saving step : {{ formStep.name }}</h3>
-</div>
+<div class="modal container">
+    <div class="modal-header">
+        <h1><i class="icon-pencil"></i> Saving step : {{ formStep.name }}</h1>
+    </div>
 
-<div class="modal-body">
-    <form novalidate name="stepForm">
-        <fieldset>
-            <label for="step-name">Name <span>*</span></label>
-            <input type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
-            
-            <label for="step-who">Who ?</label>
-            <select name="step-who" id="step-who">
-                <option value=""></option>
-                <option value="student">Student</option>
-                <option value="group">Group</option>
-                <option value="class">Class</option>
-            </select>
-            
-            <label for="step-where">Where ?</label>
-            <select name="step-where" id="step-where">
-                <option value=""></option>
-                <option value="home">Home</option>
-                <option value="classroom">Classroom</option>
-                <option value="library">Library</option>
-            </select>
-            
-            <label for="step-instructions">Instructions</label>
-            <textarea id="step-instructions" name="step-instructions" ng-model="formStep.instructions">{{ formStep.instructions }}</textarea>
-            
-            <div ng-model="formStep.duration">
-                <timepicker minute-step="5" show-meridian="false"></timepicker>
+    <div class="modal-body">
+        <form novalidate name="stepForm" id="stepForm">
+            <fieldset class="row-fluid">
+                <div class="control-group span3">
+                    <label for="step-name" class="control-label">Name</label>
+                    <input type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
+                </div>
+                
+                <div class="control-group span3">
+                    <label for="step-who" class="control-label">Who ?</label>
+                    <select name="step-who" id="step-who">
+                        <option value=""></option>
+                        <option value="student">Student</option>
+                        <option value="group">Group</option>
+                        <option value="class">Class</option>
+                    </select>
+                </div>
+                
+                <div class="control-group span3">
+                    <label for="step-where" class="control-label">Where ?</label>
+                    <select name="step-where" id="step-where">
+                        <option value=""></option>
+                        <option value="home">Home</option>
+                        <option value="classroom">Classroom</option>
+                        <option value="library">Library</option>
+                    </select>
+                </div>
+                
+                <div class="step-duration control-group span3">
+                    <label for="step-duration-hours" class="control-label">Duration</label>
+                    
+                    <input type="text" class="span3" name="step-duration-hours" id="step-duration-hours" />
+                    <span>:</span>
+                    <input type="text" class="span3" name="step-duration-minutes" id="step-duration-minutes" />
+                </div>
+                
+                <div class="control-group span8 offset2">
+	                <textarea class="span10" id="step-instructions" name="step-instructions" ng-model="formStep.instructions" placeholder="Tip step instructions here">{{ formStep.instructions }}</textarea>
+                </div>
+            </fieldset>
+        </form>
+
+        <div class="row-fluid">
+            <div class="panel-documents well well-small span4">
+                <button class="btn btn-mini btn-primary pull-left"><i class="icon-plus"></i></button>
+                <h2>Documents <i class="icon-briefcase"></i></h2>
+                <table class="table table-condensed table-hover">
+                    <tr>
+                        <td></td>
+                        <td>Vidéo</td>
+                        <td>
+                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Image</td>
+                        <td>
+                            <button class="btn btn-mini"tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Test</td>
+                        <td>
+                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
             
-        </fieldset>
-    </form>
-</div>
+            <div class="panel-image well well-small span4">
+               <button class="btn btn-small"><i class="icon-picture"></i> Select image</button>
+            </div>
+            
+            <div class="panel-tools well well-small span4">
+                <button class="btn btn-mini btn-primary pull-right"><i class="icon-plus"></i></button>
+                <h2><i class="icon-wrench"></i> Tools</h2>
+                <table class="table table-condensed table-hover">
+                    <tr>
+                        <td></td>
+                        <td>Forum</td>
+                        <td>
+                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Chat</td>
+                        <td>
+                            <button class="btn btn-mini"tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Deposit files</td>
+                        <td>
+                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 
-<div class="modal-footer">
-    <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
-    <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="!stepForm.$valid">Save step</button>
+    <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+        <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="!stepForm.$valid">Save step</button>
+    </div>
 </div>
