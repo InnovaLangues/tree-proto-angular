@@ -13,21 +13,22 @@
 
 <body ng-cloak class="ps-push">
     <div class="bg-layer">
-	    <div class="container">
-	        <div ng-controller="AlertController">
-	            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-	        </div>
-	
-	        <div id="templates-sidebar" style="display:none" ng-controller="TemplateController">
-	            <a id="templates-sidebar-close" href="#" class="btn pull-right"><i class="icon-remove"></i></a>
-	            <div ng-include="'partials/sidebars/templates-sidebar.html'"></div>
-	        </div>
-	
-	        <div ng-view></div>
-	        
-	        <div notifications="top right"></div>
-	    </div>
+        <div class="container">
+            <div ng-controller="AlertController">
+                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+            </div>
+
+            <div id="templates-sidebar" style="display:none" ng-controller="TemplateController">
+                <a id="templates-sidebar-close" href="#" class="btn pull-right"><i class="icon-remove"></i></a>
+                <div ng-include="'partials/sidebars/templates-sidebar.html'"></div>
+            </div>
+
+            <div ng-view></div>
+            
+            <div notifications="top right"></div>
+        </div>
     </div>
+    
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
