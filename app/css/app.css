@@ -2,7 +2,8 @@
 h1 {
     font-size: 20px;
     margin: 4px 0;
-    line-height: 26px;
+    line-height: 24px;
+    font-weight: normal;
 }
 
 h2 {
@@ -18,23 +19,26 @@ h3 {
 }
 
 body {
-    background-color: #CCCCCC;
+    background: #fff url(http://dev.claroline.net/bundles/clarolinecore/images/themes/claroline/bg2.jpg) repeat-x;
 }
 
-.bg-layer {
-    padding: 14px 0;
-    margin: 10px 5%;
+.step-editor {
+    padding: 10px;
+    margin: 26px auto;
     background-color: #FFFFFF;
     border-radius: 4px;
-    box-shadow: 0 0 3px #999999;
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgb(221, 221, 221);
+}
+
+.page-title {
+    margin-bottom: 10px;
+    margin-left: 30px;
+    vertical-align: middle;
 }
 
 li {
     list-style: none;
-}
-
-h1 {
-    font-size:16px;
 }
 
 .tree-item {

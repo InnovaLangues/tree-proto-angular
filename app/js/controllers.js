@@ -306,9 +306,28 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             
             $scope.openStepEdit = function(step) {
                 stepFactory.setStep(step);
-                dialogOptions.dialogClass = 'step-edit';
-                var d = $dialog.dialog(dialogOptions);
+                var options = jQuery.extend(true, {}, dialogOptions);
+                options.dialogClass = 'step-edit';
+                var d = $dialog.dialog(options);
                 d.open('partials/modals/step-edit.html', 'StepModalController');
+            };
+            
+            $scope.openHelp = function() {
+                var d = $dialog.dialog(dialogOptions);
+                d.open('partials/modals/help.html', 'HelpModalController');
+            };
+        }
+    ])
+    
+    /**
+     * Help Modal Controller
+     */
+    .controller('HelpModalController', [
+        '$scope',
+        'dialog',
+        function($scope, dialog) {
+            $scope.close = function() {
+                dialog.close();
             };
         }
     ])

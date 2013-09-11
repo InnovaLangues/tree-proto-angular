@@ -52,10 +52,47 @@
 <hr />
 
 <div>
+    <form class="form-horizontal">
+        <div class="well well-small span5" id="left">
+            <fieldset>  
+                <div class="control-group">  
+                    <label class="control-label" for="select01">Select a pedagogical framework</label>  
+                    <div class="controls">  
+                        <select id="select01">  
+                            <option>CECRL</option>  
+                            <option>C2I</option>  
+                        </select>  
+                    </div>  
+                </div>  
+                <div class="control-group">  
+                    <label class="control-label" for="multiSelect">Select items and Add in you skills list</label>  
+                    <div class="controls">  
+                        <select multiple="multiple" id="multiSelect" size="20">  
+                            <option>Compréhension Orale</option>  
+                            <option>Production Orale</option>  
+                            <option>Compréhension Ecrite</option>  
+                            <option>Production Ecrite</option>  
+                            <option>Communication</option>  
+                        </select>  
+                    </div>  
+                </div>  
+            </fieldset>  
+        </div>  
 
+        <div class="well well-small span1" id="center">
+        </div>  
+
+        <div class="well well-small span5" id="right">
+            <div class="control-group">  
+                <label class="control-label" for="multiSelect">Selected items</label>  
+                <div class="controls">  
+                    <select multiple="multiple" id="multiSelect" size="20">  
+                        <option>Production Orale</option>  
+                        <option>Production Ecrite</option>  
+                    </select>  
+                </div>  
+            </div>  
+        </div>  
+    </form>
 </div>
-
 <hr />
-
-<a class="btn btn-small" href="#/path/global/{{ path.id }}"><i class="icon-backward"></i>  Previous step</a>
-<a class="btn btn-small btn-primary" href="#/path/scenario/{{ path.id }}">Next step <i class="icon-forward icon-white"></i></a>
