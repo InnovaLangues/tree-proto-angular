@@ -1,4 +1,16 @@
 /* app css stylesheet */
+body {
+    background-color: #CCCCCC;
+}
+
+.bg-layer {
+    padding: 14px 0;
+    margin: 10px 5%;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    box-shadow: 0 0 3px #999999;
+}
+
 li {
     list-style: none;
 }
