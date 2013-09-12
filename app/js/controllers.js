@@ -294,8 +294,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             
             var dialogOptions = {
                 backdrop: true,
-                keyboard: true,
-                backdropClick: true,
+                keyboard: false,
+                backdropClick: false,
             };
             
             $scope.openTemplateEdit = function(step) {
@@ -338,10 +338,11 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('StepModalController', [
        '$scope',
        'dialog',
+       '$dialog',
        'pathFactory',
        'stepFactory',
        'historyFactory',
-       function($scope, dialog, pathFactory, stepFactory, historyFactory) {
+       function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory) {
            var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
            
            $scope.formStep = localStep;
@@ -359,7 +360,41 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                
                dialog.close();
            };
+           
+           $scope.openDocumentEdit = function() {
+               var dialogOptions = {
+                   backdrop: true,
+                   keyboard: false,
+                   backdropClick: false,
+               };
+               
+               var d = $dialog.dialog(dialogOptions);
+               d.open('partials/modals/document-edit.html', 'DocumentModalController');
+           };
        }
+    ])
+    
+    /**
+     * Document Modal Controller
+     */
+    .controller('DocumentModalController', [
+        '$scope',
+        'dialog',
+        function($scope, dialog) {
+            $scope.formDocument = {
+                name: 'Document name',
+                url: null
+            };
+            
+            $scope.close = function() {
+                dialog.close();
+            };
+            
+            $scope.save = function(formDocument) {
+                // TODO : save document
+                dialog.close();
+            };
+        }
     ])
     
     /**

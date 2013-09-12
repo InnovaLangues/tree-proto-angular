@@ -1,56 +1,86 @@
-<div class="top-toolbar">
-    <div class="buttons pull-right">
-        <div class="btn-group">
-            <button class="btn" ng-click="undo()" ng-disabled="undoDisabled"><i class="icon-reply"></i></button>
-            <button class="btn" ng-click="redo()" ng-disabled="redoDisabled"><i class="icon-share-alt"></i></button>
-        </div>
-        
-        <button class="btn btn-primary" ng-click="save(path)" tooltip="Save"><i class="icon-save"></i></button>
-        
-        <button class="btn btn-success" ng-click="deploy(path)" tooltip="Submit"><i class="icon-share"></i></button>
+<div class="buttons pull-right">
+    <div class="btn-group">
+        <button class="btn btn-small" ng-click="undo()" ng-disabled="undoDisabled" tooltip="Undo"><i class="icon-reply"></i></button>
+        <button class="btn btn-small" ng-click="redo()" ng-disabled="redoDisabled" tooltip="Redo"><i class="icon-share-alt"></i></button>
     </div>
     
-    <ul class="nav nav-pills">
-        <li><a href="#/path/list" tooltip="Back to list"><i class="icon-list"></i></a></li>
-        
-        <!-- Global Tab -->
-        <li class="active" ng-class="">
-            <a href="#/path/global/{{ path.id }}" style="display: inline-block;">Global</a>
-            
-            <div class="btn-group" style="display: inline-block;">
-                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown" tooltip="Change status">
-                    <i class="icon-ban-circle"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#"><i class="icon-ban-circle"></i> Not started</a></li>
-                    <li><a href="#"><i class="icon-refresh"></i> In progress</a></li>
-                    <li><a href="#"><i class="icon-ok"></i> Completed</a></li>
-                </ul>
-            </div>
-        </li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <!-- Skills Tab -->
-        <li>
-            <a href="#/path/skills/{{ path.id }}">
-                <i ng-class="{not_started: icon-ban-circle, in_progress: icon-refresh, completed: icon-ok}" ng-model="path.progression.skills"></i> Skills
-            </a>
-        </li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <!-- Scenario Tab -->
-        <li><a href="#/path/scenario/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Scenario</a></li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <!-- Validation Tab -->
-        <li><a href="#/path/validation/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Validation</a></li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <!-- Planner Tab -->
-        <li><a href="#/path/planner/{{ path.id }}"><i  tooltip="Not started" class="icon-ban-circle"></i> Planner</a></li>
-    </ul>
+    <button class="btn btn-small btn-primary" ng-click="save(path)" tooltip="Save"><i class="icon-save"></i></button>
+<!--     <button class="btn btn-small btn-success" ng-click="deploy(path)" tooltip="Submit"><i class="icon-share"></i></button> -->
+    
+    <a class="btn btn-small btn-danger" href="#/path/list" tooltip="Back to list"><i class="icon-remove"></i></a>
 </div>
+
+<button class="btn btn-mini pull-left" ng-click="openHelp()" tooltip="Help"><i class="icon-question-sign"></i></button>
+<h1 class="page-title">Editing Path : &lt;{{ path.name }}&gt; in Workspace &lt;xxx&gt;</h1>
+
+<ul class="navbar clearfix">
+    <li ng-class="{active: activeTab == 'Global'}" tooltip="Task 1 : Defining General Properties">
+        <div class="btn-group">
+            <a class="btn" href="#/path/global/{{ path.id }}"><span class="badge">1</span> Global</a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href=""><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href=""><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href=""><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Skills'}" tooltip="Task 2 : Defining skills and competencies">
+        <div class="btn-group">
+            <a class="btn" href="#/path/skills/{{ path.id }}"><span class="badge">2</span> Skills</a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href=""><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href=""><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href=""><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Scenario'}" tooltip="Task 3 : Defining scenario and steps">
+        <div class="btn-group">
+            <a class="btn" href="#/path/scenario/{{ path.id }}"><span class="badge">3</span> Scenario</a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href=""><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href=""><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href=""><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Planner'}" tooltip="Task 4 : Plan the path in an agenda">
+        <div class="btn-group">
+            <a class="btn" href="#/path/planner/{{ path.id }}"><span class="badge">4</span> Planner</a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href=""><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href=""><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href=""><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Validation'}" tooltip="Task 5 : Validating the path">
+        <div class="btn-group">
+            <a class="btn" href="#/path/validation/{{ path.id }}"><span class="badge">5</span> Validation</a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href=""><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href=""><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href=""><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+</ul>

@@ -16,6 +16,12 @@
             "children"     : []
         }
     ],
+    "resources" : [
+        {
+            "stepId" : null,
+            "type"   : "documents"
+        }
+    ],
     "activities" : [
         {
             "123" : {

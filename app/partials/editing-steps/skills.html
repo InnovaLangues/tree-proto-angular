@@ -1,57 +1,6 @@
-<h1>Path editor : {{ path.name }}</h1>
+<div ng-include="'partials/navbar.html'" onload="activeTab = 'Skills'"></div>
 
-<div class="top-toolbar">
-    <div class="buttons pull-right">
-        <div class="btn-group">
-            <button class="btn" ng-click="undo()" ng-disabled="undoDisabled"><i class="icon-reply"></i></button>
-            <button class="btn" ng-click="redo()" ng-disabled="redoDisabled"><i class="icon-share-alt"></i></button>
-        </div>
-        
-        <button class="btn btn-primary" ng-click="save(path)" tooltip="Save"><i class="icon-save"></i></button>
-        
-        <button class="btn btn-success" ng-click="deploy(path)" tooltip="Submit"><i class="icon-share"></i></button>
-    </div>
-    
-    <a class="btn pull-left" pageslide="left" ps-speed="0.5" href="#templates-sidebar"><i class="icon-heart"></i></a>
-    
-    <ul class="nav nav-pills">
-        <li><a href="#/path/list" tooltip="Back to list"><i class="icon-list"></i></a></li>
-        
-        <li><a href="#/path/global/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Global</a></li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <li class="active">
-            <a href="#/path/skills/{{ path.id }}" style="display: inline-block;">Skills</a>
-            <div class="btn-group" style="display: inline-block;">
-                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown" tooltip="Change status">
-                    <i class="icon-ban-circle"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href=""><i class="icon-ban-circle"></i> Not started</a></li>
-                    <li><a href=""><i class="icon-refresh"></i> In progress</a></li>
-                    <li><a href=""><i class="icon-ok"></i> Completed</a></li>
-                </ul>
-            </div>
-        </li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <li><a href="#/path/scenario/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Scenario</a></li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <li><a href="#/path/validation/{{ path.id }}"><i tooltip="Not started" class="icon-ban-circle"></i> Validation</a></li>
-        
-        <li><strong class="divider">&raquo;</strong></li>
-        
-        <li><a href="#/path/planner/{{ path.id }}" style="display: inline-block;"><i tooltip="Not started" class="icon-ban-circle"></i> Planner</a></li>
-    </ul>
-</div>
-
-<hr />
-
-<div>
+<div class="row-fluid">
     <form class="form-horizontal">
         <div class="well well-small span5" id="left">
             <fieldset>  
@@ -79,10 +28,12 @@
             </fieldset>  
         </div>  
 
-        <div class="well well-small span1" id="center">
+        <div class="well well-small span2" id="center" style="text-align: center">
+            <button class="btn"><i class="icon-chevron-right"></i></button>
         </div>  
 
         <div class="well well-small span5" id="right">
+            <button class="btn pull-right" tooltip="Remove selected items"><i class="icon-trash"></i></button>
             <div class="control-group">  
                 <label class="control-label" for="multiSelect">Selected items</label>  
                 <div class="controls">  
@@ -95,4 +46,3 @@
         </div>  
     </form>
 </div>
-<hr />

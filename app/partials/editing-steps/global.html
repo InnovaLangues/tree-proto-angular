@@ -1,33 +1,6 @@
-<div class="buttons pull-right">
-    <a class="btn btn-small btn-danger" href="#/path/list" tooltip="Back to list"><i class="icon-list"></i></a>
-    
-    <div class="btn-group">
-        <button class="btn btn-small" ng-click="undo()" ng-disabled="undoDisabled" tooltip="Undo"><i class="icon-reply"></i></button>
-        <button class="btn btn-small" ng-click="redo()" ng-disabled="redoDisabled" tooltip="Redo"><i class="icon-share-alt"></i></button>
-    </div>
-    
-    <button class="btn btn-small btn-primary" ng-click="save(path)" tooltip="Save"><i class="icon-save"></i></button>
-    <button class="btn btn-small btn-success" ng-click="deploy(path)" tooltip="Submit"><i class="icon-share"></i></button>
-</div>
+<div ng-include="'partials/navbar.html'" onload="activeTab = 'Global'"></div>
 
-<button class="btn btn-mini pull-left" ng-click="openHelp()"><i class="icon-question-sign"></i></button>
-<h1 class="page-title">Editing Path : {{ path.name }}</h1>
-
-<ul class="nav nav-tabs">
-    <li class="active">
-        <a href="#/path/global/{{ path.id }}" style="display: inline-block;"><span class="badge">1</span> Global</a>
-    </li>
-    
-    <li><a href="#/path/skills/{{ path.id }}"><span class="badge">2</span> Skills</a></li>
-    
-    <li><a href="#/path/scenario/{{ path.id }}"><span class="badge">3</span> Scenario</a></li>
-    
-    <li><a href="#/path/planner/{{ path.id }}"><span class="badge">4</span> Planner</a></li>
-    
-    <li><a href="#/path/validation/{{ path.id }}"><span class="badge">5</span> Validation</a></li>
-</ul>
-
-<div>
+<div class="row-fluid">
     <label class="control-label" for="path-name">Path name : </label>
     <input type="text" value="{{ path.name }}" ng-model="path.name" id="path-name" ng-change="rename()" />
     
