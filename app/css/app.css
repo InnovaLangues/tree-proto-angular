@@ -47,6 +47,7 @@ li {
 
 .tree-item {
     cursor: pointer;
+    line-height: 24px;
 }
 
 .top-toolbar .divider {

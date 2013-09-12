@@ -63,6 +63,18 @@
     border-radius: 0 !important;
 }
 
+.navbar .active .btn {
+	padding-top: 7px !important;
+}
+
+.navbar .active .btn:first-child {
+    padding-left: 11px !important;
+}
+
+.navbar .active .dropdown-toggle {
+    padding-right: 7px !important;
+}
+
 .navbar .active {
     border: 1px solid rgb(221, 221, 221);
     border-bottom: none;
