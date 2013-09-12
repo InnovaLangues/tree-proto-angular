@@ -343,8 +343,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
        'stepFactory',
        'historyFactory',
        function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory) {
-           var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
+           $scope.buttonsDisabled = false;
            
+           var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
            $scope.formStep = localStep;
            
            $scope.close = function() {
@@ -362,14 +363,17 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            };
            
            $scope.openDocumentEdit = function() {
+               // Disable current modal button to prevent close step modal before close document/tool modal
+               $scope.buttonsDisabled = true;
+               
                var dialogOptions = {
                    backdrop: true,
                    keyboard: false,
-                   backdropClick: false,
+                   backdropClick: false
                };
                
                var d = $dialog.dialog(dialogOptions);
-               d.open('partials/modals/document-edit.html', 'DocumentModalController');
+               d.open('partials/modals/document-edit.html', 'DocumentModalController').then(function(result) {$scope.buttonsDisabled = false;});
            };
        }
     ])

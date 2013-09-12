@@ -84,3 +84,22 @@ input.ng-invalid {
 input.ng-valid {
     border: 1px solid green;
 }
+
+.btn-templates {
+    position: fixed;
+    left: -42px;
+    top: 172px;
+    margin: 0;
+    
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-top-right-radius: 0;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-topright: 0;
+    border-top-left-radius: 0;
+    border-top -right-radius: 0;
+    
+    -webkit-transform: rotate(-90deg); 
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg); 
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}

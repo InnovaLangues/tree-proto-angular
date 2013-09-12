@@ -140,7 +140,7 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
-        <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="!stepForm.$valid">Save step</button>
+        <button class="btn btn-warning cancel" ng-click="close()" ng-disabled="buttonsDisabled">Cancel</button>
+        <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="buttonsDisabled || !stepForm.$valid">Save step</button>
     </div>
 </div>

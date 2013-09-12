@@ -40,10 +40,10 @@
     ],
     "progression" :
         {
-            "global"     : "not_started",
-            "skills"     : "not_started",
-            "scenario"   : "not_started",
-            "validation" : "not_started",
-            "planner"    : "not_started"
+            "global"     : "todo",
+            "skills"     : "todo",
+            "scenario"   : "todo",
+            "validation" : "todo",
+            "planner"    : "todo"
         }
 }
