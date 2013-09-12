@@ -69,11 +69,13 @@
     background-color: #FFFFFF;
 }
 
+.navbar .active .btn-group > a {
+}
+
 .navbar .active .btn-group > a, 
 .navbar .active .btn-group > a:hover, 
 .navbar .active .btn-group > a:focus,
 .navbar .active .btn-group > a:active {
-    padding-right: 8px !important;
     color: rgb(85, 85, 85) !important;
     cursor: default !important;
     background-color: #FFFFFF !important;

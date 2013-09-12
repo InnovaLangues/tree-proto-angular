@@ -3,23 +3,26 @@
     "description"  : "This is the path description",
     "steps" : [
         {
-            "id"           : 1,
-            "name"         : "Step",
-            "type"         : "seq",
-            "expanded"     : true,
-            "data"         : "activity",
-            "dataId"       : 123,
-            "instructions" : null,
-            "duration"     : "15",
-            "who"          : null,
-            "where"        : null,
-            "children"     : []
+            "id"              : 1,
+            "name"            : "Step",
+            "type"            : "seq",
+            "expanded"        : true,
+            "data"            : "activity",
+            "dataId"          : 123,
+            "instructions"    : null,
+            "durationHours"   : null,
+            "durationMinutes" : null,
+            "who"             : null,
+            "where"           : null,
+            "children"        : []
         }
     ],
     "resources" : [
         {
-            "stepId" : null,
-            "type"   : "documents"
+            "name"      : "Resource",
+            "stepId"    : null,
+            "type"      : "document",
+            "isDigital" : false
         }
     ],
     "activities" : [

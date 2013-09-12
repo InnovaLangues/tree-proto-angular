@@ -384,10 +384,15 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('DocumentModalController', [
         '$scope',
         'dialog',
-        function($scope, dialog) {
+        'stepFactory',
+        function($scope, dialog, stepFactory) {
+            var currentStep = stepFactory.getStep();
+            
             $scope.formDocument = {
                 name: 'Document name',
-                url: null
+                type: null,
+                url: null,
+                stepId: currentStep.id
             };
             
             $scope.close = function() {
@@ -395,6 +400,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.save = function(formDocument) {
+                // Send back document to step
+                // We don't add directly 
                 // TODO : save document
                 dialog.close();
             };

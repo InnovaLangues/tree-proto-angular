@@ -13,7 +13,7 @@
                 
                 <div class="control-group span3">
                     <label for="step-who" class="control-label">Who ?</label>
-                    <select name="step-who" id="step-who">
+                    <select name="step-who" id="step-who" ng-model="formStep.who">
                         <option value=""></option>
                         <option value="student">Student</option>
                         <option value="group">Group</option>
@@ -23,7 +23,7 @@
                 
                 <div class="control-group span3">
                     <label for="step-where" class="control-label">Where ?</label>
-                    <select name="step-where" id="step-where">
+                    <select name="step-where" id="step-where" ng-model="formStep.where">
                         <option value=""></option>
                         <option value="home">Home</option>
                         <option value="classroom">Classroom</option>
@@ -33,7 +33,7 @@
                 
                 <div class="step-duration control-group span3">
                     <label for="step-duration-hours" class="control-label">Student duration (in hours)</label>
-                    <select class="span3" name="step-duration-hours" id="step-duration-hours">
+                    <select class="span3" name="step-duration-hours" id="step-duration-hours" ng-model="formStep.durationHours">
                         <option value="">00</option>
                         <option value="1">01</option>
                         <option value="2">02</option>
@@ -47,7 +47,7 @@
                         <option value="10">10</option>
                     </select>
                     <span>h</span>
-                    <select class="span3" name="step-duration-minutes" id="step-duration-minutes">
+                    <select class="span3" name="step-duration-minutes" id="step-duration-minutes" ng-model="formStep.durationMinutes">
                         <option value="">00</option>
                         <option value="5">05</option>
                         <option value="10">10</option>
