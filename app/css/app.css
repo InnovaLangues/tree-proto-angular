@@ -1,4 +1,8 @@
 /* app css stylesheet */
+.modal-backdrop {
+	z-index: 1;
+}
+
 img {
     border: none;
 }
