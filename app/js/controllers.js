@@ -453,7 +453,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         .post('../api/index.php/path/templates.json', formTemplate)
                         .success(function(response) {
                             $notification.success("Success!", "Template saved!");
-                            templateFactory.addTemplate(response);
+                            formTemplate.id = response;
+                            templateFactory.addTemplate(formTemplate);
                             dialog.close();
                         });
                 }

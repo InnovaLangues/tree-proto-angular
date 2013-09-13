@@ -9,6 +9,7 @@
     position: fixed;
     display: inline-block;
     width: 100%;
+    z-index: 100;
 }
 
 .step-edit .container {

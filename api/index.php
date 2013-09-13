@@ -181,18 +181,9 @@ $app->post('/path/templates.json', function () use($app, $db)
 
         $lastId = $db->lastInsertId();
 
-        $sql = "SELECT * FROM pathtemplates WHERE pathtemplates.id = :id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam("id", $lastId);
-        $stmt->execute();
-
-        $result = $stmt->fetchObject();
-
-        if ($result) {
-            echo json_encode($result);
-        }
-
         $db = null;
+        
+        echo $lastId;
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
