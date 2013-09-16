@@ -31,7 +31,7 @@ body {
     background: #fff url(http://dev.claroline.net/bundles/clarolinecore/images/themes/claroline/bg2.jpg) repeat-x;
 }
 
-.step-editor {
+.path-editor {
     padding: 10px;
     margin: 26px auto;
     background-color: #FFFFFF;
@@ -106,7 +106,7 @@ input.ng-valid {
     -moz-border-radius-topleft: 0;
     -moz-border-radius-topright: 0;
     border-top-left-radius: 0;
-    border-top -right-radius: 0;
+    border-top-right-radius: 0;
     
     -webkit-transform: rotate(-90deg); 
     -moz-transform: rotate(-90deg);

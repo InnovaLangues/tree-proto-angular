@@ -14,7 +14,7 @@
 </head>
 
 <body ng-cloak class="ps-push">
-    <div class="step-editor container">
+    <div class="path-editor container">
         <div ng-controller="AlertController">
             <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
         </div>

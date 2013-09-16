@@ -1,6 +1,6 @@
 {
-    "name"  : "My Path Name",
-    "description"  : "This is the path description",
+    "name" : "My Path Name",
+    "description" : "This is the path description",
     "steps" : [
         {
             "id"              : 1,
@@ -19,10 +19,13 @@
     ],
     "resources" : [
         {
-            "name"      : "Resource",
-            "stepId"    : null,
-            "type"      : "document",
-            "isDigital" : false
+            "id"                  : null,
+            "name"                : "Resource",
+            "stepId"              : null,
+            "type"                : "document",
+            "subType"             : null,
+            "isDigital"           : false,
+            "propagateToChildren" : true
         }
     ],
     "activities" : [

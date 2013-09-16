@@ -70,6 +70,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('PathController', [
         '$scope',
         '$http',
+        'pathFactory',
         function($scope, $http, pathFactory) {
             $scope.paths = null;
 
@@ -342,10 +343,19 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
        'pathFactory',
        'stepFactory',
        'historyFactory',
-       function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory) {
+       'resourceFactory',
+       function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory, resourceFactory) {
+           var path = pathFactory.getPath();
+           resourceFactory.setResources(path.resources);
+           
            $scope.buttonsDisabled = false;
            
            var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
+           
+           var localDocuments = jQuery.extend(true, {}, stepFactory.getStep());
+           localStep.documents = resourceFactory.getStepDocuments(localStep.id);
+           localStep.tools = resourceFactory.getStepTools(localStep.id);
+           
            $scope.formStep = localStep;
            
            $scope.close = function() {
@@ -356,25 +366,41 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                // Inject edited step in path
                pathFactory.replaceStep(formStep);
                
+               // Inject new resources
+               
                $scope.path = pathFactory.getPath();
                historyFactory.update($scope.path);
                
                dialog.close();
            };
            
-           $scope.openDocumentEdit = function() {
+           var dialogOptions = {
+               backdrop: true,
+               keyboard: false,
+               backdropClick: false,
+           };
+           
+           // Document Management
+           $scope.editDocument = function(document) {
                // Disable current modal button to prevent close step modal before close document/tool modal
                $scope.buttonsDisabled = true;
                
-               var dialogOptions = {
-                   backdrop: true,
-                   keyboard: false,
-                   backdropClick: false
-               };
+               if (undefined != document && null != document) {
+                   // Edit existing document
+                   resourceFactory.setCurrentResource(document);
+               }
                
                var d = $dialog.dialog(dialogOptions);
-               d.open('partials/modals/document-edit.html', 'DocumentModalController').then(function(result) {$scope.buttonsDisabled = false;});
+               d.open('partials/modals/document-edit.html', 'DocumentModalController').then(function(result) { $scope.buttonsDisabled = false; });
            };
+           
+           
+           $scope.removeDocument = function(document) {
+               
+           };
+           
+           // Tool Management
+           
        }
     ])
     
@@ -385,21 +411,44 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         '$scope',
         'dialog',
         'stepFactory',
-        function($scope, dialog, stepFactory) {
+        'resourceFactory',
+        function($scope, dialog, stepFactory, resourceFactory) {
+            var editDocument = false;
             var currentStep = stepFactory.getStep();
             
-            $scope.formDocument = {
-                name: 'Document name',
-                type: null,
-                url: null,
-                stepId: currentStep.id
-            };
+            var currentDocument = resourceFactory.getCurrentResource();
+            if (null === currentDocument) {
+                // Create new document
+                $scope.formDocument = {
+                    id:   resourceFactory.getNextResourceId(),
+                    name: 'Document name',
+                    type: null,
+                    url:  null,
+                    stepId: currentStep.id
+                };
+            }
+            else {
+                // Edit exiting document
+                editDocument = true;
+                
+                resourceFactory.setCurrentResource(null);
+                
+                // Create a clone of current document to not affect original data (in case of user click on 'Cancel')
+                $scope.formDocument = jQuery.extend(true, {}, currentDocument);
+            }
             
             $scope.close = function() {
                 dialog.close();
             };
             
             $scope.save = function(formDocument) {
+                if (editDocument) {
+                    
+                }
+                else {
+                    
+                }
+                    
                 // Send back document to step
                 // We don't add directly 
                 // TODO : save document
@@ -438,8 +487,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 editTemplate = true;
                 
                 templateFactory.setCurrentTemplate(null);
-                var localCurrentTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
-                $scope.formTemplate = localCurrentTemplate;
+                $scope.formTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
             }
             
             $scope.close = function() {

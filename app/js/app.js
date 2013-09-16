@@ -245,6 +245,8 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                         this.retrieveMaxStepId(path.steps[i]);
                     }
                 }
+                
+               return maxStepId;
             },
             
             retrieveMaxStepId: function(step) {
@@ -386,6 +388,110 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 currentTemplate = data;
             }
         };
+    })
+    
+    .factory('resourceFactory', function() {
+        var resources = [];
+        var maxResourceId = 1;
+        
+        var currentResource = null;
+        
+        return {
+            getCurrentResource: function() {
+                return currentResource;
+            },
+            
+            setCurrentResource: function(data) {
+                currentResource = data;
+            },
+            
+            getNextResourceId: function() {
+                maxResourceId++;
+                return maxResourceId;
+            },
+            
+            getMaxResourceId: function() {
+                if (resources.length !== 0) {
+                    for (var i = 0; i < resources.length; i++) {
+                        var resource = resources[i];
+                        if (resource.id > maxResourceId)
+                        {
+                            maxResourceId = resource.id;
+                        }
+                    }
+                }
+                
+                return maxResourceId;
+            },
+            
+            getResources: function() {
+                return resources;
+            },
+            
+            setResources: function(data) {
+                resources = data;
+                
+                // Recalculate max resource id for new resource
+                this.getMaxResourceId();
+            },
+            
+            addDocument: function(newDocument) {
+                newDocument.type = 'document';
+                resources.push(newDocument);
+            },
+            
+            addTool: function(newTool) {
+                newTool.type = 'tool';
+                resources.push(newTool);
+            },
+            
+            getStepDocuments: function(stepId) {
+                return this.searchStepResources(stepId, 'document');
+            },
+            
+            getStepTools: function(stepId) {
+                return this.searchStepResources(stepId, 'tool');
+            },
+            
+            searchStepResources: function(stepId, resourceType) {
+                var stepResources = [];
+                for (var i = 0; i < resources.length; i++) {
+                    var resource = resources[i];
+                    if (resourceType === resource.type && stepId === resource.stepId) {
+                        stepResources.push(resource);
+                    }
+                }
+                
+                return stepResources;
+            },
+            
+            replaceStepDocuments: function(stepId, newDocuments) {
+                this.replaceStepResources(stepId, 'document', newDocuments);
+            },
+            
+            replaceStepTools: function(stepId, newTools) {
+                this.replaceStepResources(stepId, 'tool', newTools);
+            },
+            
+            replaceStepResources: function(stepId, resourceType, newResources) {
+                var newResourcesArray = [];
+                
+                // Remove old step resources
+                for (var i = 0; i < resources.length; i++) {
+                    var resource = resources[i];
+                    if (stepId !== resource.id || resourceType !== resource.type) {
+                        newResourcesArray.push(resource);
+                    }
+                }
+                
+                // Inject new resources
+                for (var j = 0; j < newResources.length; j++) {
+                    newResourcesArray.push(newResources[j]);
+                }
+                
+                this.setResources(newResourcesArray);
+            }
+        }
     })
     
     .factory('alertFactory', function() {

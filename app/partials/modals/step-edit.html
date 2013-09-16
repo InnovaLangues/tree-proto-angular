@@ -73,31 +73,15 @@
 
         <div class="row-fluid">
             <div class="panel-documents well well-small span4">
-                <button class="btn btn-mini btn-primary pull-left" ng-click="openDocumentEdit()"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-primary pull-left" ng-click="editDocument()"><i class="icon-plus"></i></button>
                 <h2>Documents <i class="icon-briefcase"></i></h2>
                 <table class="table table-condensed table-hover">
-                    <tr>
-                        <td></td>
-                        <td>Vidéo</td>
+                    <tr ng-repeat="document in documents">
+                        <td>{{ document.type }}</td>
+                        <td>{{ document.name }}</td>
                         <td>
-                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Image</td>
-                        <td>
-                            <button class="btn btn-mini"tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Test</td>
-                        <td>
-                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                            <button class="btn btn-mini" ng-click="editDocument(document)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" ng-click="removeDocument(document)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>
                 </table>
