@@ -25,17 +25,19 @@
         <p>{{ previewStep.instructions }}</p>
         
         <h3><i class="icon-briefcase"></i> Documents</h3>
-        <ul>
-            <li>Vidéo (Démo)</li>
-            <li>Image (Démo)</li>
-            <li>Test (Démo)</li>
-        </ul>
+        <table>
+            <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">
+                <td>{{ resource.subType }}</td>
+                <td>{{ resource.name }}</td>
+            </tr>
+        </table>
         
         <h3><i class="icon-wrench"></i> Tools</h3>
-        <ul>
-            <li>Forum (Démo)</li>
-            <li>Tchat (Démo)</li>
-            <li>Deposit files (Démo)</li>
-        </ul>
+        <table>
+	        <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
+	            <td>{{ resource.subType }}</td>
+	            <td>{{ resource.name }}</td>
+	        </tr>
+        </table>
     </div>
 </div>

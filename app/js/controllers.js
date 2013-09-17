@@ -345,16 +345,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
        'historyFactory',
        'resourceFactory',
        function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory, resourceFactory) {
-           var path = pathFactory.getPath();
-           resourceFactory.setResources(path.resources);
-           
            $scope.buttonsDisabled = false;
            
            var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
-           
-           var localDocuments = jQuery.extend(true, {}, stepFactory.getStep());
-           localStep.documents = resourceFactory.getStepDocuments(localStep.id);
-           localStep.tools = resourceFactory.getStepTools(localStep.id);
            
            $scope.formStep = localStep;
            
@@ -365,8 +358,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            $scope.save = function(formStep) {
                // Inject edited step in path
                pathFactory.replaceStep(formStep);
-               
-               // Inject new resources
                
                $scope.path = pathFactory.getPath();
                historyFactory.update($scope.path);
@@ -380,14 +371,14 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                backdropClick: false,
            };
            
-           // Document Management
-           $scope.editDocument = function(document) {
+           // Resources Management
+           $scope.editResource = function(resource) {
                // Disable current modal button to prevent close step modal before close document/tool modal
                $scope.buttonsDisabled = true;
                
-               if (undefined != document && null != document) {
+               if (undefined != resource && null != resource) {
                    // Edit existing document
-                   resourceFactory.setCurrentResource(document);
+                   resourceFactory.setResource(resource);
                }
                
                var d = $dialog.dialog(dialogOptions);
@@ -395,12 +386,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            };
            
            
-           $scope.removeDocument = function(document) {
+           $scope.removeResource = function(resource) {
                
            };
-           
-           // Tool Management
-           
        }
     ])
     
@@ -410,28 +398,31 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     .controller('DocumentModalController', [
         '$scope',
         'dialog',
+        'pathFactory',
         'stepFactory',
         'resourceFactory',
-        function($scope, dialog, stepFactory, resourceFactory) {
+        function($scope, dialog, pathFactory, stepFactory, resourceFactory) {
             var editDocument = false;
-            var currentStep = stepFactory.getStep();
             
-            var currentDocument = resourceFactory.getCurrentResource();
+            var currentDocument = resourceFactory.getResource();
             if (null === currentDocument) {
                 // Create new document
+                var currentStep = stepFactory.getStep();
+                
                 $scope.formDocument = {
-                    id:   resourceFactory.getNextResourceId(),
+                    id:   pathFactory.getNextResourceId(),
                     name: 'Document name',
                     type: null,
                     url:  null,
-                    stepId: currentStep.id
+                    stepId: currentStep.id,
+                    propagateToChildren: true
                 };
             }
             else {
                 // Edit exiting document
                 editDocument = true;
                 
-                resourceFactory.setCurrentResource(null);
+                resourceFactory.setResource(null);
                 
                 // Create a clone of current document to not affect original data (in case of user click on 'Cancel')
                 $scope.formDocument = jQuery.extend(true, {}, currentDocument);

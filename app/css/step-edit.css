@@ -48,3 +48,7 @@
 .panel-documents h2 {
     text-align: right;
 }
+
+.step-edit table {
+	margin-bottom: 0;
+}

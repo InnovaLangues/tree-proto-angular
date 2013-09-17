@@ -83,6 +83,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                     var path = this.getPathFromHistory(historyState);
                     
                     // Clone object
+                    // TODO : replace by native js method
                     var pathCopy = jQuery.extend(true, {}, path);
                     
                     this.setRedoDisabled(false);
@@ -211,12 +212,14 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         var path = null;
         var pathInstanciated = [];
         var maxStepId = 1;
+        var maxResourceId = 1;
         
         return {
             clear: function() {
                 path = null;
                 pathInstanciated = [];
                 maxStepId = 1;
+                maxResourceId = 1;
             },
             
             getPath: function() {
@@ -228,6 +231,9 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 // Retrieve max step id
                 this.getMaxStepId();
+                
+                // Retrieve max resource id
+                this.getMaxResourceId();
             },
             
             addPathInstanciated: function(id) {
@@ -239,6 +245,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             },
             
             getMaxStepId: function() {
+                maxStepId = 1;
                 if (null !== path && path.steps.length !== 0)
                 {
                     for (var i = 0; i < path.steps.length; i++) {
@@ -266,6 +273,41 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             getNextStepId: function() {
                 maxStepId++;
                 return maxStepId;
+            },
+            
+            getMaxResourceId: function() {
+                maxResourceId = 1;
+                if (null !== path && path.steps.length !== 0)
+                {
+                    for (var i = 0; i < path.steps.length; i++) {
+                        this.retrieveMaxResourceId(path.steps[i]);
+                    }
+                }
+                
+               return maxResourceId;
+            },
+            
+            retrieveMaxResourceId: function(step) {
+                if (step.resources.length !== 0) {
+                 // Check current step resources
+                    for (var i = 0; i < step.resources.length; i++) {
+                        if (step.resources[i].id > maxResourceId) {
+                            maxResourceId = step.resources[i];
+                        }
+                    }
+                }
+                
+                // Check step children
+                if (step.children.length !== 0) {
+                    for (var i = 0; i < step.children.length; i++) {
+                        this.retrieveMaxResourceId(step.children[i]);
+                    }
+                }
+            },
+            
+            getNextResourceId: function() {
+                maxResourceId++;
+                return maxResourceId;
             },
             
             replaceStep: function(newStep) {
@@ -313,17 +355,21 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             // Base template used to append new step to tree
             var baseStep = {
-                id           : null,
-                name         : 'Step',
-                type         : 'seq',
-                expanded     : true,
-                dataType     : null,
-                dataId       : null,
-                instructions : null,
-                duration     : '15',
-                who          : null,
-                where        : null,
-                children     : []
+                id                : null,
+                name              : 'Step',
+                type              : 'seq',
+                expanded          : true,
+                dataType          : null,
+                dataId            : null,
+                instructions      : null,
+                duration          : '15',
+                who               : null,
+                where             : null,
+                withTutor         : false,
+                withComputer      : true,
+                children          : [],
+                resources         : [],
+                excludedResources : []
             };
             
             return {
@@ -391,105 +437,14 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
     })
     
     .factory('resourceFactory', function() {
-        var resources = [];
-        var maxResourceId = 1;
-        
-        var currentResource = null;
-        
+        var resource = null;
         return {
-            getCurrentResource: function() {
-                return currentResource;
+            getResource: function() {
+                return resource;
             },
             
-            setCurrentResource: function(data) {
-                currentResource = data;
-            },
-            
-            getNextResourceId: function() {
-                maxResourceId++;
-                return maxResourceId;
-            },
-            
-            getMaxResourceId: function() {
-                if (resources.length !== 0) {
-                    for (var i = 0; i < resources.length; i++) {
-                        var resource = resources[i];
-                        if (resource.id > maxResourceId)
-                        {
-                            maxResourceId = resource.id;
-                        }
-                    }
-                }
-                
-                return maxResourceId;
-            },
-            
-            getResources: function() {
-                return resources;
-            },
-            
-            setResources: function(data) {
-                resources = data;
-                
-                // Recalculate max resource id for new resource
-                this.getMaxResourceId();
-            },
-            
-            addDocument: function(newDocument) {
-                newDocument.type = 'document';
-                resources.push(newDocument);
-            },
-            
-            addTool: function(newTool) {
-                newTool.type = 'tool';
-                resources.push(newTool);
-            },
-            
-            getStepDocuments: function(stepId) {
-                return this.searchStepResources(stepId, 'document');
-            },
-            
-            getStepTools: function(stepId) {
-                return this.searchStepResources(stepId, 'tool');
-            },
-            
-            searchStepResources: function(stepId, resourceType) {
-                var stepResources = [];
-                for (var i = 0; i < resources.length; i++) {
-                    var resource = resources[i];
-                    if (resourceType === resource.type && stepId === resource.stepId) {
-                        stepResources.push(resource);
-                    }
-                }
-                
-                return stepResources;
-            },
-            
-            replaceStepDocuments: function(stepId, newDocuments) {
-                this.replaceStepResources(stepId, 'document', newDocuments);
-            },
-            
-            replaceStepTools: function(stepId, newTools) {
-                this.replaceStepResources(stepId, 'tool', newTools);
-            },
-            
-            replaceStepResources: function(stepId, resourceType, newResources) {
-                var newResourcesArray = [];
-                
-                // Remove old step resources
-                for (var i = 0; i < resources.length; i++) {
-                    var resource = resources[i];
-                    if (stepId !== resource.id || resourceType !== resource.type) {
-                        newResourcesArray.push(resource);
-                    }
-                }
-                
-                // Inject new resources
-                for (var j = 0; j < newResources.length; j++) {
-                    newResourcesArray.push(newResources[j]);
-                }
-                
-                this.setResources(newResourcesArray);
+            setResource: function(data) {
+                resource = data;
             }
         }
     })

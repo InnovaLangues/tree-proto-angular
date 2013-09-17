@@ -65,6 +65,20 @@
                     <span>min</span>
                 </div>
                 
+                <div class="control-group span3 offset3">
+                    <label class="checkbox">
+	                    <input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" />
+	                    With tutor ?
+	                </label>
+                </div>
+                
+                <div class="control-group span3">
+                    <label class="checkbox">
+                        <input type="checkbox" name="with-computer" id="with-computer" ng-model="formStep.withComputer" />
+                        With computer ?
+                    </label>
+                </div>
+                
                 <div class="control-group span8 offset2">
 	                <textarea class="span10" id="step-instructions" name="step-instructions" ng-model="formStep.instructions" placeholder="Tip step instructions here">{{ formStep.instructions }}</textarea>
                 </div>
@@ -73,15 +87,15 @@
 
         <div class="row-fluid">
             <div class="panel-documents well well-small span4">
-                <button class="btn btn-mini btn-primary pull-left" ng-click="editDocument()"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-primary pull-left" ng-click="editResource()"><i class="icon-plus"></i></button>
                 <h2>Documents <i class="icon-briefcase"></i></h2>
                 <table class="table table-condensed table-hover">
-                    <tr ng-repeat="document in documents">
-                        <td>{{ document.type }}</td>
-                        <td>{{ document.name }}</td>
+                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
+                        <td>{{ resource.subType }}</td>
+                        <td>{{ resource.name }}</td>
                         <td>
-                            <button class="btn btn-mini" ng-click="editDocument(document)" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" ng-click="removeDocument(document)" tooltip="Delete"><i class="icon-trash"></i></button>
+                            <button class="btn btn-mini" ng-click="editResource(resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>
                 </table>
@@ -96,31 +110,15 @@
             </div>
             
             <div class="panel-tools well well-small span4">
-                <button class="btn btn-mini btn-primary pull-right"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-primary pull-right" ng-click="editResource()"><i class="icon-plus"></i></button>
                 <h2><i class="icon-wrench"></i> Tools</h2>
                 <table class="table table-condensed table-hover">
-                    <tr>
-                        <td></td>
-                        <td>Forum</td>
+                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
+                        <td>{{ resource.subType }}</td>
+                        <td>{{ resource.name }}</td>
                         <td>
-                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Chat</td>
-                        <td>
-                            <button class="btn btn-mini"tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Deposit files</td>
-                        <td>
-                            <button class="btn btn-mini" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" tooltip="Delete"><i class="icon-trash"></i></button>
+                            <button class="btn btn-mini" ng-click="editResource(resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>
                 </table>
