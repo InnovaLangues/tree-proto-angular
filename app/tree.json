@@ -8,8 +8,6 @@
             "type"              : "seq",
             "picture"           : null,
             "expanded"          : true,
-            "data"              : "activity",
-            "dataId"            : 123,
             "instructions"      : null,
             "durationHours"     : null,
             "durationMinutes"   : null,
@@ -19,26 +17,7 @@
             "withComputer"      : true,
             "children"          : [],
             "excludedResources" : [],
-            "resources" : [
-                {
-                    "id"                  : null,
-                    "name"                : "Document",
-                    "stepId"              : null,
-                    "type"                : "document",
-                    "subType"             : null,
-                    "isDigital"           : false,
-                    "propagateToChildren" : true
-                },
-                {
-                    "id"                  : null,
-                    "name"                : "Tool",
-                    "stepId"              : null,
-                    "type"                : "tool",
-                    "subType"             : null,
-                    "isDigital"           : false,
-                    "propagateToChildren" : true
-                }
-            ]
+            "resources"         : []
         }
     ],
     "progression" :

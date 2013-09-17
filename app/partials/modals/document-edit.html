@@ -12,7 +12,7 @@
             
             <div class="control-group span6">
                 <label for="document-type">Type</label>
-                <select name="document-type" id="document-type" class="span12">
+                <select name="document-type" id="document-type" class="span12" ng-model="formDocument.subType">
                     <option value=""></option>
                     <option value="text">Text</option>
                     <option value="sound">Sound</option>
@@ -43,6 +43,7 @@
         </fieldset>
         
         <fieldset class="row-fluid">
+            <br/>
             <label class="checkbox">
                 <input type="checkbox" name="propagate-to-children" id="propagate-to-children" ng-model="formDocument.propagateToChildren" />
                 Is available for children ?

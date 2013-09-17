@@ -221,7 +221,6 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             $scope.removeChildren = function(step) {
                 step.children = [];
                 historyFactory.update($scope.path);
-
             };
             
             $scope.copyToClipboard = function(step) {
@@ -305,12 +304,22 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 d.open('partials/modals/template-edit.html', 'TemplateModalController');
             };
             
-            $scope.openStepEdit = function(step) {
+            $scope.editStep = function(step) {
                 stepFactory.setStep(step);
+                
+                // Create modal form
                 var options = jQuery.extend(true, {}, dialogOptions);
                 options.dialogClass = 'step-edit';
+                
                 var d = $dialog.dialog(options);
-                d.open('partials/modals/step-edit.html', 'StepModalController');
+                d.open('partials/modals/step-edit.html', 'StepModalController')
+                 .then(function(step) {
+                     // Inject edited step in path
+                     pathFactory.replaceStep(step);
+                     
+                     // Update history
+                     historyFactory.update($scope.path);
+                 });
             };
             
             $scope.openHelp = function() {
@@ -340,11 +349,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
        '$scope',
        'dialog',
        '$dialog',
-       'pathFactory',
        'stepFactory',
        'historyFactory',
        'resourceFactory',
-       function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory, resourceFactory) {
+       function($scope, dialog, $dialog, stepFactory, historyFactory, resourceFactory) {
            $scope.buttonsDisabled = false;
            
            var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
@@ -356,13 +364,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            };
            
            $scope.save = function(formStep) {
-               // Inject edited step in path
-               pathFactory.replaceStep(formStep);
-               
-               $scope.path = pathFactory.getPath();
-               historyFactory.update($scope.path);
-               
-               dialog.close();
+               // Send back edited step to path
+               dialog.close(formStep);
            };
            
            var dialogOptions = {
@@ -373,21 +376,47 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            
            // Resources Management
            $scope.editResource = function(resource) {
+               var editResource = false;
+               
                // Disable current modal button to prevent close step modal before close document/tool modal
                $scope.buttonsDisabled = true;
                
                if (undefined != resource && null != resource) {
+                   editResource = true;
                    // Edit existing document
                    resourceFactory.setResource(resource);
                }
                
                var d = $dialog.dialog(dialogOptions);
-               d.open('partials/modals/document-edit.html', 'DocumentModalController').then(function(result) { $scope.buttonsDisabled = false; });
+               d.open('partials/modals/document-edit.html', 'DocumentModalController')
+                .then(function(resource) {
+                    if (editResource) {
+                        // Edit existing resource
+                        // Replace old resource by the new one
+                        for (var i = 0; i < $scope.formStep.resources.length; i++) {
+                            if ($scope.formStep.resources[i].id === resource.id) {
+                                $scope.formStep.resources[i] = resource;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        // Create new resource
+                        $scope.formStep.resources.push(resource);
+                    }
+                    
+                    // Modal is now close, enable buttons
+                    $scope.buttonsDisabled = false; 
+                });
            };
            
-           
            $scope.removeResource = function(resource) {
-               
+               // Search resource to remove
+               for (var i = 0; i < $scope.formStep.resources.length; i++) {
+                   if (resource.id === $scope.formStep.resources[i].id) {
+                       $scope.formStep.resources.splice(i, 1);
+                   }
+               }
            };
        }
     ])
@@ -402,26 +431,23 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'stepFactory',
         'resourceFactory',
         function($scope, dialog, pathFactory, stepFactory, resourceFactory) {
-            var editDocument = false;
-            
             var currentDocument = resourceFactory.getResource();
             if (null === currentDocument) {
                 // Create new document
                 var currentStep = stepFactory.getStep();
                 
                 $scope.formDocument = {
-                    id:   pathFactory.getNextResourceId(),
-                    name: 'Document name',
-                    type: null,
-                    url:  null,
-                    stepId: currentStep.id,
-                    propagateToChildren: true
+                    id                  : pathFactory.getNextResourceId(),
+                    name                : 'Document',
+                    stepId              : currentStep.id,
+                    type                : 'document',
+                    subType             : null,
+                    isDigital           : false,
+                    propagateToChildren : true
                 };
             }
             else {
                 // Edit exiting document
-                editDocument = true;
-                
                 resourceFactory.setResource(null);
                 
                 // Create a clone of current document to not affect original data (in case of user click on 'Cancel')
@@ -433,17 +459,8 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.save = function(formDocument) {
-                if (editDocument) {
-                    
-                }
-                else {
-                    
-                }
-                    
-                // Send back document to step
-                // We don't add directly 
-                // TODO : save document
-                dialog.close();
+                // Send back edited document to step
+                dialog.close(formDocument);
             };
         }
     ])
@@ -491,7 +508,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     $http
                         .post('../api/index.php/path/templates.json', formTemplate)
                         .success(function(response) {
-                            $notification.success("Success!", "Template saved!");
+                            $notification.success("Success", "Template saved!");
                             formTemplate.id = response;
                             templateFactory.addTemplate(formTemplate);
                             dialog.close();

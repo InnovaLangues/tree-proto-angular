@@ -289,10 +289,10 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             retrieveMaxResourceId: function(step) {
                 if (step.resources.length !== 0) {
-                 // Check current step resources
+                    // Check current step resources
                     for (var i = 0; i < step.resources.length; i++) {
                         if (step.resources[i].id > maxResourceId) {
-                            maxResourceId = step.resources[i];
+                            maxResourceId = step.resources[i].id;
                         }
                     }
                 }
@@ -359,10 +359,9 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 name              : 'Step',
                 type              : 'seq',
                 expanded          : true,
-                dataType          : null,
-                dataId            : null,
                 instructions      : null,
-                duration          : '15',
+                durationHours     : null,
+                durationMinutes   : null,
                 who               : null,
                 where             : null,
                 withTutor         : false,
@@ -382,16 +381,46 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                     return newStep;
                 },
                 
-                setStep: function (data) {
+                setStep: function(data) {
                     step = data;
                 },
                 
-                getStep: function () {
+                getStep: function() {
                     return step;
+                },
+                
+                replaceResource: function(newResource) {
+                    if (null !== step) {
+                        for (var i = 0; i < step.resources.length; i++) {
+                            if (newResource.id === step.resources[i].id) {
+                                this.updateResource(oldResource, newResource);
+                                break;
+                            }
+                        }
+                    }
+                },
+                
+                updateResource: function(oldResource, newResource) {
+                    for (var prop in newResource) {
+                        oldResource[prop] = newResource[prop];
+                    }
                 }
             };
         }
     ])
+    
+    .factory('resourceFactory', function() {
+        var resource = null;
+        return {
+            getResource: function() {
+                return resource;
+            },
+            
+            setResource: function(data) {
+                resource = data;
+            }
+        }
+    })
     
     .factory('templateFactory', function() {
         var templates = [];
@@ -434,19 +463,6 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 currentTemplate = data;
             }
         };
-    })
-    
-    .factory('resourceFactory', function() {
-        var resource = null;
-        return {
-            getResource: function() {
-                return resource;
-            },
-            
-            setResource: function(data) {
-                resource = data;
-            }
-        }
     })
     
     .factory('alertFactory', function() {

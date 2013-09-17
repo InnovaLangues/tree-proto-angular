@@ -1,36 +1,42 @@
 {
-    "name"  : "My Path Name",
-    "description"  : "This is the path description",
+    "name" : "My Path Name",
+    "description" : "This is the path description",
     "steps" : [
         {
-            "id"              : 1,
-            "name"            : "Step",
-            "type"            : "seq",
-            "expanded"        : true,
-            "data"            : "activity",
-            "dataId"          : 123,
-            "instructions"    : null,
-            "durationHours"   : null,
-            "durationMinutes" : null,
-            "who"             : null,
-            "where"           : null,
-            "children"        : []
-        }
-    ],
-    "activities" : [
-        {
-            "123" : {
-                "name"       : "My Activity Name",
-                "resourceIn" : [
-                    {
-                        "id"             : 321,
-                        "name"           : "toto",
-                        "isInstanciated" : false,
-                        "uri"            : "www.google.com"
-                    }
-                ]
-
-            }
+            "id"                : 1,
+            "name"              : "Step",
+            "type"              : "seq",
+            "picture"           : null,
+            "expanded"          : true,
+            "instructions"      : null,
+            "durationHours"     : null,
+            "durationMinutes"   : null,
+            "who"               : null,
+            "where"             : null,
+            "withTutor"         : false,
+            "withComputer"      : true,
+            "children"          : [],
+            "excludedResources" : [],
+            "resources" : [
+                {
+                    "id"                  : 1,
+                    "name"                : "Document",
+                    "stepId"              : null,
+                    "type"                : "document",
+                    "subType"             : null,
+                    "isDigital"           : false,
+                    "propagateToChildren" : true
+                },
+                {
+                    "id"                  : 2,
+                    "name"                : "Tool",
+                    "stepId"              : null,
+                    "type"                : "tool",
+                    "subType"             : null,
+                    "isDigital"           : false,
+                    "propagateToChildren" : true
+                }
+            ]
         }
     ],
     "progression" :
