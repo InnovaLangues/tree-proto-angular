@@ -409,18 +409,108 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         }
     ])
     
-    .factory('resourceFactory', function() {
-        var resource = null;
-        return {
-            getResource: function() {
-                return resource;
-            },
+    .factory('resourceFactory', [
+        'pathFactory', 
+        function(pathFactory) {
+            var resource = null;
             
-            setResource: function(data) {
-                resource = data;
+            // Base template used to create new resource
+            var baseResource = {
+                id                  : null,
+                name                : null,
+                type                : null,
+                subType             : null,
+                isDigital           : false,
+                propagateToChildren : true
+            };
+            
+            var resourceSubTypes = {
+                document: [
+                    {key: 'text',        label: 'Text'},
+                    {key: 'sound',       label: 'Sound'},
+                    {key: 'picture',     label: 'Picture'},
+                    {key: 'video',       label: 'Video'},
+                    {key: 'simulation',  label: 'Simulation'},
+                    {key: 'test',        label: 'Test'},
+                    {key: 'other',       label: 'Other'},
+                    {key: 'indifferent', label: 'Indifferent'}
+                ],
+                tool: [
+                    {key: 'chat',          label: 'Chat'},
+                    {key: 'forum',         label: 'Forum'},
+                    {key: 'deposit_files', label: 'Deposit files'},
+                    {key: 'other',         label: 'Other'},
+                    {key: 'indifferent',   label: 'Indifferent'}
+                ]
+            };
+            
+            return {
+                getResourceSubTypes: function(resourceType) {
+                    return resourceSubTypes[resourceType] || {};
+                },
+                getResource: function() {
+                    return resource;
+                },
+                
+                setResource: function(data) {
+                    resource = data;
+                },
+                
+                generateNewResource: function() {
+                    var newResource = jQuery.extend(true, {}, baseResource);
+                    newResource.id = pathFactory.getNextResourceId();
+                    return newResource;
+                },
+                
+                getInheritedResources: function(stepToFind) {
+                    var stepFound = false;
+                    var inheritedResources = [];
+
+                    var path = pathFactory.getPath();
+                    if (path) {
+                        for (var i = 0; i < path.steps.length; i++) {
+                            var currentStep = path.steps[i];
+                            stepFound = this.retrieveInheritedResources(stepToFind, currentStep, inheritedResources);
+                            if (stepFound) {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    return inheritedResources;
+                },
+                
+                retrieveInheritedResources: function(stepToFind, currentStep, inheritedResources) {
+                    var stepFound = false;
+                    
+                    if (stepToFind.id !== currentStep.id) {
+                        // Not the step we search for => search in children
+                        for (var i = 0; i < currentStep.children.length; i++) {
+                            stepFound =  this.retrieveInheritedResources(stepToFind, currentStep.children[i], inheritedResources);
+                            if (stepFound) {
+                                // Get all resources which must be sent to children
+                                for (var j = currentStep.resources.length - 1; j >= 0; j--) {
+                                    if (currentStep.resources[j].propagateToChildren) {
+                                        // Current resource must be available for children
+                                        var resource = currentStep.resources[j];
+                                        resource.parentStep = currentStep.name;
+                                        resource.isExcluded = stepToFind.excludedResources.indexOf(resource.id) != -1;
+                                        inheritedResources.unshift(resource);
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        stepFound = true;
+                    }
+                    
+                    return stepFound;
+                }
             }
         }
-    })
+    ])
     
     .factory('templateFactory', function() {
         var templates = [];

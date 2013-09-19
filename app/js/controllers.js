@@ -112,9 +112,9 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'alertFactory',
         'clipboardFactory',
         'historyFactory',
-        function($scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory, clipboardFactory, historyFactory) {
+        'resourceFactory',
+        function($scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory, clipboardFactory, historyFactory, resourceFactory) {
             $scope.path = pathFactory.getPath();
-            
             $scope.previewStep = null;
             
             $scope.sortableOptions = {
@@ -123,6 +123,18 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 connectWith: '.ui-sortable'
             };
             
+            $scope.setPreviewStep = function(step) {
+                if (step) {
+                    $scope.previewStep = step;
+                }
+                else if (null !== $scope.path && undefined !== $scope.path.steps[0]) {
+                    $scope.previewStep = $scope.path.steps[0];
+                }
+                
+                $scope.inheritedResources = resourceFactory.getInheritedResources($scope.previewStep);
+            };
+            
+            // Load current path
             if ($routeParams.id) {
                 // Edit existing path
                 if (!pathFactory.getPathInstanciated($routeParams.id)) {
@@ -157,15 +169,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 );
             }
             
-            $scope.setPreviewStep = function(step) {
-                if (step) {
-                    $scope.previewStep = step;
-                }
-                else if (null !== $scope.path && undefined !== $scope.path.steps[0]) {
-                    $scope.previewStep = $scope.path.steps[0];
-                }
-            };
-            
+            // Display Root node as default preview step
             $scope.setPreviewStep();
             
             $scope.update = function() {
@@ -314,17 +318,97 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 var d = $dialog.dialog(options);
                 d.open('partials/modals/step-edit.html', 'StepModalController')
                  .then(function(step) {
-                     // Inject edited step in path
-                     pathFactory.replaceStep(step);
-                     
-                     // Update history
-                     historyFactory.update($scope.path);
+                     if (step) {
+                         // Inject edited step in path
+                         pathFactory.replaceStep(step);
+                         
+                         // Update history
+                         historyFactory.update($scope.path);
+                     }
                  });
             };
             
             $scope.openHelp = function() {
                 var d = $dialog.dialog(dialogOptions);
                 d.open('partials/modals/help.html', 'HelpModalController');
+            };
+            
+            // Resources management
+            $scope.editResource = function(resourceType, resource) {
+                var editResource = false;
+                
+                if (resource) {
+                    editResource = true;
+                    // Edit existing document
+                    resourceFactory.setResource(resource);
+                }
+                
+                var options = jQuery.extend(true, {}, dialogOptions);
+                
+                // Send resource type to form
+                options.resolve = {
+                    resourceType: function() {
+                        return resourceType;
+                    }
+                };
+                
+                var d = $dialog.dialog(options);
+                d.open('partials/modals/resource-edit.html', 'ResourceModalController')
+                 .then(function(resource) {
+                     if (resource) {
+                         // Save resource
+                         if (editResource) {
+                             // Edit existing resource
+                             // Replace old resource by the new one
+                             for (var i = 0; i < $scope.previewStep.resources.length; i++) {
+                                 if ($scope.previewStep.resources[i].id === resource.id) {
+                                     $scope.previewStep.resources[i] = resource;
+                                     break;
+                                 }
+                             }
+                         }
+                         else {
+                             // Create new resource
+                             $scope.previewStep.resources.push(resource);
+                         }
+                         
+                         // Update history
+                         historyFactory.update($scope.path);
+                     }
+                 });
+            };
+            
+            $scope.removeResource = function(resource) {
+                // Search resource to remove
+                for (var i = 0; i < $scope.previewStep.resources.length; i++) {
+                    if (resource.id === $scope.previewStep.resources[i].id) {
+                        $scope.previewStep.resources.splice(i, 1);
+                        
+                        // Update history
+                        historyFactory.update($scope.path);
+                        break;
+                    }
+                }
+            };
+            
+            $scope.excludeParentResource= function(resource) {
+                resource.isExcluded = true;
+                $scope.previewStep.excludedResources.push(resource.id);
+                
+                // Update history
+                historyFactory.update($scope.path);
+            };
+            
+            $scope.includeParentResource= function(resource) {
+                resource.isExcluded = false;
+                for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
+                    if (resource.id == $scope.previewStep.excludedResources[i]) {
+                        $scope.previewStep.excludedResources.splice(i, 1);
+                    }
+                }
+                
+                // Update history
+                historyFactory.update($scope.path);
             };
         }
     ])
@@ -358,6 +442,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
            
            $scope.formStep = localStep;
+           $scope.inheritedResources = resourceFactory.getInheritedResources(localStep);
            
            $scope.close = function() {
                dialog.close();
@@ -375,7 +460,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
            };
            
            // Resources Management
-           $scope.editResource = function(resource) {
+           $scope.editResource = function(resourceType, resource) {
                var editResource = false;
                
                // Disable current modal button to prevent close step modal before close document/tool modal
@@ -387,22 +472,34 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                    resourceFactory.setResource(resource);
                }
                
-               var d = $dialog.dialog(dialogOptions);
-               d.open('partials/modals/document-edit.html', 'DocumentModalController')
+               var options = jQuery.extend(true, {}, dialogOptions);
+               
+               // Send resource type to form
+               options.resolve = {
+                   resourceType: function() {
+                       return resourceType;
+                   }
+               };
+               
+               var d = $dialog.dialog(options);
+               d.open('partials/modals/resource-edit.html', 'ResourceModalController')
                 .then(function(resource) {
-                    if (editResource) {
-                        // Edit existing resource
-                        // Replace old resource by the new one
-                        for (var i = 0; i < $scope.formStep.resources.length; i++) {
-                            if ($scope.formStep.resources[i].id === resource.id) {
-                                $scope.formStep.resources[i] = resource;
-                                break;
+                    if (resource) {
+                        // Save resource
+                        if (editResource) {
+                            // Edit existing resource
+                            // Replace old resource by the new one
+                            for (var i = 0; i < $scope.formStep.resources.length; i++) {
+                                if ($scope.formStep.resources[i].id === resource.id) {
+                                    $scope.formStep.resources[i] = resource;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    else {
-                        // Create new resource
-                        $scope.formStep.resources.push(resource);
+                        else {
+                            // Create new resource
+                            $scope.formStep.resources.push(resource);
+                        }
                     }
                     
                     // Modal is now close, enable buttons
@@ -415,8 +512,33 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                for (var i = 0; i < $scope.formStep.resources.length; i++) {
                    if (resource.id === $scope.formStep.resources[i].id) {
                        $scope.formStep.resources.splice(i, 1);
+                       break;
                    }
                }
+           };
+           
+           $scope.excludeParentResource= function(resource) {
+               resource.isExcluded = true;
+               $scope.formStep.excludedResources.push(resource.id);
+               
+               // Update history
+               historyFactory.update($scope.path);
+           };
+           
+           $scope.includeParentResource= function(resource) {
+               resource.isExcluded = false;
+               for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
+                   if (resource.id == $scope.previewStep.excludedResources[i]) {
+                       $scope.formStep.excludedResources.splice(i, 1);
+                   }
+               }
+               
+               // Update history
+               historyFactory.update($scope.path);
+           };
+           
+           $scope.selectImage = function() {
+               
            };
        }
     ])
@@ -424,43 +546,39 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
     /**
      * Document Modal Controller
      */
-    .controller('DocumentModalController', [
+    .controller('ResourceModalController', [
         '$scope',
         'dialog',
         'pathFactory',
-        'stepFactory',
         'resourceFactory',
-        function($scope, dialog, pathFactory, stepFactory, resourceFactory) {
-            var currentDocument = resourceFactory.getResource();
-            if (null === currentDocument) {
+        'resourceType',
+        function($scope, dialog, pathFactory, resourceFactory, resourceType) {
+            $scope.resourceType = resourceType;
+            $scope.resourceSubTypes = resourceFactory.getResourceSubTypes(resourceType);
+            
+            var currentResource = resourceFactory.getResource();
+            if (null === currentResource) {
                 // Create new document
-                var currentStep = stepFactory.getStep();
+                var newResource = resourceFactory.generateNewResource();
+                newResource.type = resourceType;
                 
-                $scope.formDocument = {
-                    id                  : pathFactory.getNextResourceId(),
-                    name                : 'Document',
-                    stepId              : currentStep.id,
-                    type                : 'document',
-                    subType             : null,
-                    isDigital           : false,
-                    propagateToChildren : true
-                };
+                $scope.formResource = newResource;
             }
             else {
                 // Edit exiting document
                 resourceFactory.setResource(null);
                 
                 // Create a clone of current document to not affect original data (in case of user click on 'Cancel')
-                $scope.formDocument = jQuery.extend(true, {}, currentDocument);
+                $scope.formResource = jQuery.extend(true, {}, currentResource);
             }
             
             $scope.close = function() {
                 dialog.close();
             };
             
-            $scope.save = function(formDocument) {
+            $scope.save = function(formResource) {
                 // Send back edited document to step
-                dialog.close(formDocument);
+                dialog.close(formResource);
             };
         }
     ])

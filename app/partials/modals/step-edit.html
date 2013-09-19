@@ -1,6 +1,6 @@
 <div class="modal container">
     <div class="modal-header">
-        <h1><i class="icon-pencil"></i> Editing step : {{ formStep.name }}</h1>
+        <h1><i class="icon-pencil"></i> Editing step : &lt;<strong>{{ formStep.name }}</strong>&gt;</h1>
     </div>
 
     <div class="modal-body">
@@ -87,14 +87,26 @@
 
         <div class="row-fluid">
             <div class="panel-documents well well-small span4">
-                <button class="btn btn-mini btn-primary pull-left" ng-click="editResource()"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-primary pull-left" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                 <h2>Documents <i class="icon-briefcase"></i></h2>
+                <div ng-include="'partials/resource-list.html'" onload="activeTab = 'Global'"></div>
                 <table class="table table-condensed table-hover">
+                    <!-- Inherited documents from parents -->
+                    <tr ng-repeat="resource in inheritedResources | filter: {type: 'document'}">
+                        <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td ng-class="{'excluded-resource': resource.isExcluded}">&lt;<strong>{{ resource.parentStep }}</strong>&gt; {{ resource.name }}</td>
+                        <td class="actions">
+                            <button ng-show="resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)" tooltip="Enable document for this step"><i class="icon-ok"></i></button>
+                    <button ng-show="!resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)" tooltip="Disable document for this step"><i class="icon-remove"></i></button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Specific documents -->
                     <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
-                        <td>{{ resource.subType }}</td>
+                        <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
                         <td>{{ resource.name }}</td>
-                        <td>
-                            <button class="btn btn-mini" ng-click="editResource(resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                        <td class="actions">
+                            <button class="btn btn-mini" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
                             <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>
@@ -106,18 +118,29 @@
                     <img src="images/image.png" />
                </div>
                <br/>
-               <button class="btn btn-small"><i class="icon-picture"></i> Select image</button>
+               <button class="btn btn-small" ng-click="selectImage()"><i class="icon-picture"></i> Select image</button>
             </div>
             
             <div class="panel-tools well well-small span4">
-                <button class="btn btn-mini btn-primary pull-right" ng-click="editResource()"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                 <h2><i class="icon-wrench"></i> Tools</h2>
                 <table class="table table-condensed table-hover">
+                    <!-- Inherited tools from parents -->
+                    <tr ng-repeat="resource in inheritedResources | filter: {type: 'tool'}">
+                        <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td ng-class="{'excluded-resource': resource.isExcluded}">&lt;<strong>{{ resource.parentStep }}</strong>&gt; {{ resource.name }}</td>
+                        <td class="actions">
+                            <button ng-show="resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)" tooltip="Enable tool for this step"><i class="icon-ok"></i></button>
+                            <button ng-show="!resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)" tooltip="Disable tool for this step"><i class="icon-remove"></i></button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Specific tools -->
                     <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
-                        <td>{{ resource.subType }}</td>
+                        <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
                         <td>{{ resource.name }}</td>
-                        <td>
-                            <button class="btn btn-mini" ng-click="editResource(resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                        <td class="actions">
+                            <button class="btn btn-mini" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
                             <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>

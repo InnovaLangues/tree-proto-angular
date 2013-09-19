@@ -1,0 +1,11 @@
+{{ resourceType }}
+<table class="table table-condensed table-hover">
+    <tr ng-repeat="resource in previewStep.resources | filter: {type: '{{ resourceType }}'}">
+        <td class="icon"><img src="images/icons/{{ resourceType }}/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+        <td>{{ resource.name }}</td>
+        <td class="actions">
+            <button class="btn btn-mini" ng-click="editResource(resourceType, resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+        </td>
+    </tr>
+</table>

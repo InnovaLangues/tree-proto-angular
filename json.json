@@ -1,4 +1,5 @@
 {
+    "id" : null,
     "name" : "My Path Name",
     "description" : "This is the path description",
     "steps" : [
@@ -21,7 +22,6 @@
                 {
                     "id"                  : 1,
                     "name"                : "Document",
-                    "stepId"              : null,
                     "type"                : "document",
                     "subType"             : null,
                     "isDigital"           : false,
@@ -30,7 +30,6 @@
                 {
                     "id"                  : 2,
                     "name"                : "Tool",
-                    "stepId"              : null,
                     "type"                : "tool",
                     "subType"             : null,
                     "isDigital"           : false,
