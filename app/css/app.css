@@ -123,10 +123,6 @@ table td.icon {
     text-align: center !important;
 }
 
-.preview-step .table {
-    margin: 10px 0;
-}
-
 .preview-step .icons {
     text-align: center;
     background-color: #FFFFFF;
@@ -157,7 +153,60 @@ table td.icon {
     text-align: center;
 }
 
+.preview-step .accordion-group,
+.panel-documents .accordion-group,
+.panel-tools .accordion-group {
+    background-color: #FFF;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.preview-step .accordion-inner,
+.panel-documents .accordion-inner,
+.panel-tools .accordion-inner {
+    padding: 0;
+}
+
+.preview-step .accordion-inner .table,
+.panel-documents .accordion-inner .table,
+.panel-tools .accordion-inner .table {
+    margin: 0;
+}
+
+.preview-step .accordion-inner .table tr:first-child td,
+.panel-documents .accordion-inner .table tr:first-child td,
+.panel-tools .accordion-inner .table tr:first-child td {
+    border-top: none;
+}
+
 .excluded-resource {
     text-decoration: line-through;
     color: #999;
+}
+
+.parent-resources-count {
+    font-size: 12px;
+    color: rgb(51, 51, 51) !important;
+    font-weight: normal;
+}
+
+.preview-step .accordion-heading,
+.panel-documents .accordion-heading,
+.panel-tools .accordion-heading {
+    font-weight: bold;
+}
+
+.preview-step .accordion-heading a:hover,
+.panel-documents .accordion-heading a:hover,
+.panel-tools .accordion-heading a:hover {
+    text-decoration: none;
+}
+
+.indent {
+    padding-right: 8px;
+}
+
+.preview-step .accordion,
+.panel-documents .accordion,
+.panel-tools .accordion {
+    margin-bottom: 0;
 }

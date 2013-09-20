@@ -115,6 +115,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
         'resourceFactory',
         function($scope, $http, $notification, $dialog, $routeParams, $location, pathFactory, stepFactory, templateFactory, alertFactory, clipboardFactory, historyFactory, resourceFactory) {
             $scope.path = pathFactory.getPath();
+            
             $scope.previewStep = null;
             
             $scope.sortableOptions = {
@@ -143,14 +144,22 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                         .success(function(data) {
                             // Store Path ID
                             data.id = $routeParams.id;
+
+                            $scope.path = data;
+                            pathFactory.setPath($scope.path);
+                            
+                            if ($scope.path.steps.length === 0) {
+                                // Missing root step => add it
+                                var rootStep = stepFactory.generateNewStep();
+                                rootStep.name = $scope.path.name;
+                                $scope.path.steps.push(rootStep);
+                            }
                             
                             // Update History if needed
                             if (-1 === historyFactory.getHistoryState()) {
-                                historyFactory.update(data);
+                                historyFactory.update($scope.path);
                             }
-
-                            pathFactory.setPath(data);
-                            $scope.path = data;
+                            
                             $scope.setPreviewStep();
                         }
                     );
@@ -160,10 +169,17 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 // Create new path
                 $http.get('tree.json')
                     .success(function(data) {
-                        pathFactory.setPath(data);
                         $scope.path = data;
+                        pathFactory.setPath($scope.path);
                         
-                        historyFactory.update(data);
+                        if ($scope.path.steps.length === 0) {
+                            // New path => add root step
+                            var rootStep = stepFactory.generateNewStep();
+                            rootStep.name = $scope.path.name;
+                            $scope.path.steps.push(rootStep);
+                        }
+                        
+                        historyFactory.update($scope.path);
                         $scope.setPreviewStep();
                     }
                 );
@@ -193,6 +209,10 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.rename = function() {
+                if (undefined != $scope.path.steps[0]) {
+                    $scope.path.steps[0].name = $scope.path.name;
+                }
+                
                 historyFactory.update($scope.path);
             };
             
@@ -433,16 +453,24 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
        '$scope',
        'dialog',
        '$dialog',
+       'pathFactory',
        'stepFactory',
        'historyFactory',
        'resourceFactory',
-       function($scope, dialog, $dialog, stepFactory, historyFactory, resourceFactory) {
+       function($scope, dialog, $dialog, pathFactory, stepFactory, historyFactory, resourceFactory) {
            $scope.buttonsDisabled = false;
            
            var localStep = jQuery.extend(true, {}, stepFactory.getStep()); // Create a copy to not affect original data before user save
            
            $scope.formStep = localStep;
            $scope.inheritedResources = resourceFactory.getInheritedResources(localStep);
+           
+           $scope.isRootNode = false;
+           var path = pathFactory.getPath();
+           if (undefined != path.steps[0] && path.steps[0].id == localStep.id) {
+               // We are editing root node of tree => diable name field (it has the same name than path)
+               $scope.isRootNode = true;
+           }
            
            $scope.close = function() {
                dialog.close();
@@ -600,12 +628,11 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             var currentTemplate = templateFactory.getCurrentTemplate();
             if (null === currentTemplate) {
                 // Create new Template
-                $scope.step = stepFactory.getStep();
-
+                var stepToSave = jQuery.extend(true, {}, stepFactory.getStep());
                 $scope.formTemplate = {
-                    name : 'Template ' + $scope.step.name,
+                    name : 'Template ' + stepToSave.name,
                     description : '',
-                    step: stepFactory.getStep()
+                    step: stepToSave
                 };
             }
             else {
@@ -621,6 +648,22 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
             };
             
             $scope.save = function (formTemplate) {
+                function removeResources(step) {
+                    step.excludedResources = [];
+                    step.resources = [];
+                    
+                    if (step.children.length !== 0) {
+                        for (var i = 0; i < step.children.length; i++) {
+                            removeResources(step.children[i]);
+                        }
+                    }
+                }
+                
+                if (!formTemplate.withResources) {
+                    // No need to save step resources => remove them
+                    removeResources(formTemplate.step);
+                }
+                
                 if (!editTemplate) {
                     // Create new template
                     $http

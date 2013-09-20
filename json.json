@@ -5,8 +5,9 @@
     "steps" : [
         {
             "id"                : 1,
+            "resourceId"        : null,
             "name"              : "Step",
-            "type"              : "seq",
+            "type"              : "1",
             "picture"           : null,
             "expanded"          : true,
             "instructions"      : null,
@@ -21,6 +22,7 @@
             "resources" : [
                 {
                     "id"                  : 1,
+                    "resourceId"          : null,
                     "name"                : "Document",
                     "type"                : "document",
                     "subType"             : null,
@@ -29,6 +31,7 @@
                 },
                 {
                     "id"                  : 2,
+                    "resourceId"          : null,
                     "name"                : "Tool",
                     "type"                : "tool",
                     "subType"             : null,

@@ -15,8 +15,8 @@
 
 <body ng-cloak class="ps-push">
     <div class="path-editor container">
-        <div ng-controller="AlertController">
-            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <div ng-cloak ng-controller="AlertController">
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{ alert.msg }}</alert>
         </div>
 
         <div id="templates-sidebar" style="display:none" ng-controller="TemplateController">

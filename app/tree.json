@@ -1,25 +1,7 @@
 {
     "name" : "My Path Name",
     "description" : "This is the path description",
-    "steps" : [
-        {
-            "id"                : 1,
-            "name"              : "Step",
-            "type"              : "seq",
-            "picture"           : null,
-            "expanded"          : true,
-            "instructions"      : null,
-            "durationHours"     : null,
-            "durationMinutes"   : null,
-            "who"               : null,
-            "where"             : null,
-            "withTutor"         : false,
-            "withComputer"      : true,
-            "children"          : [],
-            "excludedResources" : [],
-            "resources"         : []
-        }
-    ],
+    "steps" : [],
     "progression" :
         {
             "global"     : "todo",

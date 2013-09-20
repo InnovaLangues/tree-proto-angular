@@ -24,6 +24,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         'clipboardFactory',
         'historyFactory',
         function($rootScope, pathFactory, clipboardFactory, historyFactory) {
+            // Check if current route need to clean factories data
             $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
                 if (next.clearClipboard) {
                     clipboardFactory.clear();
@@ -39,43 +40,78 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             });
         }
     ])
-    
-    // TODO : remove reference to $rootScope
+     
+    /**
+     * History Factory
+     * @todo remove reference to $rootScope
+     * @todo replace jQuery.extend function by native js function
+     */
     .factory('historyFactory', [
         '$rootScope',
         'pathFactory', 
         function($rootScope, pathFactory) {
+            // Is redo function is disabled ?
             $rootScope.redoDisabled = true;
+            
+            // Is undo function is disabled ?
             $rootScope.undoDisabled = true;
             
+            // History stack
             var history = [];
             var historyState = -1;
             
             return {
+                /**
+                 * Get current history stack
+                 * 
+                 * @returns Array
+                 */
                 get: function() {
                     return history;
                 },
                 
+                /**
+                 * Restore default history state (= empty history)
+                 * 
+                 * @returns historyFactory
+                 */
                 clear: function() {
                     this.setRedoDisabled(true);
                     this.setUndoDisabled(true);
                     
                     history = [];
                     historyState = -1;
+                    
+                    return this;
                 },
                 
+                /**
+                 * Store current path in history
+                 * 
+                 * @param path - The current path
+                 * @returns historyFactory
+                 */
                 update: function(path) {
                     // Increment history state
                     this.incrementHistoryState();
                     
+                    // Store path in history stack
                     this.addPathToHistory(path);
                     
                     if (this.getHistoryState() !== 0) {
+                        // History is not empty => enable the undo function
                         this.setUndoDisabled(false);
                     }
                     this.setRedoDisabled(true);
+                    
+                    return this;
                 },
                 
+                /**
+                 * Get the last path state from history stack and set it as current path
+                 * 
+                 * @returns historyFactory
+                 */
                 undo: function() {
                     // Decrement history state
                     this.decrementHistoryState();
@@ -83,18 +119,25 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                     var path = this.getPathFromHistory(historyState);
                     
                     // Clone object
-                    // TODO : replace by native js method
                     var pathCopy = jQuery.extend(true, {}, path);
                     
                     this.setRedoDisabled(false);
                     if (0 === historyState) {
+                        // History stack is empty => disable the undo function
                         this.setUndoDisabled(true);
                     }
                     
                     // Inject new path
                     pathFactory.setPath(pathCopy);
+                    
+                    return this;
                 },
                 
+                /**
+                 * Get the next history state from history stack and set it as current path
+                 * 
+                 * @returns historyFactory
+                 */
                 redo: function() {
                     // Increment history state
                     this.incrementHistoryState();
@@ -111,6 +154,8 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                     
                     // Inject new path
                     pathFactory.setPath(pathCopy);
+                    
+                    return this;
                 },
                 
                 incrementHistoryState: function() {
@@ -160,7 +205,11 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         }
     ])
     
-    // TODO : remove reference to $rootScope
+    /**
+     * Clipboard Factory
+     * 
+     * @todo remove reference to $rootScope
+     */
     .factory('clipboardFactory', function($rootScope) {
         var clipboard = null;
         var clipboardFromTemplates = false;
@@ -208,6 +257,9 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         };
     })
     
+    /**
+     * Path Factory
+     */
     .factory('pathFactory', function() {
         var path = null;
         var pathInstanciated = [];
@@ -356,6 +408,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             // Base template used to append new step to tree
             var baseStep = {
                 id                : null,
+                resourceId        : null,
                 name              : 'Step',
                 type              : 'seq',
                 expanded          : true,
@@ -372,10 +425,19 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             };
             
             return {
+                /**
+                 * 
+                 * @param step
+                 * @returns
+                 */
                 generateNewStep: function(step) {
                     var stepId = pathFactory.getNextStepId();
                     var newStep = jQuery.extend(true, {}, baseStep);
-                    newStep.name = step.name + '-' + stepId;
+                    
+                    if (undefined != step) {
+                        newStep.name = step.name + '-' + stepId;
+                    }
+                    
                     newStep.id = stepId;
                     
                     return newStep;
@@ -417,6 +479,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             // Base template used to create new resource
             var baseResource = {
                 id                  : null,
+                resourceId          : null,
                 name                : null,
                 type                : null,
                 subType             : null,
@@ -464,7 +527,10 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 getInheritedResources: function(stepToFind) {
                     var stepFound = false;
-                    var inheritedResources = [];
+                    var inheritedResources = {
+                        documents: [],
+                        tools: []
+                    };
 
                     var path = pathFactory.getPath();
                     if (path) {
@@ -489,15 +555,38 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                             stepFound =  this.retrieveInheritedResources(stepToFind, currentStep.children[i], inheritedResources);
                             if (stepFound) {
                                 // Get all resources which must be sent to children
+                                var stepDocuments = {
+                                    stepName: currentStep.name,
+                                    resources: []
+                                };
+                                
+                                var stepTools = {
+                                    stepName: currentStep.name,
+                                    resources: []
+                                };
+                                
                                 for (var j = currentStep.resources.length - 1; j >= 0; j--) {
                                     if (currentStep.resources[j].propagateToChildren) {
                                         // Current resource must be available for children
                                         var resource = currentStep.resources[j];
                                         resource.parentStep = currentStep.name;
                                         resource.isExcluded = stepToFind.excludedResources.indexOf(resource.id) != -1;
-                                        inheritedResources.unshift(resource);
+                                        
+                                        if ('document' === resource.type) {
+                                            stepDocuments.resources.unshift(resource);
+                                        }
+                                        else if ('tool' === resource.type) {
+                                            stepTools.resources.unshift(resource);
+                                        }
                                     }
                                 }
+                                
+                                if (stepDocuments.resources.length !== 0)
+                                    inheritedResources.documents.unshift(stepDocuments);
+                                
+                                if (stepTools.resources.length !== 0)
+                                    inheritedResources.tools.unshift(stepTools);
+                                
                                 break;
                             }
                         }

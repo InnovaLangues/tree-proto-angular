@@ -20,6 +20,12 @@
 }
 /* END fix new modal width */
 
+.step-edit h1 {
+    display: inline-block;
+    margin: 0;
+    line-height: 30px;
+}
+
 .step-edit form {
     padding: 0;
 }
@@ -50,5 +56,10 @@
 }
 
 .step-edit table {
-	margin-bottom: 0;
+    margin-bottom: 0;
+}
+
+#step-name {
+	margin: 0;
+	font-size: 18px;
 }
