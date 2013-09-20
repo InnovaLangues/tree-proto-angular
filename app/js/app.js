@@ -176,14 +176,28 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                     historyState = data;
                 },
                 
+                /**
+                 * Get path state stored at position index in history stack
+                 * 
+                 * @param index
+                 * @returns object
+                 */
                 getPathFromHistory : function(index) {
                     return history[index];
                 },
                 
+                /**
+                 * Store path state in history stack
+                 * 
+                 * @param data
+                 * @returns historyFactory
+                 */
                 addPathToHistory : function(data) {
                     // Clone object
                     var pathCopy = jQuery.extend(true, {}, data);
                     history.push(pathCopy);
+                    
+                    return this;
                 },
                 
                 getRedoDisabled: function() {
@@ -403,6 +417,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
     .factory('stepFactory', [
         'pathFactory',
         function(pathFactory) {
+            // Stored step
             var step = null;
             
             // Base template used to append new step to tree
@@ -426,9 +441,10 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             return {
                 /**
+                 * Generate a new empty step
                  * 
                  * @param step
-                 * @returns
+                 * @returns object
                  */
                 generateNewStep: function(step) {
                     var stepId = pathFactory.getNextStepId();
@@ -443,10 +459,22 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                     return newStep;
                 },
                 
+                /**
+                 * Store step in factory
+                 * 
+                 * @param data - The step to store
+                 * @returns stepFactory
+                 */
                 setStep: function(data) {
                     step = data;
+                    return this;
                 },
                 
+                /**
+                 * Get step stored in factory
+                 * 
+                 * @returns object
+                 */
                 getStep: function() {
                     return step;
                 },
@@ -511,6 +539,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 getResourceSubTypes: function(resourceType) {
                     return resourceSubTypes[resourceType] || {};
                 },
+                
                 getResource: function() {
                     return resource;
                 },
