@@ -1,6 +1,6 @@
 <form class="tree-item form-inline">
     <span ng-mouseenter="show = true" ng-click="setPreviewStep(step)" ng-mouseleave="show = false" >
-    {{ step.name }}
+    {{ step.name | limitTo:10 }}
     </span>
     
     <span ng-show="show" ng-mouseenter="show = true;" ng-mouseleave="show = false">

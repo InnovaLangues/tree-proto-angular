@@ -198,14 +198,29 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 historyFactory.update(_ref);
             };
             
+            $scope.updatePreviewStep = function() {
+                // Update preview step
+                var step = null;
+                if (null !== $scope.previewStep) {
+                    step = pathFactory.getStepById($scope.previewStep.id);
+                }
+                $scope.setPreviewStep(step);
+            };
+            
             $scope.undo = function() {
                 historyFactory.undo();
                 $scope.path = pathFactory.getPath();
+                
+                // Update preview step
+                $scope.updatePreviewStep();
             };
             
             $scope.redo = function() {
                 historyFactory.redo();
                 $scope.path = pathFactory.getPath();
+                
+                // Update preview step
+                $scope.updatePreviewStep();
             };
             
             $scope.rename = function() {
@@ -216,7 +231,7 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                 historyFactory.update($scope.path);
             };
             
-            $scope.remove = function(step, fromPreview) {
+            $scope.remove = function(step) {
                 function walk(path) {
                     var children = path.children;
                     var i;
@@ -233,13 +248,11 @@ angular.module('myApp.controllers', ['ui.bootstrap'])
                     }
                 }
                 
-                if (fromPreview) {
-                    $scope.previewStep = null;
-                }
-                
                 walk($scope.path.steps[0]);
                 
                 historyFactory.update($scope.path);
+                
+                $scope.updatePreviewStep();
             };
             
             $scope.removeChildren = function(step) {

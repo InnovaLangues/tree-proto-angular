@@ -14,12 +14,12 @@
     <div class="preview-step well well-small span6">
         <div class="pull-right" ng-show="previewStep != null">
             <button ng-click="editStep(previewStep)" class="btn btn-small" tooltip="Edit step"><i class="icon-pencil"></i></button>
-            <button class="btn btn-danger btn-small" ng-click="remove(previewStep, true)" tooltip="Delete step">
+            <button class="btn btn-danger btn-small" ng-click="remove(previewStep)" tooltip="Delete step">
                 <i class="icon-trash"></i>
             </button>
         </div>
         
-        <h2>Selected step : <a href="" ng-click="editStep(previewStep)"><strong>&lt;{{ previewStep.name }}&gt;</strong></a></h2>
+        <h2>Selected step : <a href="" ng-click="editStep(previewStep)"><strong>&lt;{{ previewStep.name | limitTo:10 }}&gt;</strong></a></h2>
         
         <div class="icons">
             <img src="images/icons/who/{{ previewStep.who }}" alt="{{ previewStep.who }}" tooltip="{{ previewStep.who }}" />

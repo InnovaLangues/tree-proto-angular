@@ -161,11 +161,13 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 incrementHistoryState: function() {
                     // Increment history state
                     this.setHistoryState(this.getHistoryState() + 1);
+                    return this;
                 },
                 
                 decrementHistoryState: function() {
                     // Decrement history state
                     this.setHistoryState(this.getHistoryState() - 1);
+                    return this;
                 },
                 
                 getHistoryState: function() {
@@ -174,6 +176,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 setHistoryState: function(data) {
                     historyState = data;
+                    return this;
                 },
                 
                 /**
@@ -206,6 +209,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 setRedoDisabled: function(data) {
                     $rootScope.redoDisabled = data;
+                    return this;
                 },
                 
                 getUndoDisabled: function() {
@@ -214,6 +218,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 setUndoDisabled: function(data) {
                     $rootScope.undoDisabled = data;
+                    return this;
                 }
             };
         }
@@ -224,52 +229,111 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
      * 
      * @todo remove reference to $rootScope
      */
-    .factory('clipboardFactory', function($rootScope) {
-        var clipboard = null;
-        var clipboardFromTemplates = false;
-        
-        $rootScope.pasteDisabled = true;
-        
-        return {
-            clear: function() {
-                clipboard = null;
-                clipboardFromTemplates = false;
-                this.setPasteDisabled(true);
-            },
+    .factory('clipboardFactory', [
+        '$rootScope',
+        'pathFactory',
+        function($rootScope, pathFactory) {
+            // Clipboard content
+            var clipboard = null;
             
-            isEmpty: function() {
-                return null === clipboard;
-            },
+            // Current clipboard content comes from Templates ?
+            var clipboardFromTemplates = false;
             
-            copy: function(steps, fromTemplates) {
-                clipboard = steps;
-                clipboardFromTemplates = fromTemplates || false;
-                this.setPasteDisabled(false);
-            },
+            // Enable paste buttons when clipboard is not empty
+            $rootScope.pasteDisabled = true;
             
-            paste: function(step) {
-                if (!this.isEmpty())
-                {
-                    // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
-                    var stepCopy = jQuery.extend(true, {}, clipboard);
+            return {
+                /**
+                 * Empty clipboard
+                 * 
+                 * @returns clipboardFactory
+                 */
+                clear: function() {
+                    clipboard = null;
+                    clipboardFromTemplates = false;
+                    this.setPasteDisabled(true);
                     
-                    if (!clipboardFromTemplates) {
-                        stepCopy.name = stepCopy.name + '_copy';
+                    return this;
+                },
+                
+                /**
+                 * Copy selected steps into clipboard
+                 * 
+                 * @param steps
+                 * @param fromTemplates
+                 * @returns clipboardFactory
+                 */
+                copy: function(steps, fromTemplates) {
+                    clipboard = steps;
+                    clipboardFromTemplates = fromTemplates || false;
+                    this.setPasteDisabled(false);
+                    
+                    return this;
+                },
+                
+                /**
+                 * Paste steps form clipboards into current Path tree
+                 * 
+                 * @param step
+                 * @returns clipboardFactory
+                 * @todo modify reference to resources in array excludedResources
+                 */
+                paste: function(step) {
+                    if (null !== clipboard) {
+                        // Clone voir : http://stackoverflow.com/questions/122102/most-efficient-way-to-clone-an-object
+                        var stepCopy = jQuery.extend(true, {}, clipboard);
+                        
+                        // Replace IDs before inject steps in path
+                        this.replaceStepsId(stepCopy);
+                        this.replaceResourcesId(stepCopy)
+                        
+                        if (!clipboardFromTemplates) {
+                            stepCopy.name = stepCopy.name + '_copy';
+                        }
+                        
+                        step.children.push(stepCopy);
                     }
                     
-                    step.children.push(stepCopy);
+                    return this;
+                },
+                
+                replaceResourcesId: function(step) {
+                    if (step.resources.length != 0) {
+                        for (var i = 0; i < step.resources.length; i++) {
+                            step.resources[i].id = pathFactory.getNextResourceId();
+                        }
+                    }
+                    
+                    if (step.children.length != 0) {
+                        for (var j = 0; j < step.children.length; j++) {
+                            this.replaceResourcesId(step.children[j]);
+                        }
+                    }
+                    
+                    return this;
+                },
+                
+                replaceStepsId: function(step) {
+                    step.id = pathFactory.getNextStepId();
+                    if (step.children.length != 0) {
+                        for (var i = 0; i < step.children.length; i++) {
+                            this.replaceStepsId(step.children[i]);
+                        }
+                    }
+                    return this;
+                },
+                
+                getPasteDisabled: function() {
+                    return $rootScope.pasteDisabled;
+                },
+                
+                setPasteDisabled: function(data) {
+                    $rootScope.pasteDisabled = data;
+                    return this;
                 }
-            },
-            
-            getPasteDisabled: function() {
-                return $rootScope.pasteDisabled;
-            },
-            
-            setPasteDisabled: function(data) {
-                $rootScope.pasteDisabled = data;
-            }
-        };
-    })
+            };
+        }
+    ])
     
     /**
      * Path Factory
@@ -277,15 +341,17 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
     .factory('pathFactory', function() {
         var path = null;
         var pathInstanciated = [];
-        var maxStepId = 1;
-        var maxResourceId = 1;
+        var maxStepId = 0;
+        var maxResourceId = 0;
         
         return {
             clear: function() {
                 path = null;
                 pathInstanciated = [];
-                maxStepId = 1;
-                maxResourceId = 1;
+                maxStepId = 0;
+                maxResourceId = 0;
+                
+                return this;
             },
             
             getPath: function() {
@@ -293,6 +359,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             },
             
             setPath: function(data) {
+                // Store current path
                 path = data;
                 
                 // Retrieve max step id
@@ -300,10 +367,51 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 // Retrieve max resource id
                 this.getMaxResourceId();
+                
+                return this;
+            },
+            
+            /**
+             * Retrieve step in path using its ID
+             * 
+             * @param stepId
+             * @returns object
+             */
+            getStepById: function(stepId) {
+                function search(stepId, currentStep) {
+                    var step = null;
+                    if (stepId === currentStep.id) {
+                        step = currentStep;
+                    }
+                    else {
+                        for (var i = 0; i < currentStep.children.length; i++) {
+                            step = search(stepId, currentStep.children[i]);
+                            if (null !== step) {
+                                // Step found, stop search
+                                break;
+                            }
+                        }
+                    }
+                    
+                    return step;
+                }
+                
+                var step = null;
+                if (null !== path && path.length !== 0) {
+                    for (var i = 0; i < path.steps.length; i++) {
+                        step = search(stepId, path.steps[i]);
+                        if (null !== step) {
+                            break;
+                        }
+                    }
+                }
+                
+                return step;
             },
             
             addPathInstanciated: function(id) {
                 pathInstanciated[id] = id;
+                return this;
             },
             
             getPathInstanciated: function(id) {
@@ -334,9 +442,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                         this.retrieveMaxStepId(step.children[i]);
                     }
                 }
+                
+                return this;
             },
             
             getNextStepId: function() {
+                if (0 === maxStepId) {
+                    // Max step ID not calculated
+                    this.getMaxStepId();
+                }
                 maxStepId++;
                 return maxStepId;
             },
@@ -369,9 +483,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                         this.retrieveMaxResourceId(step.children[i]);
                     }
                 }
+                
+                return this;
             },
             
             getNextResourceId: function() {
+                if (0 === maxResourceId) {
+                    // Max step ID not calculated
+                    this.getMaxResourceId();
+                }
                 maxResourceId++;
                 return maxResourceId;
             },
@@ -386,6 +506,8 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                         }
                     }
                 }
+                
+                return this;
             },
             
             searchStepToReplace: function(currentStep, newStep) {
@@ -410,10 +532,15 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 for (var prop in newStep) {
                     oldStep[prop] = newStep[prop];
                 }
+                
+                return this;
             }
         };
     })
     
+    /**
+     * Step Factory
+     */
     .factory('stepFactory', [
         'pathFactory',
         function(pathFactory) {
@@ -488,17 +615,24 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                             }
                         }
                     }
+                    
+                    return this;
                 },
                 
                 updateResource: function(oldResource, newResource) {
                     for (var prop in newResource) {
                         oldResource[prop] = newResource[prop];
                     }
+                    
+                    return this;
                 }
             };
         }
     ])
     
+    /**
+     * Resource Factory
+     */
     .factory('resourceFactory', [
         'pathFactory', 
         function(pathFactory) {
@@ -546,6 +680,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 
                 setResource: function(data) {
                     resource = data;
+                    return this;
                 },
                 
                 generateNewResource: function() {
@@ -630,6 +765,9 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         }
     ])
     
+    /**
+     * Template Factory
+     */
     .factory('templateFactory', function() {
         var templates = [];
         var currentTemplate = null;
@@ -637,6 +775,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
         return {
             addTemplate: function(template) {
                 templates.push(template);
+                return this;
             },
             
             replaceTemplate: function(template) {
@@ -653,6 +792,8 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
                 if (!templateFound) {
                     this.addTemplate(template);
                 }
+                
+                return this;
             },
             
             getTemplates: function() {
@@ -661,6 +802,7 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             setTemplates: function(data) {
                 templates = data;
+                return this;
             },
             
             getCurrentTemplate: function() {
@@ -669,10 +811,14 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             setCurrentTemplate: function(data) {
                 currentTemplate = data;
+                return this;
             }
         };
     })
     
+    /**
+     * Alert Factory
+     */
     .factory('alertFactory', function() {
         var alerts = [];
 
@@ -683,10 +829,12 @@ angular.module('myApp', ['myApp.controllers', 'myApp.directives', 'ui', 'pagesli
             
             addAlert: function(msg, type) {
                 alerts.push({ type: type, msg: msg });
+                return this;
             },
             
             closeAlert: function(index) {
                 alerts.splice(index, 1);
+                return this;
             }
         };
     });
